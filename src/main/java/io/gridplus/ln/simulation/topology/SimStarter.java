@@ -1,8 +1,7 @@
-package io.gridplus.ln.simulation.starter;
+package io.gridplus.ln.simulation.topology;
 
 import io.gridplus.ln.simulation.model.LNEdge;
 import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.topology.NetworkTopology;
 import io.gridplus.ln.simulation.view.GraphView;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
@@ -12,7 +11,7 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 public class SimStarter {
 
     public static void main(String[] args) {
-       NetworkTopology nt = new NetworkTopology();
+        NetworkTopology nt = new NetworkTopology();
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> stringGraph = nt.createNetworkGraph(2, 20);
 
         System.out.println(stringGraph.toString());
@@ -23,6 +22,6 @@ public class SimStarter {
         new GraphView().init(stringGraph);
 
 
-        nt.computeShortestPaths(2,4);
+        nt.computeShortestPaths(2, 4);
     }
 }

@@ -15,7 +15,7 @@ public class LNVertex implements Serializable {
 
     public LNVertex(int id, double fee) {
         this.id = id;
-        this.fee = (double)Math.round(fee * 100d) / 100d;
+        this.fee = (double) Math.round(fee * 100d) / 100d;
     }
 
     public int getId() {
@@ -45,5 +45,17 @@ public class LNVertex implements Serializable {
     @Override
     public String toString() {
         return "V" + id;
+    }
+
+    public static class NetworkStatus implements Serializable {
+        private double healthScore;
+
+        public NetworkStatus(double healthScore) {
+            this.healthScore = healthScore;
+        }
+
+        public double getHealthScore() {
+            return healthScore;
+        }
     }
 }

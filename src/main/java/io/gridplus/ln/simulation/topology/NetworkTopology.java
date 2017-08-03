@@ -2,9 +2,7 @@ package io.gridplus.ln.simulation.topology;
 
 
 import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.ChannelStatus;
 import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.model.NetworkStatus;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
@@ -16,7 +14,7 @@ import java.util.Random;
 public class NetworkTopology {
 
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
-    private  List<LNVertex> hops;
+    private List<LNVertex> hops;
     private static final double V_TOKEN = 100;
 
     public SimpleDirectedWeightedGraph<LNVertex, LNEdge> createNetworkGraph(int noHops, int size) {
@@ -26,15 +24,15 @@ public class NetworkTopology {
         for (int i = 0; i < noHops; i++) {
             double fee = rand.nextDouble();
             LNVertex hop = new LNVertex(i, fee);
-            hop.networkStatus = new NetworkStatus(1);
+            hop.networkStatus = new LNVertex.NetworkStatus(1);
             networkGraph.addVertex(hop);
             hops.add(hop);
-            if(i-1 >=0){
-                LNVertex hop0 = hops.get(i-1);
-                double tokenAmountV1 = rand.nextInt(100)+V_TOKEN*size;
-                double tokenAmountV2 = rand.nextInt(100)+V_TOKEN*size;
+            if (i - 1 >= 0) {
+                LNVertex hop0 = hops.get(i - 1);
+                double tokenAmountV1 = rand.nextInt(100) + V_TOKEN * size;
+                double tokenAmountV2 = rand.nextInt(100) + V_TOKEN * size;
                 System.out.println("Hop Channel: " + hop0 + "-" + hop);
-                addEdge(hop0, hop, ChannelStatus.OPENED,tokenAmountV1, tokenAmountV2 );
+                addEdge(hop0, hop, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
             }
         }
 
@@ -47,14 +45,14 @@ public class NetworkTopology {
             System.out.println("Channel: " + v1 + "-" + v2);
             networkGraph.addVertex(v1);
 
-            double tokenAmountV1 = rand.nextInt(50)+V_TOKEN;
-            double tokenAmountV2 = rand.nextInt(50)+V_TOKEN;
-            addEdge(v1, v2, ChannelStatus.OPENED,tokenAmountV1, tokenAmountV2 );
+            double tokenAmountV1 = rand.nextInt(50) + V_TOKEN;
+            double tokenAmountV2 = rand.nextInt(50) + V_TOKEN;
+            addEdge(v1, v2, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
         }
         return networkGraph;
     }
 
-    private void addEdge(LNVertex v1, LNVertex v2, ChannelStatus status, double tokenAmountV1, double tokenAmountV2                         ) {
+    private void addEdge(LNVertex v1, LNVertex v2, LNEdge.ChannelStatus status, double tokenAmountV1, double tokenAmountV2) {
         LNEdge e12 = networkGraph.addEdge(v1, v2);
         e12.status = status;
         e12.tokenAmount = tokenAmountV1;

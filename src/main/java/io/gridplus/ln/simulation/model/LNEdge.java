@@ -18,4 +18,8 @@ public class LNEdge extends DefaultWeightedEdge {
         return "" + super.getWeight();
 
     }
+
+    public enum ChannelStatus {
+        OPENED, CLOSED, SETTLED
+    }
 }
