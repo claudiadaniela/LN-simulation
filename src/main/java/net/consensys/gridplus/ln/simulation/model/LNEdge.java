@@ -9,12 +9,13 @@ public class LNEdge extends DefaultWeightedEdge {
      * Token Amount on Directed Edge: A-> B the amount deposited by A
      * lockedTokenAmount: the amount blocked in transfers from A-> B
      */
-    private double tokenAmount;
-    private double lockedTokenAmount;
+    public double tokenAmount;
+    public double lockedTokenAmount;
+
 
     @Override
     public String toString() {
-            return ""+ super.getWeight();
+        return "" + super.getWeight();
 
     }
 }

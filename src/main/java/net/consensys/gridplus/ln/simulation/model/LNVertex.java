@@ -3,11 +3,11 @@ package net.consensys.gridplus.ln.simulation.model;
 
 import java.io.Serializable;
 
-public class LNVertex implements Serializable{
+public class LNVertex implements Serializable {
     private int id;
     private double fee;
 
-    private NetworkStatus networkStatus;
+    public NetworkStatus networkStatus;
 
     public LNVertex(int id) {
         this.id = id;
@@ -15,7 +15,7 @@ public class LNVertex implements Serializable{
 
     public LNVertex(int id, double fee) {
         this.id = id;
-        this.fee = fee;
+        this.fee = (double)Math.round(fee * 100d) / 100d;
     }
 
     public int getId() {
@@ -26,13 +26,6 @@ public class LNVertex implements Serializable{
         return fee;
     }
 
-    public NetworkStatus getNetworkStatus() {
-        return networkStatus;
-    }
-
-    public void setNetworkStatus(NetworkStatus networkStatus) {
-        this.networkStatus = networkStatus;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -51,6 +44,6 @@ public class LNVertex implements Serializable{
 
     @Override
     public String toString() {
-        return "V"+id;
+        return "V" + id;
     }
 }

@@ -13,7 +13,7 @@ public class SimStarter {
 
     public static void main(String[] args) {
        NetworkTopology nt = new NetworkTopology();
-        SimpleDirectedWeightedGraph<LNVertex, LNEdge> stringGraph = nt.createNetwrokGraph(1, 20);
+        SimpleDirectedWeightedGraph<LNVertex, LNEdge> stringGraph = nt.createNetworkGraph(2, 20);
 
         System.out.println(stringGraph.toString());
 
