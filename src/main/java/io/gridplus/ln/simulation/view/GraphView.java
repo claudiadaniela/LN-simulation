@@ -10,9 +10,7 @@ import org.jgrapht.ext.*;
 import com.mxgraph.layout.*;
 import com.mxgraph.swing.*;
 
-
 public class GraphView {
-
 
     public void init(Graph<LNVertex, LNEdge> g) {
         JGraphXAdapter<LNVertex, LNEdge> jgxAdapter = new JGraphXAdapter<LNVertex, LNEdge>(g);

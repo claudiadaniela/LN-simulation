@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.topology;
+package io.gridplus.ln.simulation.network;
 
 
 import io.gridplus.ln.simulation.model.LNEdge;
