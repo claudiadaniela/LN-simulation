@@ -1,9 +1,9 @@
-package net.consensys.gridplus.ln.simulation.starter;
+package io.gridplus.ln.simulation.starter;
 
-import net.consensys.gridplus.ln.simulation.model.LNEdge;
-import net.consensys.gridplus.ln.simulation.model.LNVertex;
-import net.consensys.gridplus.ln.simulation.topology.NetworkTopology;
-import net.consensys.gridplus.ln.simulation.view.GraphView;
+import io.gridplus.ln.simulation.model.LNEdge;
+import io.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.simulation.topology.NetworkTopology;
+import io.gridplus.ln.simulation.view.GraphView;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;

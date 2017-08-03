@@ -1,10 +1,10 @@
-package net.consensys.gridplus.ln.simulation.topology;
+package io.gridplus.ln.simulation.topology;
 
 
-import net.consensys.gridplus.ln.simulation.model.ChannelStatus;
-import net.consensys.gridplus.ln.simulation.model.LNEdge;
-import net.consensys.gridplus.ln.simulation.model.LNVertex;
-import net.consensys.gridplus.ln.simulation.model.NetworkStatus;
+import io.gridplus.ln.simulation.model.LNEdge;
+import io.gridplus.ln.simulation.model.ChannelStatus;
+import io.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.simulation.model.NetworkStatus;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;

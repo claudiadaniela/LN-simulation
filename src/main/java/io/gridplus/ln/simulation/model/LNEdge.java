@@ -1,4 +1,4 @@
-package net.consensys.gridplus.ln.simulation.model;
+package io.gridplus.ln.simulation.model;
 
 
 import org.jgrapht.graph.DefaultWeightedEdge;

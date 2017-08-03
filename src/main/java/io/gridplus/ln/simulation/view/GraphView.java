@@ -1,10 +1,10 @@
-package net.consensys.gridplus.ln.simulation.view;
+package io.gridplus.ln.simulation.view;
 
 
 import javax.swing.*;
 
-import net.consensys.gridplus.ln.simulation.model.LNEdge;
-import net.consensys.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.simulation.model.LNEdge;
+import io.gridplus.ln.simulation.model.LNVertex;
 import org.jgrapht.*;
 import org.jgrapht.ext.*;
 import com.mxgraph.layout.*;
