@@ -14,7 +14,7 @@ public class GraphView {
 
     public void init(Graph<LNVertex, LNEdge> g) {
         JGraphXAdapter<LNVertex, LNEdge> jgxAdapter = new JGraphXAdapter<LNVertex, LNEdge>(g);
-        mxCircleLayout layout = new mxCircleLayout(jgxAdapter);
+        mxFastOrganicLayout layout = new mxFastOrganicLayout(jgxAdapter);
         layout.execute(jgxAdapter.getDefaultParent());
 
         JFrame frame = new JFrame();
