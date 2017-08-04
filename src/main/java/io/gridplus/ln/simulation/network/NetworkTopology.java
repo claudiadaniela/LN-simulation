@@ -1,84 +1,85 @@
 package io.gridplus.ln.simulation.network;
 
-
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.alg.shortestpath.KShortestPaths;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.KShortestPaths;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+
+import io.gridplus.ln.simulation.model.LNEdge;
+import io.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.simulation.model.LNVertex.NetworkStatus;
+
 public class NetworkTopology {
 
-    private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
-    private List<LNVertex> hops;
-    private static final int V_TOKEN = 100;
+	private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
+	private List<LNVertex> hops;
+	private static final int V_TOKEN = 100;
 
-    public SimpleDirectedWeightedGraph<LNVertex, LNEdge> createNetworkGraph(int noHops, int size) {
-        networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
-        Random rand = new Random();
-        hops = new ArrayList<LNVertex>();
-        for (int i = 0; i < noHops; i++) {
-            double fee = rand.nextDouble();
-            LNVertex hop = new LNVertex(i, fee);
-            hop.networkStatus = new LNVertex.NetworkStatus(1);
-            networkGraph.addVertex(hop);
-            hops.add(hop);
-            if (i - 1 >= 0) {
-                LNVertex hop0 = hops.get(i - 1);
-                int tokenAmountV1 = rand.nextInt(100) + V_TOKEN * size;
-                int tokenAmountV2 = rand.nextInt(100) + V_TOKEN * size;
-                System.out.println("Hop Channel: " + hop0 + "-" + hop);
-                addEdge(hop0, hop, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
-            }
-        }
+	public NetworkTopology() {
+		networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
+	}
 
-        for (int i = noHops; i < size + noHops; i++) {
-            double fee = rand.nextDouble();
-            int selectHopConn = rand.nextInt(noHops);
-            LNVertex v1 = new LNVertex(i, fee);
-            LNVertex v2 = hops.get(selectHopConn);
+	public SimpleDirectedWeightedGraph<LNVertex, LNEdge> createNetworkGraph(int noHops, int size) {
+		Random rand = new Random();
+		hops = new ArrayList<LNVertex>();
+		for (int i = 0; i < noHops; i++) {
+			LNVertex hop = addNode(i, rand.nextDouble(), new LNVertex.NetworkStatus(1));
+			hops.add(hop);
+			if (i - 1 >= 0) {
+				LNVertex hop0 = hops.get(i - 1);
+				int tokenAmountV1 = rand.nextInt(100) + V_TOKEN * size / noHops;
+				int tokenAmountV2 = rand.nextInt(100) + V_TOKEN * size / noHops;
+				addChannel(hop0, hop, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
+				System.out.println("Hop Channel: " + hop0 + "-" + hop);
+			}
+		}
 
-            System.out.println("Channel: " + v1 + "-" + v2);
-            networkGraph.addVertex(v1);
+		for (int i = noHops; i < size + noHops; i++) {
+			LNVertex v1 = addNode(i, rand.nextDouble(), new LNVertex.NetworkStatus(1));
+			LNVertex v2 = hops.get(rand.nextInt(noHops));
 
-            int tokenAmountV1 = rand.nextInt(50) + V_TOKEN;
-            int tokenAmountV2 = rand.nextInt(50) + V_TOKEN;
-            addEdge(v1, v2, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
-        }
-        return networkGraph;
-    }
+			int tokenAmountV1 = rand.nextInt(50) + V_TOKEN;
+			int tokenAmountV2 = rand.nextInt(50) + V_TOKEN;
+			addChannel(v1, v2, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
+			System.out.println("Channel: " + v1 + "-" + v2);
+		}
+		return networkGraph;
+	}
 
-    private void addEdge(LNVertex v1, LNVertex v2, LNEdge.ChannelStatus status, int tokenAmountV1, int tokenAmountV2) {
-        LNEdge e12 = networkGraph.addEdge(v1, v2);
-        e12.status = status;
-        e12.tokenAmount = tokenAmountV1;
-        networkGraph.setEdgeWeight(e12, v1.getFee());
-        LNEdge e21 = networkGraph.addEdge(v2, v1);
-        e21.status = status;
-        e21.tokenAmount = tokenAmountV2;
-        networkGraph.setEdgeWeight(e21, v2.getFee());
-    }
+	public LNVertex addNode(int id, double fee, NetworkStatus status) {
+		LNVertex vertex = new LNVertex(id, fee);
+		vertex.networkStatus = new LNVertex.NetworkStatus(1);
+		networkGraph.addVertex(vertex);
+		return vertex;
+	}
 
-    public void computeShortestPath(int id1, int id2) {
-        System.out.println("Shortest path from " + id1 + " to " + id2);
-        DijkstraShortestPath<LNVertex, LNEdge> dijkstraAlg =
-                new DijkstraShortestPath<LNVertex, LNEdge>(networkGraph);
-        ShortestPathAlgorithm.SingleSourcePaths<LNVertex, LNEdge> iPaths = dijkstraAlg.getPaths(new LNVertex(id1));
-        System.out.println(iPaths.getPath(new LNVertex(id2)) + "\n");
-    }
+	public void addChannel(LNVertex v1, LNVertex v2, LNEdge.ChannelStatus status, int tokenAmountV1,
+			int tokenAmountV2) {
+		LNEdge e12 = networkGraph.addEdge(v1, v2);
+		e12.status = status;
+		e12.tokenAmount = tokenAmountV1;
+		networkGraph.setEdgeWeight(e12, v1.getFee());
+		LNEdge e21 = networkGraph.addEdge(v2, v1);
+		e21.status = status;
+		e21.tokenAmount = tokenAmountV2;
+		networkGraph.setEdgeWeight(e21, v2.getFee());
+	}
 
+	public List<GraphPath<LNVertex, LNEdge>> computeShortestPaths(int id1, int id2, int amount) {
+		KShortestPathAlgorithm<LNVertex, LNEdge> pathsAlg = new KShortestPaths<LNVertex, LNEdge>(networkGraph, 10,
+				new LNPathValidator(amount));
+		List<GraphPath<LNVertex, LNEdge>> paths = pathsAlg.getPaths(new LNVertex(id1), new LNVertex(id2));
+		Collections.sort(paths, new LNPathComparator());
+		return paths;
 
-    public void computeBFSPaths(int id1, int id2, int amount) {
-        System.out.println("Shortest path from " + id1 + " to " + id2);
+	}
 
-        KShortestPathAlgorithm<LNVertex, LNEdge> pathsAlg = new KShortestPaths(networkGraph, 10, new LNPathValidator(amount));
-        List<GraphPath<LNVertex, LNEdge>> paths = pathsAlg.getPaths(new LNVertex(id1), new LNVertex(id2));
-    }
+	public SimpleDirectedWeightedGraph<LNVertex, LNEdge> getNetworkGraph() {
+		return networkGraph;
+	}
 }
