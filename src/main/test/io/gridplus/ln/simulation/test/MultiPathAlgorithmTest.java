@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import io.gridplus.ln.simulation.model.LNEdge;
 import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.multipath.MinCostMaxFlowAlgorithm;
-import io.gridplus.ln.simulation.network.NetworkTopology;;
+import io.gridplus.ln.simulation.model.NetworkTopology;
+import io.gridplus.ln.simulation.multipath.MinCostMaxFlowAlgorithm;;
 
 public class MultiPathAlgorithmTest {
 	private NetworkTopology networkTop;

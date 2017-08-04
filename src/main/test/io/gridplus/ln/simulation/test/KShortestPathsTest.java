@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import io.gridplus.ln.simulation.model.LNEdge;
 import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.network.NetworkTopology;
+import io.gridplus.ln.simulation.model.NetworkTopology;
 
 public class KShortestPathsTest {
 	private NetworkTopology networkTop;

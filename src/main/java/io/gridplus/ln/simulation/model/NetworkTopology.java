@@ -1,59 +1,28 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulation.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.KShortestPaths;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
 import io.gridplus.ln.simulation.model.LNVertex.NetworkStatus;
+import io.gridplus.ln.simulation.network.LNPathComparator;
+import io.gridplus.ln.simulation.network.LNPathValidator;
 
 public class NetworkTopology {
 
 	private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
-	private List<LNVertex> hops;
-	private static final int V_TOKEN = 100;
 
 	public NetworkTopology() {
 		networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
 	}
 
-	public SimpleDirectedWeightedGraph<LNVertex, LNEdge> createNetworkGraph(int noHops, int size) {
-		Random rand = new Random();
-		hops = new ArrayList<LNVertex>();
-		for (int i = 0; i < noHops; i++) {
-			LNVertex hop = addNode(i, rand.nextDouble(), new LNVertex.NetworkStatus(1));
-			hops.add(hop);
-			if (i - 1 >= 0) {
-				LNVertex hop0 = hops.get(i - 1);
-				int tokenAmountV1 = rand.nextInt(100) + V_TOKEN * size / noHops;
-				int tokenAmountV2 = rand.nextInt(100) + V_TOKEN * size / noHops;
-				addChannel(hop0, hop, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
-				System.out.println("Hop Channel: " + hop0 + "-" + hop);
-			}
-		}
-
-		for (int i = noHops; i < size + noHops; i++) {
-			LNVertex v1 = addNode(i, rand.nextDouble(), new LNVertex.NetworkStatus(1));
-			LNVertex v2 = hops.get(rand.nextInt(noHops));
-
-			int tokenAmountV1 = rand.nextInt(50) + V_TOKEN;
-			int tokenAmountV2 = rand.nextInt(50) + V_TOKEN;
-			addChannel(v1, v2, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
-			System.out.println("Channel: " + v1 + "-" + v2);
-		}
-		return networkGraph;
-	}
-
 	public LNVertex addNode(int id, double fee, NetworkStatus status) {
 		LNVertex vertex = new LNVertex(id, fee);
-		vertex.networkStatus = new LNVertex.NetworkStatus(1);
+		vertex.networkStatus = new NetworkStatus(1);
 		networkGraph.addVertex(vertex);
 		return vertex;
 	}
