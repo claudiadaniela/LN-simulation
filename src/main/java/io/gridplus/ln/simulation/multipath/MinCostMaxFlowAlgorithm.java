@@ -1,11 +1,11 @@
-package io.gridplus.ln.simulation.algorithm;
+package io.gridplus.ln.simulation.multipath;
 
 import java.util.Arrays;
 
 /**
  * SOURCE : https://github.com/jaehyunp/stanfordacm/blob/master/code/MinCostMaxFlow.java
  */
-public class MinCostMaxFlow {
+public class MinCostMaxFlowAlgorithm {
     boolean found[];
     int noNodes, capacity[][], flow[][], cost[][], dad[], dist[], pi[];
 

@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.algorithm;
+package io.gridplus.ln.simulation.multipath;
 
 import io.gridplus.ln.simulation.model.LNEdge;
 import io.gridplus.ln.simulation.model.LNVertex;
@@ -8,7 +8,7 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import java.util.Set;
 
 
-public class MinMaxAlgorithmTest {
+public class MultiPathNetworkSetup {
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
 
     public SimpleDirectedWeightedGraph<LNVertex, LNEdge> createNetworkGraph() {
@@ -57,8 +57,8 @@ public class MinMaxAlgorithmTest {
 
 
     public static void main(String[] args) {
-        MinMaxAlgorithmTest nt = new MinMaxAlgorithmTest();
-        MinCostMaxFlow flowAlg = new MinCostMaxFlow();
+        MultiPathNetworkSetup nt = new MultiPathNetworkSetup();
+        MinCostMaxFlowAlgorithm flowAlg = new MinCostMaxFlowAlgorithm();
         int noNodes = 5;
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph = nt.createNetworkGraph();
         System.out.println(networkGraph.toString());
