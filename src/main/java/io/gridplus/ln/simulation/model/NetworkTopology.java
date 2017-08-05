@@ -2,22 +2,40 @@ package io.gridplus.ln.simulation.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.KShortestPaths;
+import org.jgrapht.alg.shortestpath.PathValidator;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 import io.gridplus.ln.simulation.model.LNVertex.NetworkStatus;
-import io.gridplus.ln.simulation.network.LNPathComparator;
-import io.gridplus.ln.simulation.network.LNPathValidator;
+import io.gridplus.ln.simulation.network.BlockClock;
 
 public class NetworkTopology {
 
 	private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
+	private List<LNVertex> hops;
+	private static NetworkTopology instance;
 
-	public NetworkTopology() {
-		networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
+	private NetworkTopology() {
+		this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
+	}
+
+	public static NetworkTopology getInstance() {
+		if (instance == null) {
+			synchronized (NetworkTopology.class) {
+				if (instance == null) {
+					instance = new NetworkTopology();
+				}
+			}
+		}
+		return instance;
+	}
+
+	public void setHops(List<LNVertex> list) {
+		this.hops = list;
 	}
 
 	public LNVertex addNode(int id, double fee, NetworkStatus status) {
@@ -39,16 +57,87 @@ public class NetworkTopology {
 		networkGraph.setEdgeWeight(e21, v2.getFee());
 	}
 
-	public List<GraphPath<LNVertex, LNEdge>> computeShortestPaths(int id1, int id2, int amount) {
+	public List<GraphPath<LNVertex, LNEdge>> findShortestPaths(LNVertex id1, LNVertex id2, int amount,
+			PathValidator<LNVertex, LNEdge> validator) {
 		KShortestPathAlgorithm<LNVertex, LNEdge> pathsAlg = new KShortestPaths<LNVertex, LNEdge>(networkGraph, 10,
-				new LNPathValidator(amount));
-		List<GraphPath<LNVertex, LNEdge>> paths = pathsAlg.getPaths(new LNVertex(id1), new LNVertex(id2));
+				validator);
+		List<GraphPath<LNVertex, LNEdge>> paths = pathsAlg.getPaths(id1, id2);
 		Collections.sort(paths, new LNPathComparator());
 		return paths;
+	}
 
+	public LNEdge getEdge(LNVertex v1, LNVertex v2) {
+		return networkGraph.getEdge(v1, v2);
+	}
+
+	public Set<LNEdge> getEdges(LNVertex v1) {
+		return networkGraph.edgesOf(v1);
+	}
+
+	public int getMinAmountOnNodeEdges(LNVertex v1) {
+		int currentBlock = BlockClock.getInstance().currentBlock();
+		Set<LNEdge> edges = getEdges(v1);
+
+		int min = Integer.MAX_VALUE;
+		for (LNEdge e : edges) {
+			int availableAmount = e.tokenAmount - e.getLockedAmount(currentBlock);
+			if (availableAmount < min) {
+				min = availableAmount;
+			}
+		}
+		return min != Integer.MAX_VALUE ? min : 0;
+	}
+
+	public Set<LNVertex> getVertices() {
+		return networkGraph.vertexSet();
 	}
 
 	public SimpleDirectedWeightedGraph<LNVertex, LNEdge> getNetworkGraph() {
 		return networkGraph;
 	}
+
+	public boolean sendTransfer(Transfer transfer) {
+		List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
+				transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
+		if (paths == null || paths.size() == 0) {
+			return false;
+		}
+		GraphPath<LNVertex, LNEdge> bestPath = paths.get(0);
+		List<LNEdge> edges = bestPath.getEdgeList();
+		int lockedTime = transfer.getLockTime();
+		int currentBlock = BlockClock.getInstance().currentBlock();
+		for (LNEdge exy : edges) {
+			LNVertex ex = exy.getSource();
+			LNVertex ey = exy.getTarget();
+			LNEdge eyx = getEdge(ey, ex);
+			if (eyx != null) {
+				exy.tokenAmount -= transfer.getAmount();
+				eyx.tokenAmount += transfer.getAmount();
+				for (int i = currentBlock; i < lockedTime; i++) {
+					eyx.lockedTokenAmount.put(i, transfer.getAmount());
+				}
+			}
+		}
+		return true;
+	}
+
+	public boolean refundHops(Transfer transfer) {
+		List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
+				transfer.getAmount(), null);
+		if (paths == null || paths.size() == 0) {
+			return false;
+		}
+		GraphPath<LNVertex, LNEdge> bestPath = paths.get(0);
+		List<LNEdge> edges = bestPath.getEdgeList();
+		for (LNEdge exy : edges) {
+			LNVertex ex = exy.getSource();
+			if (hops.contains(ex) && exy.tokenAmount < transfer.getAmount()) {
+				exy.tokenAmount += transfer.getAmount();
+				System.out.println("Refund hop: " + ex + " amount: " + transfer.getAmount());
+			}
+		}
+
+		return true;
+	}
+
 }

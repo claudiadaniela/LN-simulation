@@ -50,6 +50,7 @@ public class LNVertex implements Serializable {
 	}
 
 	public static class NetworkStatus implements Serializable {
+		private static final long serialVersionUID = 1L;
 		private double healthScore;
 
 		public NetworkStatus(double healthScore) {

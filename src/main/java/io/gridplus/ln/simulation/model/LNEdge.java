@@ -1,5 +1,8 @@
 package io.gridplus.ln.simulation.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 public class LNEdge extends DefaultWeightedEdge {
@@ -11,17 +14,26 @@ public class LNEdge extends DefaultWeightedEdge {
 	 * lockedTokenAmount: the amount blocked in transfers from A-> B
 	 */
 	public int tokenAmount;
-	public int lockedTokenAmount;
+	public Map<Integer, Integer> lockedTokenAmount;
 	public int fee;
+
+	public LNEdge() {
+		lockedTokenAmount = new HashMap<Integer, Integer>();
+	}
+
+	public int getLockedAmount(int block) {
+		Integer amount = lockedTokenAmount.get(block);
+		return amount != null ? amount : 0;
+	}
 
 	public double getWeight() {
 		return super.getWeight();
 	}
 
-//	@Override
-//	public String toString() {
-//		return "" + super.getWeight();
-//	}
+	// @Override
+	// public String toString() {
+	// return "" + super.getWeight();
+	// }
 
 	public LNVertex getSource() {
 		return (LNVertex) super.getSource();

@@ -1,10 +1,10 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulation.model;
 
 import org.jgrapht.alg.shortestpath.AbstractPathElement;
 import org.jgrapht.alg.shortestpath.PathValidator;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.simulation.model.LNEdge.ChannelStatus;
+import io.gridplus.ln.simulation.network.BlockClock;
 
 public class LNPathValidator implements PathValidator<LNVertex, LNEdge> {
 	private int amountNeeded;
@@ -14,6 +14,8 @@ public class LNPathValidator implements PathValidator<LNVertex, LNEdge> {
 	}
 
 	public boolean isValidPath(AbstractPathElement<LNVertex, LNEdge> prevPathElement, LNEdge edge) {
-		return edge.tokenAmount - edge.lockedTokenAmount >= amountNeeded;
+		// TODO: check network status of the nodes
+		int lockedAmount = edge.getLockedAmount(BlockClock.getInstance().currentBlock());
+		return edge.tokenAmount - lockedAmount >= amountNeeded && ChannelStatus.OPENED.equals(edge.status);
 	}
 }

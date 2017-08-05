@@ -1,11 +1,8 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulation.model;
 
 import java.util.Comparator;
 
 import org.jgrapht.GraphPath;
-
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
 
 public class LNPathComparator implements Comparator<GraphPath<LNVertex, LNEdge>> {
 
