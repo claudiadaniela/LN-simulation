@@ -1,16 +1,16 @@
 package io.gridplus.ln.simulation.network;
 
-public class BlockClock implements Runnable {
+public class BlockRunner implements Runnable {
 	private volatile int currentBlock;
-	private static BlockClock instance;
+	private static BlockRunner instance;
 
-	private BlockClock(){}
-	public static BlockClock getInstance() {
+	private BlockRunner(){}
+	public static BlockRunner getInstance() {
 		if (instance == null) {
-			synchronized (BlockClock.class) {
+			synchronized (BlockRunner.class) {
 				if (instance == null) {
 					System.out.println("Create Block Clock");
-					instance = new BlockClock();
+					instance = new BlockRunner();
 				}
 			}
 		}

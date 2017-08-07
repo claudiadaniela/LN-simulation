@@ -45,7 +45,7 @@ public class NetworkRunner implements Runnable {
 
 	public void run() {
 
-		while (BlockClock.getInstance().currentBlock() < SimulationSetup.NO_SIM_STEPS.value()) {
+		while (BlockRunner.getInstance().currentBlock() < SimulationSetup.NO_SIM_STEPS.value()) {
 			strategy.dispatchTransfer(generateTransfers(), clients);
 			try {
 				Thread.sleep(1000);
@@ -82,8 +82,8 @@ public class NetworkRunner implements Runnable {
 		}
 		int amount = rand.nextInt(minAmount - 1) + 1;
 		int htlc = rand.nextInt(SimulationSetup.MAX_HTLC.value()) + 1;
-		Transfer transfer = new Transfer(source, recipient, amount, htlc);
-		transfer.setBlockOfDeploymentTime(BlockClock.getInstance().currentBlock());
+		Transfer transfer = new Transfer(source, recipient, amount, htlc, rand.nextInt(htlc));
+		transfer.setBlockOfDeploymentTime(BlockRunner.getInstance().currentBlock());
 		System.out.println("T: " + transfer);
 		return transfer;
 	}
@@ -91,7 +91,7 @@ public class NetworkRunner implements Runnable {
 	public static void main(String[] args) {
 		NetworkRunner runner = NetworkRunner.getInstance();
 		new Thread(runner).start();
-		BlockClock clock = BlockClock.getInstance();
+		BlockRunner clock = BlockRunner.getInstance();
 		new Thread(clock).start();
 	}
 }

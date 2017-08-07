@@ -15,7 +15,7 @@ public class LNEdge extends DefaultWeightedEdge {
 	 */
 	public int tokenAmount;
 	public Map<Integer, Integer> lockedTokenAmount;
-	public int fee;
+
 
 	public LNEdge() {
 		lockedTokenAmount = new HashMap<Integer, Integer>();

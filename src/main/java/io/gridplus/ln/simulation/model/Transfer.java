@@ -17,14 +17,14 @@ public class Transfer {
 	 */
 	private int blockOfDeploymentTime;
 
-	public Transfer(LNVertex source, LNVertex recipient, int amount, int htlc) {
+	public Transfer(LNVertex source, LNVertex recipient, int amount, int htlc, int lockTime) {
 		super();
 		this.source = source;
 		this.recipient = recipient;
 		this.amount = amount;
 		this.htlcTime = htlc;
 		Random rand = new Random();
-		this.lockTime = rand.nextInt(htlc);
+		this.lockTime =lockTime; rand.nextInt(htlc);
 	}
 
 	public LNVertex getSource() {

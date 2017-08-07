@@ -24,13 +24,13 @@ public class ClientRunner implements Runnable {
 	}
 
 	public void run() {
-		while (BlockClock.getInstance().currentBlock() < SimulationSetup.NO_SIM_STEPS.value()) {
+		while (BlockRunner.getInstance().currentBlock() < SimulationSetup.NO_SIM_STEPS.value()) {
 
 			Transfer transfer;
 			try {
 				transfer = transfers.peek();
 				if (transfer == null
-						|| transfer.getBlockOfDeploymentTime() != BlockClock.getInstance().currentBlock()) {
+						|| transfer.getBlockOfDeploymentTime() != BlockRunner.getInstance().currentBlock()) {
 					continue;
 				}
 				transfer = transfers.take();
