@@ -97,12 +97,6 @@ public class NetworkTopology {
         return networkGraph;
     }
 
-    /**
-     * TODO: apply fee on each hop
-     *
-     * @param transfer
-     * @return
-     */
     public boolean sendTransfer(Transfer transfer) {
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
@@ -146,7 +140,6 @@ public class NetworkTopology {
                 System.out.println("Refund hop: " + ex + " amount: " + missingAmount);
             }
         }
-
         return true;
     }
 

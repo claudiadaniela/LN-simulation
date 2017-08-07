@@ -24,8 +24,8 @@ public class NetworkClientRunner implements Runnable {
 	}
 
 	public void run() {
-		while (BlockRunner.getInstance().currentBlock() < SimulationSetup.NO_SIM_STEPS.value()) {
-
+		BlockRunner runner = BlockRunner.getInstance();
+		while (runner.running()) {
 			Transfer transfer;
 			try {
 				transfer = transfers.peek();
