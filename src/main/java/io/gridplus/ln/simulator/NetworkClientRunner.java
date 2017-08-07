@@ -7,7 +7,7 @@ import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.model.NetworkTopology;
 
 public class NetworkClientRunner implements Runnable {
-	private static final int MAX_ATTEMPTS = 3;
+	private static final int MAX_ATTEMPTS = 5;
 	private int id;
 	private NetworkTopology networkTopology;
 	private BlockingQueue<Transfer> transfers;

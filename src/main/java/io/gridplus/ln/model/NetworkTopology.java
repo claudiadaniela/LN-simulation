@@ -124,6 +124,11 @@ public class NetworkTopology {
         return true;
     }
 
+    /**TODO: sync mechanisms
+     *
+     * @param transfer
+     * @return
+     */
     public boolean refundHops(Transfer transfer) {
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), null);
