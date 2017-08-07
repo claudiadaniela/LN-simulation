@@ -3,15 +3,15 @@ package io.gridplus.ln.simulation.scheduler;
 import java.util.List;
 
 import io.gridplus.ln.simulation.model.Transfer;
-import io.gridplus.ln.simulation.network.ClientRunner;
+import io.gridplus.ln.simulation.network.NetworkClientRunner;
 
 public class ShortestQueueStrategy implements SchedulerStrategy {
 
-	public void dispatchTransfer(List<Transfer> transfers, List<ClientRunner> clients) {
+	public void dispatchTransfer(List<Transfer> transfers, List<NetworkClientRunner> clients) {
 		int minSize = Integer.MAX_VALUE;
-		ClientRunner minRunner = null;
+		NetworkClientRunner minRunner = null;
 		for (Transfer t : transfers) {
-			for (ClientRunner runner : clients) {
+			for (NetworkClientRunner runner : clients) {
 				if (runner.getSize() < minSize) {
 					minSize = runner.getSize();
 					minRunner = runner;

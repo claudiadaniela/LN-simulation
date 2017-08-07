@@ -23,8 +23,7 @@ public class Transfer {
 		this.recipient = recipient;
 		this.amount = amount;
 		this.htlcTime = htlc;
-		Random rand = new Random();
-		this.lockTime =lockTime; rand.nextInt(htlc);
+		this.lockTime =lockTime;
 	}
 
 	public LNVertex getSource() {

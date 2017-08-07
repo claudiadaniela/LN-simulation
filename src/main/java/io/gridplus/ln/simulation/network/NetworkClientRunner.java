@@ -6,13 +6,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import io.gridplus.ln.simulation.model.NetworkTopology;
 import io.gridplus.ln.simulation.model.Transfer;
 
-public class ClientRunner implements Runnable {
+public class NetworkClientRunner implements Runnable {
 	private static final int MAX_ATTEMPTS = 3;
 	private int id;
 	private NetworkTopology networkTopology;
 	private BlockingQueue<Transfer> transfers;
 
-	public ClientRunner(int id) {
+	public NetworkClientRunner(int id) {
 		this.id = id;
 		this.networkTopology = NetworkTopology.getInstance();
 		this.transfers = new LinkedBlockingQueue<Transfer>();

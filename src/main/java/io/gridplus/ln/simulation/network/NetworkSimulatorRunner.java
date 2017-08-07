@@ -11,23 +11,23 @@ import io.gridplus.ln.simulation.model.Transfer;
 import io.gridplus.ln.simulation.scheduler.SchedulerStrategy;
 import io.gridplus.ln.simulation.scheduler.ShortestQueueStrategy;
 
-public class NetworkRunner implements Runnable {
-	private List<ClientRunner> clients;
+public class NetworkSimulatorRunner implements Runnable {
+	private List<NetworkClientRunner> clients;
 	private SchedulerStrategy strategy;
-	private static NetworkRunner instance;
+	private static NetworkSimulatorRunner instance;
 	private NetworkTopology networkTopo;
 
-	private NetworkRunner() {
+	private NetworkSimulatorRunner() {
 		this.networkTopo = NetworkTopologyGenerator.generateRandomTopology();
 		setupClients(SimulationSetup.NO_CLIENT_RUNNERS.value());
 		this.strategy = new ShortestQueueStrategy();
 	}
 
-	public static NetworkRunner getInstance() {
+	public static NetworkSimulatorRunner getInstance() {
 		if (instance == null) {
-			synchronized (NetworkRunner.class) {
+			synchronized (NetworkSimulatorRunner.class) {
 				if (instance == null) {
-					instance = new NetworkRunner();
+					instance = new NetworkSimulatorRunner();
 				}
 			}
 		}
@@ -35,9 +35,9 @@ public class NetworkRunner implements Runnable {
 	}
 
 	private void setupClients(int size) {
-		clients = new ArrayList<ClientRunner>();
+		clients = new ArrayList<NetworkClientRunner>();
 		for (int i = 0; i < size; i++) {
-			ClientRunner runner = new ClientRunner(i);
+			NetworkClientRunner runner = new NetworkClientRunner(i);
 			clients.add(runner);
 			new Thread(runner).start();
 		}
@@ -89,7 +89,7 @@ public class NetworkRunner implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		NetworkRunner runner = NetworkRunner.getInstance();
+		NetworkSimulatorRunner runner = NetworkSimulatorRunner.getInstance();
 		new Thread(runner).start();
 		BlockRunner clock = BlockRunner.getInstance();
 		new Thread(clock).start();
