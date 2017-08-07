@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.multipath;
+package io.gridplus.ln.multipath;
 
 import java.util.Arrays;
 

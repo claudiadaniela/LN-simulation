@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulator;
 
 public class BlockRunner implements Runnable {
 	private volatile int currentBlock;

@@ -1,18 +1,18 @@
-package io.gridplus.ln.simulation.model;
+package io.gridplus.ln.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import io.gridplus.ln.simulator.BlockRunner;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.KShortestPaths;
 import org.jgrapht.alg.shortestpath.PathValidator;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-import io.gridplus.ln.simulation.model.LNVertex.NetworkStatus;
-import io.gridplus.ln.simulation.network.BlockRunner;
+import io.gridplus.ln.model.LNVertex.NetworkStatus;
 
 public class NetworkTopology {
 

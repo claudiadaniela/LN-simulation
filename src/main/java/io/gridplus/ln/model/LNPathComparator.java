@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.model;
+package io.gridplus.ln.model;
 
 import java.util.Comparator;
 

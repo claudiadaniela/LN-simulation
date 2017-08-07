@@ -1,8 +1,8 @@
-package io.gridplus.ln.simulation.test;
+package io.gridplus.ln;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.model.NetworkTopology;
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.NetworkTopology;
 import org.junit.Before;
 
 public class NetworkTopologyTest {

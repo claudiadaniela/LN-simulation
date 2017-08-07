@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulator;
 
 public enum SimulationSetup {
 	MAX_TOKEN_HOP(100),

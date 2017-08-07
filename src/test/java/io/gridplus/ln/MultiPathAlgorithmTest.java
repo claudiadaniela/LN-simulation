@@ -1,15 +1,15 @@
-package io.gridplus.ln.simulation.test;
+package io.gridplus.ln;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
+import io.gridplus.ln.model.LNEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.junit.Test;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.multipath.MinCostMaxFlowAlgorithm;;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.multipath.MinCostMaxFlowAlgorithm;;
 
 public class MultiPathAlgorithmTest extends NetworkTopologyTest {
 	private MinCostMaxFlowAlgorithm flowAlg = new MinCostMaxFlowAlgorithm();

@@ -1,4 +1,4 @@
-package io.gridplus.ln.simulation.view;
+package io.gridplus.ln.view;
 
 import javax.swing.JFrame;
 
@@ -8,8 +8,8 @@ import org.jgrapht.ext.JGraphXAdapter;
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNVertex;
 
 public class GraphView {
 

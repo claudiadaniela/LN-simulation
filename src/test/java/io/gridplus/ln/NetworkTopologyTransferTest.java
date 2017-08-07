@@ -1,7 +1,10 @@
-package io.gridplus.ln.simulation.test;
+package io.gridplus.ln;
 
 
-import io.gridplus.ln.simulation.model.*;
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNPathValidator;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.Transfer;
 import org.jgrapht.GraphPath;
 import org.junit.Test;
 

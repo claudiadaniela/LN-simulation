@@ -1,7 +1,6 @@
-package io.gridplus.ln.simulation.model;
+package io.gridplus.ln.model;
 
 import java.util.Comparator;
-import java.util.Random;
 
 public class Transfer {
 	private LNVertex source;

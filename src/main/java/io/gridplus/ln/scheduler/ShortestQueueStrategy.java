@@ -1,9 +1,9 @@
-package io.gridplus.ln.simulation.scheduler;
+package io.gridplus.ln.scheduler;
 
 import java.util.List;
 
-import io.gridplus.ln.simulation.model.Transfer;
-import io.gridplus.ln.simulation.network.NetworkClientRunner;
+import io.gridplus.ln.model.Transfer;
+import io.gridplus.ln.simulator.NetworkClientRunner;
 
 public class ShortestQueueStrategy implements SchedulerStrategy {
 

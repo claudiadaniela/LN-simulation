@@ -1,15 +1,15 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.model.NetworkTopology;
-import io.gridplus.ln.simulation.model.Transfer;
-import io.gridplus.ln.simulation.scheduler.SchedulerStrategy;
-import io.gridplus.ln.simulation.scheduler.ShortestQueueStrategy;
+import io.gridplus.ln.scheduler.SchedulerStrategy;
+import io.gridplus.ln.scheduler.ShortestQueueStrategy;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.NetworkTopology;
+import io.gridplus.ln.model.Transfer;
 
 public class NetworkSimulatorRunner implements Runnable {
 	private List<NetworkClientRunner> clients;

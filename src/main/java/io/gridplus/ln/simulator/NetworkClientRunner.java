@@ -1,10 +1,10 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulator;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import io.gridplus.ln.simulation.model.NetworkTopology;
-import io.gridplus.ln.simulation.model.Transfer;
+import io.gridplus.ln.model.Transfer;
+import io.gridplus.ln.model.NetworkTopology;
 
 public class NetworkClientRunner implements Runnable {
 	private static final int MAX_ATTEMPTS = 3;

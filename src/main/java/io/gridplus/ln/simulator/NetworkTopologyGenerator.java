@@ -1,12 +1,12 @@
-package io.gridplus.ln.simulation.network;
+package io.gridplus.ln.simulator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import io.gridplus.ln.simulation.model.LNEdge;
-import io.gridplus.ln.simulation.model.LNVertex;
-import io.gridplus.ln.simulation.model.NetworkTopology;
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.NetworkTopology;
 
 public class NetworkTopologyGenerator {
 	
