@@ -10,6 +10,7 @@ import io.gridplus.ln.scheduler.ShortestQueueStrategy;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
+import io.gridplus.ln.view.GraphView;
 
 public class NetworkSimulatorRunner implements Runnable {
 	private List<NetworkClientRunner> clients;
@@ -93,5 +94,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		new Thread(runner).start();
 		BlockRunner clock = BlockRunner.getInstance();
 		new Thread(clock).start();
+		GraphView view = new GraphView();
+		view.init(runner.networkTopo.getNetworkGraph());
 	}
 }

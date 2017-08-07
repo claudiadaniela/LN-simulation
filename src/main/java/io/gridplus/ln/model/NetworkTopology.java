@@ -140,9 +140,10 @@ public class NetworkTopology {
         List<LNEdge> edges = bestPath.getEdgeList();
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
-            if (hops.contains(ex) && exy.tokenAmount < transfer.getAmount()) {
-                exy.tokenAmount += transfer.getAmount();
-                System.out.println("Refund hop: " + ex + " amount: " + transfer.getAmount());
+            int missingAmount =  transfer.getAmount() - exy.tokenAmount;
+            if (hops.contains(ex) && missingAmount>0) {
+                exy.tokenAmount += missingAmount;
+                System.out.println("Refund hop: " + ex + " amount: " + missingAmount);
             }
         }
 

@@ -13,6 +13,7 @@ import io.gridplus.ln.model.LNVertex;
 
 public class GraphView {
 
+
 	public void init(Graph<LNVertex, LNEdge> g) {
 		JGraphXAdapter<LNVertex, LNEdge> jgxAdapter = new JGraphXAdapter<LNVertex, LNEdge>(g);
 		mxFastOrganicLayout layout = new mxFastOrganicLayout(jgxAdapter);
