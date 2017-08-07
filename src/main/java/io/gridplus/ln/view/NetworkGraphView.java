@@ -1,7 +1,8 @@
 package io.gridplus.ln.view;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
+import io.gridplus.ln.model.NetworkTopology;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphXAdapter;
 
@@ -10,12 +11,14 @@ import com.mxgraph.swing.mxGraphComponent;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-public class GraphView {
+import java.awt.*;
 
+public class NetworkGraphView {
 
-	public void init(Graph<LNVertex, LNEdge> g) {
-		JGraphXAdapter<LNVertex, LNEdge> jgxAdapter = new JGraphXAdapter<LNVertex, LNEdge>(g);
+	public NetworkGraphView(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
+		JGraphXAdapter<LNVertex, LNEdge> jgxAdapter = new JGraphXAdapter<LNVertex, LNEdge>(networkGraph);
 		mxFastOrganicLayout layout = new mxFastOrganicLayout(jgxAdapter);
 		layout.execute(jgxAdapter.getDefaultParent());
 
@@ -26,5 +29,6 @@ public class GraphView {
 		frame.pack();
 		frame.setVisible(true);
 	}
+
 
 }

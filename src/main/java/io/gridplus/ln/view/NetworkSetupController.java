@@ -1,17 +1,17 @@
 package io.gridplus.ln.view;
 
+import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.simulator.BlockRunner;
 import io.gridplus.ln.simulator.NetworkSimulatorRunner;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NetwrokSetupController {
+public class NetworkSetupController {
     private NetworkSetupView view;
 
-    public NetwrokSetupController(NetworkSetupView fame) {
+    public NetworkSetupController(NetworkSetupView fame) {
         this.view = fame;
     }
 
@@ -28,17 +28,20 @@ public class NetwrokSetupController {
                 int noMaxHTLC = view.getNoMaxHTLC();
                 setNetworkTopology(noHops, noNodes, initTokenHop, noSimulationSteps, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
             }
-
         };
         view.getStartButton().addActionListener(actionListener);
     }
 
     private void setNetworkTopology(int noHops, int noNodes, int initTokenHop, int noSimulationSteps, int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
         NetworkSimulatorRunner runner = new NetworkSimulatorRunner(noHops, noNodes, initTokenHop, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
-        new Thread(runner).start();
         BlockRunner clock = BlockRunner.getInstance();
         clock.setSimulationSteps(noSimulationSteps);
+        new Thread(runner).start();
         new Thread(clock).start();
+
+       NetworkTopology topology = NetworkTopology.getInstance();
+       NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
+
     }
 
     public static void main(String[] args) {
@@ -47,7 +50,7 @@ public class NetwrokSetupController {
             public void run() {
                 try {
                     NetworkSetupView window = new NetworkSetupView();
-                    NetwrokSetupController controller = new NetwrokSetupController(window);
+                    NetworkSetupController controller = new NetworkSetupController(window);
                     controller.controlSetup();
                 } catch (Exception e) {
                     e.printStackTrace();

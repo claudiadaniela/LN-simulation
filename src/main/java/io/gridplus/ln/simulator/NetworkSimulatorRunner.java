@@ -88,7 +88,7 @@ public class NetworkSimulatorRunner implements Runnable {
 //		new Thread(runner).start();
 //		BlockRunner clock = BlockRunner.getInstance();
 //		new Thread(clock).start();
-//		GraphView view = new GraphView();
+//		NetworkGraphView view = new NetworkGraphView();
 //		view.init(runner.networkTopo.getNetworkGraph());
 //	}
 }

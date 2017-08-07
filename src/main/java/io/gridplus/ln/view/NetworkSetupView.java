@@ -29,12 +29,9 @@ public class NetworkSetupView {
         private static final long serialVersionUID = 1L;
 
         public JTabbedPaneDemo() {
-            ImageIcon icon = new ImageIcon("java-swing-tutorial.JPG");
             JTabbedPane jtbExample = new JTabbedPane();
-            JPanel jplInnerPanel3 = createConfigPanel();
-            jtbExample.addTab("Network Configuration", icon, jplInnerPanel3, "Tab 3");
-
-            // Add the tabbed pane to this panel.
+            JPanel jplInnerPanel = createConfigPanel();
+            jtbExample.addTab("Network Configuration", null, jplInnerPanel, "Tab");
             setLayout(new GridLayout(1, 1));
             add(jtbExample);
         }
