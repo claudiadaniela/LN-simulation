@@ -19,6 +19,7 @@ public class LNEdge extends DefaultWeightedEdge {
 
 	public LNEdge() {
 		lockedTokenAmount = new HashMap<Integer, Integer>();
+		this.status = ChannelStatus.OPENED;
 	}
 
 	public int getLockedAmount(int block) {
