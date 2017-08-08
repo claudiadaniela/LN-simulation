@@ -12,10 +12,10 @@ public class NetworkClientRunner implements Runnable {
 	private NetworkTopology networkTopology;
 	private BlockingQueue<Transfer> transfers;
 
-	public NetworkClientRunner(int id) {
+	public NetworkClientRunner(int id, NetworkTopology topology) {
 		this.id = id;
-		this.networkTopology = NetworkTopology.getInstance();
-		this.transfers = new LinkedBlockingQueue<Transfer>();
+		this.networkTopology = topology;
+		this.transfers = new LinkedBlockingQueue<>();
 	}
 
 	public void addTransfer(Transfer transfer) {

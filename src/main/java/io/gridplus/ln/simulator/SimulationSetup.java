@@ -2,9 +2,8 @@ package io.gridplus.ln.simulator;
 
 public enum SimulationSetup {
 
-    SAMPLE_RATE(3000);
-
-
+    SAMPLE_RATE(3000),
+    FILE_GRAPH(1);
     private int value;
 
     SimulationSetup(int value) {

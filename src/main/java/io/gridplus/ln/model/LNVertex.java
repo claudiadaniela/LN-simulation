@@ -6,7 +6,8 @@ public class LNVertex implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private double fee;
+	public double fee;
+	public boolean hop;
 
 	public NetworkStatus networkStatus;
 
@@ -23,13 +24,6 @@ public class LNVertex implements Serializable {
 		return id;
 	}
 
-	public double getFee() {
-		return fee;
-	}
-
-	public void setFee(double fee) {
-		this.fee = fee;
-	}
 
 	@Override
 	public boolean equals(Object o) {

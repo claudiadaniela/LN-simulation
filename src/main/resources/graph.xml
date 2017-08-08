@@ -5,262 +5,285 @@
 <key id="key0" for="node" attr.name="fee" attr.type="double"/>
 <key id="key1" for="node" attr.name="networkStatus" attr.type="double"/>
 <key id="key2" for="edge" attr.name="tokenAmount" attr.type="int"/>
+<key id="key3" for="node" attr.name="hop" attr.type="boolean"/>
 <graph edgedefault="directed">
-<node id="0">
-<data key="key0">0.56</data>
-<data key="key1">1.0</data>
-</node>
-<node id="1">
-<data key="key0">0.45</data>
-<data key="key1">1.0</data>
-</node>
-<node id="2">
-<data key="key0">0.91</data>
-<data key="key1">1.0</data>
-</node>
-<node id="3">
-<data key="key0">0.03</data>
-<data key="key1">1.0</data>
-</node>
-<node id="4">
-<data key="key0">0.47</data>
-<data key="key1">1.0</data>
-</node>
-<node id="5">
-<data key="key0">0.7</data>
-<data key="key1">1.0</data>
-</node>
-<node id="6">
-<data key="key0">0.27</data>
-<data key="key1">1.0</data>
-</node>
-<node id="7">
-<data key="key0">0.75</data>
-<data key="key1">1.0</data>
-</node>
-<node id="8">
-<data key="key0">0.26</data>
-<data key="key1">1.0</data>
-</node>
-<node id="9">
-<data key="key0">0.41</data>
-<data key="key1">1.0</data>
-</node>
-<node id="10">
-<data key="key0">0.07</data>
-<data key="key1">1.0</data>
-</node>
 <node id="11">
-<data key="key0">0.05</data>
+<data key="key0">0.39</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="12">
-<data key="key0">0.78</data>
+<data key="key0">0.9</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="13">
-<data key="key0">0.49</data>
+<data key="key0">0.86</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="14">
-<data key="key0">0.22</data>
+<data key="key0">0.59</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="15">
-<data key="key0">0.53</data>
+<data key="key0">0.22</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="16">
-<data key="key0">0.6</data>
+<data key="key0">0.06</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="17">
-<data key="key0">0.03</data>
+<data key="key0">0.08</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="18">
-<data key="key0">0.38</data>
+<data key="key0">0.8</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="19">
-<data key="key0">0.35</data>
+<data key="key0">0.53</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="0">
+<data key="key0">0.11</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="1">
+<data key="key0">0.06</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="2">
+<data key="key0">0.95</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="3">
+<data key="key0">0.74</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="4">
+<data key="key0">0.63</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="5">
+<data key="key0">0.75</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="6">
+<data key="key0">0.83</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="7">
+<data key="key0">0.88</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="8">
+<data key="key0">0.16</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="9">
+<data key="key0">0.51</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="20">
-<data key="key0">0.92</data>
+<data key="key0">0.09</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
+</node>
+<node id="10">
+<data key="key0">0.62</data>
+<data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <node id="21">
-<data key="key0">0.25</data>
+<data key="key0">0.65</data>
 <data key="key1">1.0</data>
+<data key="key3">0</data>
 </node>
 <edge id="1" source="0" target="1">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">1001</data>
+<data key="edge_weight_key">0.11</data>
+<data key="key2">1082</data>
 </edge>
 <edge id="2" source="1" target="0">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">1044</data>
+<data key="edge_weight_key">0.06</data>
+<data key="key2">1067</data>
 </edge>
-<edge id="3" source="2" target="1">
-<data key="edge_weight_key">0.91</data>
-<data key="key2">78</data>
+<edge id="3" source="2" target="0">
+<data key="edge_weight_key">0.95</data>
+<data key="key2">92</data>
 </edge>
-<edge id="4" source="1" target="2">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">86</data>
-</edge>
-<edge id="5" source="3" target="0">
-<data key="edge_weight_key">0.03</data>
-<data key="key2">78</data>
-</edge>
-<edge id="6" source="0" target="3">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">88</data>
-</edge>
-<edge id="7" source="4" target="1">
-<data key="edge_weight_key">0.47</data>
-<data key="key2">96</data>
-</edge>
-<edge id="8" source="1" target="4">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">81</data>
-</edge>
-<edge id="9" source="5" target="1">
-<data key="edge_weight_key">0.7</data>
-<data key="key2">93</data>
-</edge>
-<edge id="10" source="1" target="5">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">83</data>
-</edge>
-<edge id="11" source="6" target="0">
-<data key="edge_weight_key">0.27</data>
-<data key="key2">55</data>
-</edge>
-<edge id="12" source="0" target="6">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">74</data>
-</edge>
-<edge id="13" source="7" target="1">
-<data key="edge_weight_key">0.75</data>
-<data key="key2">73</data>
-</edge>
-<edge id="14" source="1" target="7">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">61</data>
-</edge>
-<edge id="15" source="8" target="1">
-<data key="edge_weight_key">0.26</data>
-<data key="key2">83</data>
-</edge>
-<edge id="16" source="1" target="8">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">74</data>
-</edge>
-<edge id="17" source="9" target="1">
-<data key="edge_weight_key">0.41</data>
-<data key="key2">76</data>
-</edge>
-<edge id="18" source="1" target="9">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">63</data>
-</edge>
-<edge id="19" source="10" target="0">
-<data key="edge_weight_key">0.07</data>
-<data key="key2">50</data>
-</edge>
-<edge id="20" source="0" target="10">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">64</data>
-</edge>
-<edge id="21" source="11" target="1">
-<data key="edge_weight_key">0.05</data>
-<data key="key2">99</data>
-</edge>
-<edge id="22" source="1" target="11">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">75</data>
-</edge>
-<edge id="23" source="12" target="0">
-<data key="edge_weight_key">0.78</data>
-<data key="key2">85</data>
-</edge>
-<edge id="24" source="0" target="12">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">67</data>
-</edge>
-<edge id="25" source="13" target="0">
-<data key="edge_weight_key">0.49</data>
-<data key="key2">72</data>
-</edge>
-<edge id="26" source="0" target="13">
-<data key="edge_weight_key">0.56</data>
+<edge id="4" source="0" target="2">
+<data key="edge_weight_key">0.11</data>
 <data key="key2">87</data>
 </edge>
-<edge id="27" source="14" target="1">
-<data key="edge_weight_key">0.22</data>
-<data key="key2">96</data>
+<edge id="5" source="3" target="1">
+<data key="edge_weight_key">0.74</data>
+<data key="key2">78</data>
 </edge>
-<edge id="28" source="1" target="14">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">94</data>
-</edge>
-<edge id="29" source="15" target="0">
-<data key="edge_weight_key">0.53</data>
-<data key="key2">69</data>
-</edge>
-<edge id="30" source="0" target="15">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">95</data>
-</edge>
-<edge id="31" source="16" target="0">
-<data key="edge_weight_key">0.6</data>
-<data key="key2">66</data>
-</edge>
-<edge id="32" source="0" target="16">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">52</data>
-</edge>
-<edge id="33" source="17" target="0">
-<data key="edge_weight_key">0.03</data>
-<data key="key2">52</data>
-</edge>
-<edge id="34" source="0" target="17">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">54</data>
-</edge>
-<edge id="35" source="18" target="1">
-<data key="edge_weight_key">0.38</data>
-<data key="key2">79</data>
-</edge>
-<edge id="36" source="1" target="18">
-<data key="edge_weight_key">0.45</data>
-<data key="key2">71</data>
-</edge>
-<edge id="37" source="19" target="1">
-<data key="edge_weight_key">0.35</data>
-<data key="key2">57</data>
-</edge>
-<edge id="38" source="1" target="19">
-<data key="edge_weight_key">0.45</data>
+<edge id="6" source="1" target="3">
+<data key="edge_weight_key">0.06</data>
 <data key="key2">63</data>
 </edge>
-<edge id="39" source="20" target="1">
-<data key="edge_weight_key">0.92</data>
-<data key="key2">73</data>
+<edge id="7" source="4" target="0">
+<data key="edge_weight_key">0.63</data>
+<data key="key2">65</data>
 </edge>
-<edge id="40" source="1" target="20">
-<data key="edge_weight_key">0.45</data>
+<edge id="8" source="0" target="4">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">57</data>
+</edge>
+<edge id="9" source="5" target="0">
+<data key="edge_weight_key">0.75</data>
+<data key="key2">60</data>
+</edge>
+<edge id="10" source="0" target="5">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">86</data>
+</edge>
+<edge id="11" source="6" target="1">
+<data key="edge_weight_key">0.83</data>
+<data key="key2">51</data>
+</edge>
+<edge id="12" source="1" target="6">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">55</data>
+</edge>
+<edge id="13" source="7" target="1">
+<data key="edge_weight_key">0.88</data>
+<data key="key2">87</data>
+</edge>
+<edge id="14" source="1" target="7">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">86</data>
+</edge>
+<edge id="15" source="8" target="1">
+<data key="edge_weight_key">0.16</data>
+<data key="key2">55</data>
+</edge>
+<edge id="16" source="1" target="8">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">67</data>
+</edge>
+<edge id="17" source="9" target="0">
+<data key="edge_weight_key">0.51</data>
+<data key="key2">85</data>
+</edge>
+<edge id="18" source="0" target="9">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">56</data>
+</edge>
+<edge id="19" source="10" target="0">
+<data key="edge_weight_key">0.62</data>
+<data key="key2">80</data>
+</edge>
+<edge id="20" source="0" target="10">
+<data key="edge_weight_key">0.11</data>
 <data key="key2">69</data>
 </edge>
+<edge id="21" source="11" target="0">
+<data key="edge_weight_key">0.39</data>
+<data key="key2">84</data>
+</edge>
+<edge id="22" source="0" target="11">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">57</data>
+</edge>
+<edge id="23" source="12" target="1">
+<data key="edge_weight_key">0.9</data>
+<data key="key2">58</data>
+</edge>
+<edge id="24" source="1" target="12">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">71</data>
+</edge>
+<edge id="25" source="13" target="1">
+<data key="edge_weight_key">0.86</data>
+<data key="key2">72</data>
+</edge>
+<edge id="26" source="1" target="13">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">89</data>
+</edge>
+<edge id="27" source="14" target="1">
+<data key="edge_weight_key">0.59</data>
+<data key="key2">91</data>
+</edge>
+<edge id="28" source="1" target="14">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">91</data>
+</edge>
+<edge id="29" source="15" target="1">
+<data key="edge_weight_key">0.22</data>
+<data key="key2">63</data>
+</edge>
+<edge id="30" source="1" target="15">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">56</data>
+</edge>
+<edge id="31" source="16" target="0">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">99</data>
+</edge>
+<edge id="32" source="0" target="16">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">71</data>
+</edge>
+<edge id="33" source="17" target="1">
+<data key="edge_weight_key">0.08</data>
+<data key="key2">79</data>
+</edge>
+<edge id="34" source="1" target="17">
+<data key="edge_weight_key">0.06</data>
+<data key="key2">55</data>
+</edge>
+<edge id="35" source="18" target="0">
+<data key="edge_weight_key">0.8</data>
+<data key="key2">55</data>
+</edge>
+<edge id="36" source="0" target="18">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">53</data>
+</edge>
+<edge id="37" source="19" target="0">
+<data key="edge_weight_key">0.53</data>
+<data key="key2">62</data>
+</edge>
+<edge id="38" source="0" target="19">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">72</data>
+</edge>
+<edge id="39" source="20" target="0">
+<data key="edge_weight_key">0.09</data>
+<data key="key2">74</data>
+</edge>
+<edge id="40" source="0" target="20">
+<data key="edge_weight_key">0.11</data>
+<data key="key2">62</data>
+</edge>
 <edge id="41" source="21" target="0">
-<data key="edge_weight_key">0.25</data>
-<data key="key2">75</data>
+<data key="edge_weight_key">0.65</data>
+<data key="key2">78</data>
 </edge>
 <edge id="42" source="0" target="21">
-<data key="edge_weight_key">0.56</data>
-<data key="key2">50</data>
+<data key="edge_weight_key">0.11</data>
+<data key="key2">70</data>
 </edge>
 </graph>
 </graphml>

@@ -20,8 +20,8 @@ public class NetworkSimulatorRunner implements Runnable {
 	private int noNodes;
 	private int maxHTLC;
 
-	public NetworkSimulatorRunner(int noHops, int noNodes, int initTokenHop, int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
-		this.networkTopo = NetworkTopologyGenerator.generateRandomTopology(noHops, noNodes, initTokenHop);
+	public NetworkSimulatorRunner( NetworkTopology networkTopo,int noHops, int noNodes, int initTokenHop, int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
+		this.networkTopo = networkTopo;
 		setupClients(noNetworkClientsRunners);
 		this.strategy = new ShortestQueueStrategy();
 		this.maxTransfersPerBlock = noMaxTransfersPerBlock;
@@ -33,7 +33,7 @@ public class NetworkSimulatorRunner implements Runnable {
 	private void setupClients(int size) {
 		clients = new ArrayList<NetworkClientRunner>();
 		for (int i = 0; i < size; i++) {
-			NetworkClientRunner runner = new NetworkClientRunner(i);
+			NetworkClientRunner runner = new NetworkClientRunner(i, networkTopo);
 			clients.add(runner);
 			new Thread(runner).start();
 		}

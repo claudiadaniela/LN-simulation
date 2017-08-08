@@ -1,28 +1,21 @@
-package io.gridplus.ln.utils;
-
-import java.io.*;
-import java.util.*;
+package io.gridplus.ln.network.utils;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.simulator.NetworkTopologyGenerator;
+import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
+import io.gridplus.ln.network.factory.RandomNetworkTopologyFactory;
 import io.gridplus.ln.view.NetworkGraphView;
-import org.jgrapht.io.ComponentAttributeProvider;
-import org.jgrapht.io.EdgeProvider;
-import org.jgrapht.io.ExportException;
-import org.jgrapht.io.GraphExporter;
-import org.jgrapht.io.GraphImporter;
-import org.jgrapht.io.GraphMLExporter;
-import org.jgrapht.io.GraphMLExporter.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.io.GraphMLImporter;
-import org.jgrapht.io.ImportException;
-import org.jgrapht.io.IntegerComponentNameProvider;
-import org.jgrapht.io.VertexProvider;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+import org.jgrapht.io.*;
+import org.jgrapht.io.GraphMLExporter.AttributeCategory;
+import org.jgrapht.io.GraphMLExporter.AttributeType;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class GraphIO {
-    private static final String FILE = "/src/main/resources/graph.xml";
 
     private static GraphExporter<LNVertex, LNEdge> createExporter() {
         GraphMLExporter<LNVertex, LNEdge> exporter =
@@ -32,13 +25,14 @@ public final class GraphIO {
         exporter.registerAttribute("fee", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("networkStatus", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("tokenAmount", AttributeCategory.EDGE, AttributeType.INT);
-
+        exporter.registerAttribute("hop", AttributeCategory.NODE, AttributeType.BOOLEAN);
 
         ComponentAttributeProvider<LNVertex> vertexAttributeProvider =
                 v -> {
                     Map<String, String> m = new HashMap<>();
-                    if (v.getFee() != 0) {
-                        m.put("fee", v.getFee() + "");
+                    if (v.fee != 0) {
+                        m.put("fee", v.fee + "");
+                        m.put("hop", v.hop? "1":"0");
                         m.put("networkStatus", v.networkStatus.getHealthScore() + "");
                     }
                     return m;
@@ -65,7 +59,11 @@ public final class GraphIO {
             LNVertex v = new LNVertex(idValue);
             if (attributes.get("fee") != null) {
                 double feeValue = Double.parseDouble(attributes.get("fee"));
-                v.setFee(feeValue);
+                v.fee=feeValue;
+            }
+            if (attributes.get("hop") != null) {
+                boolean hopValue = attributes.get("hop").equals("1")? true: false;
+                v.hop=hopValue;
             }
             if (attributes.get("networkStatus") != null) {
                 double statusValue = Double.parseDouble(attributes.get("networkStatus"));
@@ -90,7 +88,7 @@ public final class GraphIO {
     }
 
 
-    public static void writeGraphML(SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph) {
+    public static void writeGraphML(SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph, String file) {
         try {
             System.out.println("-- Exporting graph as GraphML");
             GraphExporter<LNVertex, LNEdge> exporter = createExporter();
@@ -98,16 +96,16 @@ public final class GraphIO {
             exporter.exportGraph(graph, writer);
             String graph1AsGraphML = writer.toString();
             System.out.println(graph1AsGraphML);
-            stringToXMLFile(graph1AsGraphML);
+            stringToXMLFile(graph1AsGraphML,file);
         } catch (ExportException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static SimpleDirectedWeightedGraph<LNVertex, LNEdge> readGraphML() {
+    public static SimpleDirectedWeightedGraph<LNVertex, LNEdge> readGraphML(String file) {
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph = null;
-        String graphString = xmlFileToString();
+        String graphString = xmlFileToString(file);
         try {
             System.out.println("-- Importing graph back from GraphML");
             graph = new SimpleDirectedWeightedGraph<>(LNEdge.class);
@@ -119,9 +117,9 @@ public final class GraphIO {
         return graph;
     }
 
-    public static void stringToXMLFile(String xmlSource) {
+    public static void stringToXMLFile(String xmlSource, String file) {
         try {
-            OutputStream os = new FileOutputStream(new File("./src/main/resources/graph.xml"));
+            OutputStream os = new FileOutputStream(new File(file));
             PrintWriter p = new PrintWriter(os);
             p.println(xmlSource);
             p.flush();
@@ -131,9 +129,9 @@ public final class GraphIO {
         }
     }
 
-    public static String xmlFileToString() {
+    public static String xmlFileToString(String file) {
         try {
-            InputStream inputStream = new FileInputStream(new File("./src/main/resources/graph.xml"));
+            InputStream inputStream = new FileInputStream(new File(file));
             java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
             return s.hasNext() ? s.next() : "";
         } catch (FileNotFoundException e) {
@@ -143,10 +141,11 @@ public final class GraphIO {
     }
 
     public static void main(String[] args) {
-        NetworkTopology topology = NetworkTopologyGenerator.generateRandomTopology(2, 20, 100);
-        GraphIO.writeGraphML(topology.getNetworkGraph());
+        NetworkTopologyAbstractFactory factory = NetworkTopologyAbstractFactory.getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        NetworkTopology topology = factory.createTopology(2, 20, 100);
+        GraphIO.writeGraphML(topology.getNetworkGraph(), "./src/main/resources/graph.xml");
 
-        SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph2 = GraphIO.readGraphML();
+        SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph2 = GraphIO.readGraphML("./src/main/resources/graph.xml");
 
         System.out.println(graph2);
         System.out.println(topology.getNetworkGraph());
