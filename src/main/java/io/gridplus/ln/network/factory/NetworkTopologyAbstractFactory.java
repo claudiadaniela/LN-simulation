@@ -18,7 +18,7 @@ public abstract class NetworkTopologyAbstractFactory {
         return new EmptyTopologyFactory();
     }
 
-    public abstract NetworkTopology createTopology(int noHops, int noNodes, int initTokenHop);
+    public abstract NetworkTopology createTopology(int noHops, int noNodes);
 
 
 

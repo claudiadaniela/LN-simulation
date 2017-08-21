@@ -2,8 +2,7 @@ package io.gridplus.ln.view;
 
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
-import io.gridplus.ln.network.factory.RandomNetworkTopologyFactory;
-import io.gridplus.ln.simulator.BlockRunner;
+import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkSimulatorRunner;
 
 import java.awt.*;
@@ -34,12 +33,12 @@ public class NetworkSetupController {
 
     private void setNetworkTopology(int noHops, int noNodes, int initTokenHop, int noSimulationSteps, int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
         NetworkTopologyAbstractFactory topoFactory =NetworkTopologyAbstractFactory.getInstance(type);
-        NetworkTopology topology = topoFactory.createTopology(noHops, noNodes, initTokenHop);
+        NetworkTopology topology = topoFactory.createTopology(noHops, noNodes);
         NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
-
-        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, initTokenHop, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
-        BlockRunner clock = BlockRunner.getInstance();
+        BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(noSimulationSteps);
+       
+        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
         new Thread(runner).start();
         new Thread(clock).start();
     }

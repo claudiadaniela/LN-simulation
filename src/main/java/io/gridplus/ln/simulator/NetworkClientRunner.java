@@ -24,13 +24,13 @@ public class NetworkClientRunner implements Runnable {
 	}
 
 	public void run() {
-		BlockRunner runner = BlockRunner.getInstance();
-		while (runner.running()) {
+
+		while (BlockCounterRunner.getInstance().running()) {
 			Transfer transfer;
 			try {
 				transfer = transfers.peek();
 				if (transfer == null
-						|| transfer.getBlockOfDeploymentTime() != BlockRunner.getInstance().currentBlock()) {
+						|| transfer.getBlockOfDeploymentTime() != BlockCounterRunner.getInstance().currentBlock()) {
 					continue;
 				}
 				transfer = transfers.take();
@@ -53,6 +53,9 @@ public class NetworkClientRunner implements Runnable {
 				e.printStackTrace();
 			}
 		}
+
+		System.out.println("--------- FINISHED CLIENT "  + id +" ---------");
+
 	}
 
 	public int getSize() {

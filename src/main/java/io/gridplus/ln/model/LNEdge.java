@@ -2,6 +2,7 @@ package io.gridplus.ln.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 
@@ -13,18 +14,31 @@ public class LNEdge extends DefaultWeightedEdge {
 	 * Token Amount on Directed Edge: A-> B the amount deposited by A
 	 * lockedTokenAmount: the amount blocked in transfers from A-> B
 	 */
-	public int tokenAmount;
+	private AtomicInteger tokenAmount;
 	public Map<Integer, Integer> lockedTokenAmount;
 
 
 	public LNEdge() {
 		lockedTokenAmount = new HashMap<Integer, Integer>();
+		tokenAmount = new AtomicInteger(0);
 		this.status = ChannelStatus.OPENED;
 	}
 
+	public void changeTokenAmount(int amount){
+		tokenAmount.addAndGet(amount);
+	}
 	public int getLockedAmount(int block) {
 		Integer amount = lockedTokenAmount.get(block);
 		return amount != null ? amount : 0;
+	}
+
+
+	public int getAvailableAmount(int block) {
+		return tokenAmount.get() - getLockedAmount(block);
+	}
+	
+	public int getTotalAmount() {
+		return tokenAmount.get();
 	}
 
 	public double getWeight() {

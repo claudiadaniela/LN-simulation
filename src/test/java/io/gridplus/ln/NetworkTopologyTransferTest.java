@@ -44,17 +44,17 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V1-Source", edge34.getSource(), new LNVertex(3));
         assertEquals("V1-Target", edge34.getTarget(), new LNVertex(4));
 
-        int amount03 = edge03.tokenAmount;
-        int amount34 = edge34.tokenAmount;
-        int amount30 = edge30.tokenAmount;
-        int amount43 = edge43.tokenAmount;
+        int amount03 = edge03.getTotalAmount();
+        int amount34 = edge34.getTotalAmount();
+        int amount30 = edge30.getTotalAmount();
+        int amount43 = edge43.getTotalAmount();
 
         networkTop.sendTransfer(t);
 
-        assertEquals("V0- Amount03", edge03.tokenAmount, amount03 - amountTransferred);
-        assertEquals("V3- Amount03", edge30.tokenAmount, amount30 + amountTransferred);
-        assertEquals("V3- Amount34", edge34.tokenAmount, amount34 - amountTransferred);
-        assertEquals("V4- Amount34", edge43.tokenAmount, amount43 + amountTransferred);
+        assertEquals("V0- Amount03", edge03.getTotalAmount(), amount03 - amountTransferred);
+        assertEquals("V3- Amount03", edge30.getTotalAmount(), amount30 + amountTransferred);
+        assertEquals("V3- Amount34", edge34.getTotalAmount(), amount34 - amountTransferred);
+        assertEquals("V4- Amount34", edge43.getTotalAmount(), amount43 + amountTransferred);
     }
 
     @Test
@@ -95,14 +95,14 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V3-Target p2", edges.get(3).getTarget(), new LNVertex(4));
 
 
-        int amount01 = edge01.tokenAmount;
-        int amount10 = edge10.tokenAmount;
-        int amount12 = edge12.tokenAmount;
-        int amount21 = edge21.tokenAmount;
-        int amount23 = edge23.tokenAmount;
-        int amount32 = edge32.tokenAmount;
-        int amount34 = edge34.tokenAmount;
-        int amount43 = edge43.tokenAmount;
+        int amount01 = edge01.getTotalAmount();
+        int amount10 = edge10.getTotalAmount();
+        int amount12 = edge12.getTotalAmount();
+        int amount21 = edge21.getTotalAmount();
+        int amount23 = edge23.getTotalAmount();
+        int amount32 = edge32.getTotalAmount();
+        int amount34 = edge34.getTotalAmount();
+        int amount43 = edge43.getTotalAmount();
 
         LNEdge edge02 = networkTop.getEdge(new LNVertex(0), new LNVertex(2));
         edge02.status = LNEdge.ChannelStatus.CLOSED;
@@ -112,10 +112,10 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         boolean valid = networkTop.sendTransfer(t);
         assertEquals("Transferred", valid, true);
 
-        assertEquals("V0- Amount01", edge01.tokenAmount, amount01 - amountTransferred);
-        assertEquals("V1- Amount10", edge10.tokenAmount, amount10 + amountTransferred);
+        assertEquals("V0- Amount01", edge01.getTotalAmount(), amount01 - amountTransferred);
+        assertEquals("V1- Amount10", edge10.getTotalAmount(), amount10 + amountTransferred);
 
-        double paidFee= amountTransferred * edge12.getSource().fee;
+        double paidFee= amountTransferred * edge12.getSource().feePercentage;
         double amount12New = amount12 - (amountTransferred - paidFee);
         double amount21New = amount21 + (amountTransferred - paidFee);
         double amount23New = amount23 - (amountTransferred - paidFee);
@@ -124,12 +124,12 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         double amount43New = amount43 + (amountTransferred - paidFee);
 
 
-        assertEquals("V1- Amount12", true, Math.abs(edge12.tokenAmount- amount12New) < EPSILON);
-        assertEquals("V2- Amount21", true,  Math.abs(edge21.tokenAmount - amount21New) < EPSILON);
-        assertEquals("V1- Amount23", true, Math.abs(edge23.tokenAmount- amount23New) < EPSILON);
-        assertEquals("V2- Amount32", true,  Math.abs(edge32.tokenAmount - amount32New) < EPSILON);
-        assertEquals("V1- Amount34", true, Math.abs(edge34.tokenAmount- amount34New) < EPSILON);
-        assertEquals("V2- Amount43", true,  Math.abs(edge43.tokenAmount - amount43New) < EPSILON);
+        assertEquals("V1- Amount12", true, Math.abs(edge12.getTotalAmount()- amount12New) < EPSILON);
+        assertEquals("V2- Amount21", true,  Math.abs(edge21.getTotalAmount() - amount21New) < EPSILON);
+        assertEquals("V1- Amount23", true, Math.abs(edge23.getTotalAmount()- amount23New) < EPSILON);
+        assertEquals("V2- Amount32", true,  Math.abs(edge32.getTotalAmount() - amount32New) < EPSILON);
+        assertEquals("V1- Amount34", true, Math.abs(edge34.getTotalAmount()- amount34New) < EPSILON);
+        assertEquals("V2- Amount43", true,  Math.abs(edge43.getTotalAmount() - amount43New) < EPSILON);
 
     }
 

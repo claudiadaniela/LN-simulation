@@ -11,7 +11,7 @@ public class GraphMLTopologyFactory extends NetworkTopologyAbstractFactory {
     private static final String FILE = "./src/main/resources/graph.xml";
 
     @Override
-    public NetworkTopology createTopology(int noHops, int noNodes, int initTokenHop) {
+    public NetworkTopology createTopology(int noHops, int noNodes) {
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph = GraphIO.readGraphML(FILE);
         return new NetworkTopology(networkGraph);
 

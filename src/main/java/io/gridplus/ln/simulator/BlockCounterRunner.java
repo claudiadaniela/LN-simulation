@@ -1,19 +1,19 @@
 package io.gridplus.ln.simulator;
 
-public class BlockRunner implements Runnable {
+public class BlockCounterRunner implements Runnable {
     private volatile int currentBlock;
-    private static BlockRunner instance;
+    private static BlockCounterRunner instance;
     private int simSteps;
 
-    private BlockRunner() {
+    private BlockCounterRunner() {
     }
 
-    public static BlockRunner getInstance() {
+    public static BlockCounterRunner getInstance() {
         if (instance == null) {
-            synchronized (BlockRunner.class) {
+            synchronized (BlockCounterRunner.class) {
                 if (instance == null) {
                     System.out.println("Create Block Clock");
-                    instance = new BlockRunner();
+                    instance = new BlockCounterRunner();
                 }
             }
         }
@@ -42,6 +42,6 @@ public class BlockRunner implements Runnable {
             currentBlock++;
             System.out.println("current time: " + currentBlock);
         }
-        System.out.println("Finished simulation...");
+        System.out.println("Finished block counter...");
     }
 }

@@ -4,7 +4,6 @@ import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
-import io.gridplus.ln.network.factory.RandomNetworkTopologyFactory;
 import io.gridplus.ln.view.NetworkGraphView;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.io.*;
@@ -22,7 +21,7 @@ public final class GraphIO {
                 new GraphMLExporter<>((v) -> v.getId() + "", null, new IntegerComponentNameProvider<>(), null);
 
         exporter.setExportEdgeWeights(true);
-        exporter.registerAttribute("fee", AttributeCategory.NODE, AttributeType.DOUBLE);
+        exporter.registerAttribute("feePercentage", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("networkStatus", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("tokenAmount", AttributeCategory.EDGE, AttributeType.INT);
         exporter.registerAttribute("hop", AttributeCategory.NODE, AttributeType.BOOLEAN);
@@ -30,8 +29,8 @@ public final class GraphIO {
         ComponentAttributeProvider<LNVertex> vertexAttributeProvider =
                 v -> {
                     Map<String, String> m = new HashMap<>();
-                    if (v.fee != 0) {
-                        m.put("fee", v.fee + "");
+                    if (v.feePercentage != 0) {
+                        m.put("feePercentage", v.feePercentage + "");
                         m.put("hop", v.hop? "1":"0");
                         m.put("networkStatus", v.networkStatus.getHealthScore() + "");
                     }
@@ -43,7 +42,7 @@ public final class GraphIO {
         ComponentAttributeProvider<LNEdge> edgeAttributeProvider =
                 e -> {
                     Map<String, String> m = new HashMap<>();
-                    m.put("tokenAmount", e.tokenAmount + "");
+                    m.put("tokenAmount", e.getTotalAmount() + "");
                     return m;
                 };
         exporter.setEdgeAttributeProvider(edgeAttributeProvider);
@@ -57,9 +56,9 @@ public final class GraphIO {
         VertexProvider<LNVertex> vertexProvider = (id, attributes) -> {
             int idValue = Integer.parseInt(id);
             LNVertex v = new LNVertex(idValue);
-            if (attributes.get("fee") != null) {
-                double feeValue = Double.parseDouble(attributes.get("fee"));
-                v.fee=feeValue;
+            if (attributes.get("feePercentage") != null) {
+                double feeValue = Double.parseDouble(attributes.get("feePercentage"));
+                v.feePercentage =feeValue;
             }
             if (attributes.get("hop") != null) {
                 boolean hopValue = attributes.get("hop").equals("1")? true: false;
@@ -76,7 +75,7 @@ public final class GraphIO {
                 (from, to, label, attributes) -> {
                     int tokenAmount = Integer.parseInt(attributes.get("tokenAmount"));
                     LNEdge edge = new LNEdge();
-                    edge.tokenAmount = tokenAmount;
+                    edge.changeTokenAmount( tokenAmount);
                     return edge;
                 };
 
@@ -142,7 +141,7 @@ public final class GraphIO {
 
     public static void main(String[] args) {
         NetworkTopologyAbstractFactory factory = NetworkTopologyAbstractFactory.getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        NetworkTopology topology = factory.createTopology(2, 20, 100);
+        NetworkTopology topology = factory.createTopology(2, 20);
         GraphIO.writeGraphML(topology.getNetworkGraph(), "./src/main/resources/graph.xml");
 
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph2 = GraphIO.readGraphML("./src/main/resources/graph.xml");

@@ -27,13 +27,13 @@ public class MultiPathAlgorithmTest extends NetworkTopologyTest {
 			for (int j = 0; j < i; j++) {
 				Set<LNEdge> edgeSet = networkGraph.getAllEdges(new LNVertex(i), new LNVertex(j));
 				for (LNEdge e : edgeSet) {
-					capacity[i][j] = e.tokenAmount;
+					capacity[i][j] = e.getTotalAmount();
 					fee[i][j] =  e.getWeight();
 				}
 
 				Set<LNEdge> edgeSet2 = networkGraph.getAllEdges(new LNVertex(j), new LNVertex(i));
 				for (LNEdge e : edgeSet2) {
-					capacity[j][i] = e.tokenAmount;
+					capacity[j][i] = e.getTotalAmount();
 					fee[j][i] =  e.getWeight();
 				}
 			}
