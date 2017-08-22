@@ -1,29 +1,24 @@
 package io.gridplus.ln.network.utils;
 
+import io.gridplus.ln.model.Transfer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 public class CSVWriter {
 
-	public static void writeConsumptionData(String file, int[] values, int[] histogram) {
+	public static void writeConsumptionData(String file, int[] values) {
 		PrintWriter pw;
 		StringBuilder sb = new StringBuilder();
-		sb.append("index");
-		sb.append(',');
 		sb.append("value");
-		sb.append(',');
-		sb.append("histogram");
 		sb.append('\n');
 		try {
-			pw = new PrintWriter(new File(file+ ".csv"));
+			pw = new PrintWriter(new File(file));
 			for (int i= 0; i < values.length; i++ ) {
-				sb.append(i);
-				sb.append(',');
 				sb.append(values[i]);
-				sb.append(',');
-				sb.append(histogram[i]);
 				sb.append('\n');
 			}
 
@@ -44,7 +39,7 @@ public class CSVWriter {
 		sb.append("amount available");
 		sb.append('\n');
 		try {
-			pw = new PrintWriter(new File(file+ ".csv"));
+			pw = new PrintWriter(new File(file));
 			for (Map.Entry<String, Map<String, Integer>> entry: networkState.entrySet() ) {
 				sb.append(entry.getKey());
 				sb.append(',');
@@ -60,6 +55,45 @@ public class CSVWriter {
 					sb.append(target.getValue());
 					sb.append('\n');
 				}
+			}
+
+			pw.write(sb.toString());
+			pw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void writeTransfers(String file, List<Transfer> transferList) {
+		PrintWriter pw;
+		StringBuilder sb = new StringBuilder();
+		sb.append("source");
+		sb.append(',');
+		sb.append("recipient");
+		sb.append(',');
+		sb.append("amount");
+		sb.append(',');
+		sb.append("lockTime");
+		sb.append(',');
+		sb.append("htlc");
+		sb.append(',');
+		sb.append("deployBlock");
+		sb.append('\n');
+		try {
+			pw = new PrintWriter(new File(file));
+			for (Transfer t : transferList){
+				sb.append(t.getSource().getId());
+				sb.append(',');
+				sb.append(t.getRecipient().getId());
+				sb.append(',');
+				sb.append(t.getAmount());
+				sb.append(',');
+				sb.append(t.getLockTime());
+				sb.append(',');
+				sb.append(t.getHtlcTime());
+				sb.append(',');
+				sb.append(t.getBlockOfDeploymentTime());
+				sb.append('\n');
 			}
 
 			pw.write(sb.toString());

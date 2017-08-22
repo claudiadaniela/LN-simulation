@@ -35,7 +35,7 @@ public class BlockCounterRunner implements Runnable {
     public void run() {
         while (currentBlock < simSteps) {
             try {
-                Thread.sleep(SimulationSetup.SAMPLE_RATE.value());
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

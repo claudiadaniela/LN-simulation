@@ -1,6 +1,9 @@
 package io.gridplus.ln.model;
 
+import org.jgrapht.GraphPath;
+
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class LNVertex implements Serializable {
 
@@ -44,7 +47,7 @@ public class LNVertex implements Serializable {
 
     @Override
     public String toString() {
-        return hop ? "V" + id : "H" + id;
+        return hop ? "H" + id : "V" + id;
     }
 
     public static class NetworkStatus implements Serializable {
@@ -58,5 +61,13 @@ public class LNVertex implements Serializable {
         public double getHealthScore() {
             return healthScore;
         }
+    }
+
+    public static class LNVertexComparator implements Comparator<LNVertex> {
+
+        public int compare(LNVertex o1, LNVertex o2) {
+            return o1.id- o2.id;
+        }
+
     }
 }

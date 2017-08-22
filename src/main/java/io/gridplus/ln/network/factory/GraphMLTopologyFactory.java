@@ -8,11 +8,16 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 
 public class GraphMLTopologyFactory extends NetworkTopologyAbstractFactory {
-    private static final String FILE = "./src/main/resources/graph.xml";
+   // private static final String FILE = "./src/main/resources/graph.xml";
 
     @Override
     public NetworkTopology createTopology(int noHops, int noNodes) {
-        SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph = GraphIO.readGraphML(FILE);
+        return  new NetworkTopology();
+    }
+
+    @Override
+    public NetworkTopology createTopology(String file) {
+        SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph = GraphIO.readGraphML(file);
         return new NetworkTopology(networkGraph);
 
     }

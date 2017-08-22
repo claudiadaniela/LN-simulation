@@ -2,14 +2,13 @@ package io.gridplus.ln.simulator;
 
 import java.util.*;
 
+import io.gridplus.ln.generator.factory.TransfersFactory;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.network.utils.CSVWriter;
-import io.gridplus.ln.network.utils.RandomGaussian;
 import io.gridplus.ln.scheduler.SchedulerStrategy;
 import io.gridplus.ln.scheduler.ShortestQueueStrategy;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.view.NetworkGraphView;
 
 public class NetworkSimulatorRunner implements Runnable {
@@ -19,24 +18,24 @@ public class NetworkSimulatorRunner implements Runnable {
 	private int maxTransfersPerBlock;
 	private int noNodes;
 	private int maxHTLC;
-
-	private List<Transfer> generatedTransfers;
-
+	private TransfersFactory transfersFactory;
 	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
 			int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
 		this.networkTopo = networkTopo;
 		setupClients(noNetworkClientsRunners);
+		setupTransferGenerator(noMaxHTLC);
 		this.strategy = new ShortestQueueStrategy();
 		this.maxTransfersPerBlock = noMaxTransfersPerBlock;
 		this.noNodes = noNodes;
 		this.maxHTLC = noMaxHTLC;
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
-		CSVWriter.writeNetwrokStateData("init-state", state);
-		generatedTransfers = generateTransfers();
+		CSVWriter.writeNetwrokStateData("init-state.csv", state);
+
+
 	}
 
 	private void setupClients(int size) {
-		clients = new ArrayList<NetworkClientRunner>();
+		clients = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			NetworkClientRunner runner = new NetworkClientRunner(i, networkTopo);
 			clients.add(runner);
@@ -44,12 +43,18 @@ public class NetworkSimulatorRunner implements Runnable {
 		}
 	}
 
+	private void setupTransferGenerator(int maxHTLC){
+		Set<LNVertex> verticesSet = networkTopo.getVertices();
+		LNVertex[] vertices = new LNVertex[verticesSet.size()];
+		verticesSet.toArray(vertices);
+		transfersFactory = new TransfersFactory(vertices,maxHTLC );
+	}
 	public void run() {
 		int block = BlockCounterRunner.getInstance().currentBlock();
 		while (BlockCounterRunner.getInstance().running()) {
 			int newBlock = BlockCounterRunner.getInstance().currentBlock();
 			if (block + 1 == newBlock) {
-				strategy.dispatchTransfer(generateTransfers(), clients);
+				strategy.dispatchTransfer(transfersFactory.generate(newBlock,noNodes), clients);
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
@@ -60,70 +65,15 @@ public class NetworkSimulatorRunner implements Runnable {
 		}
 		System.out.println("--------- FINISHED ---------");
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
-		CSVWriter.writeNetwrokStateData("final-state", state);
-	}
-
-	private List<Transfer> generateTransfers() {
-		Set<LNVertex> verticesSet = networkTopo.getVertices();
-		LNVertex[] vertices = new LNVertex[verticesSet.size()];
-		verticesSet.toArray(vertices);
-		List<Transfer> transfers = new ArrayList<Transfer>();
-		Random rand = new Random();
-		int size = rand.nextInt(maxTransfersPerBlock);
-		System.out.println("Generate "+ size+ " for hour " +BlockCounterRunner.getInstance().currentBlock());
-		int[] values = RandomGaussian.generate(BlockCounterRunner.getInstance().currentBlock(), size);
-		for (int i = 0; i < size; i++) {
-			int amount = values[i];
-			transfers.add(generateGaussianTransfer(vertices, amount));
-		}
-		return transfers;
-	}
-
-	private Transfer generateRandomTransfer(LNVertex[] vertices) {
-		Random rand = new Random();
-		LNVertex source = vertices[rand.nextInt(vertices.length)];
-		int minAmount = networkTopo.getMinAmountOnNodeEdges(source);
-		while (minAmount <= 1) {
-			source = vertices[rand.nextInt(vertices.length)];
-			minAmount = networkTopo.getMinAmountOnNodeEdges(source);
-		}
-		LNVertex recipient = vertices[rand.nextInt(vertices.length)];
-		while (source.equals(recipient)) {
-			recipient = new LNVertex(rand.nextInt(noNodes));
-		}
-		int amount = rand.nextInt(minAmount/20 - 1) + 1;
-		int htlc = rand.nextInt(maxHTLC) + 1;
-		Transfer transfer = new Transfer(source, recipient, amount, htlc, rand.nextInt(htlc));
-		transfer.setBlockOfDeploymentTime(BlockCounterRunner.getInstance().currentBlock());
-		return transfer;
-	}
-	
-	
-	private Transfer generateGaussianTransfer(LNVertex[] vertices, int amount) {
-		Random rand = new Random();
-		LNVertex source = vertices[rand.nextInt(vertices.length)];
-		int minAmount = networkTopo.getMinAmountOnNodeEdges(source);
-		while (minAmount <= amount) {
-			source = vertices[rand.nextInt(vertices.length)];
-			minAmount = networkTopo.getMinAmountOnNodeEdges(source);
-		}
-		LNVertex recipient = vertices[rand.nextInt(vertices.length)];
-		while (source.equals(recipient)) {
-			recipient = new LNVertex(rand.nextInt(noNodes));
-		}
-		
-		int htlc = rand.nextInt(maxHTLC) + 1;
-		Transfer transfer = new Transfer(source, recipient, amount, htlc, rand.nextInt(htlc));
-		transfer.setBlockOfDeploymentTime(BlockCounterRunner.getInstance().currentBlock());
-		return transfer;
+		CSVWriter.writeNetwrokStateData("final-state.csv", state);
 	}
 
 	public static void main(String[] args) {
 
 		int noHops = 2;
 		int noClients = 20;
-		int noNetworkClientsRunners = 6;
-		int noMaxTransfersPerBlock = 100;
+		int noNetworkClientsRunners = 1;
+		int noMaxTransfersPerBlock = 50;
 		int noMaxHTLC = 2;
 		int noSimulationSteps = 24;
 		NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory

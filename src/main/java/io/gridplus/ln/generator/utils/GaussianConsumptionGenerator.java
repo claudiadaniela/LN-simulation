@@ -1,5 +1,7 @@
-package io.gridplus.ln.network.utils;
+package io.gridplus.ln.generator.utils;
 
+
+import io.gridplus.ln.network.utils.CSVWriter;
 
 import java.util.Random;
 
@@ -8,29 +10,27 @@ import java.util.Random;
  * Mean Electricity demand 18.84 kWh / day = 0.785 kWh/hour  = 785 Wh
  * Standard deviation 4.82 kWh / day = 0.200 kWh/hour = 200 Wh
  */
-public class RandomGaussian {
+public class GaussianConsumptionGenerator {
 
     private static final int STD_DEVIATION = 200;
     public static final int MEAN = 785;
 
-
-    public static int[] generate(int h, int size) {
+    public static int[] generate(int size) {
         Random r = new Random();
         int[] values = new int[size];
-        int[] histogram = new int[size];
 
         for (int i = 0; i < size; i++) {
             double val = r.nextGaussian() * STD_DEVIATION + MEAN;
             if (val < 0) continue;
             int value = (int) Math.round(val);
             values[i] = value;
-           // histogram[value]++;
         }
-        CSVWriter.writeConsumptionData("household-consumption-hour-"+h, values, histogram);
+
         return values;
     }
 
     public static void main(String[] args) {
-        generate(0, 3000);
+        int[] values = generate(3000);
+        CSVWriter.writeConsumptionData("household-consumption-hour-" + 0+".csv", values);
     }
 }

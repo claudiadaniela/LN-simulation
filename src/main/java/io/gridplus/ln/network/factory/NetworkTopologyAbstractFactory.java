@@ -4,10 +4,10 @@ import io.gridplus.ln.model.NetworkTopology;
 
 
 public abstract class NetworkTopologyAbstractFactory {
-    public enum Type {RANDOM, GAUSSIAN, FILE}
+
+    public enum Type {RANDOM, FILE}
 
     public static NetworkTopologyAbstractFactory getInstance(Type type) {
-
         if (Type.FILE.equals(type)) {
             return new GraphMLTopologyFactory();
         }
@@ -19,8 +19,5 @@ public abstract class NetworkTopologyAbstractFactory {
     }
 
     public abstract NetworkTopology createTopology(int noHops, int noNodes);
-
-
-
-
+    public abstract NetworkTopology createTopology(String file);
 }

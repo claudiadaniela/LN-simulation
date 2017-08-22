@@ -25,7 +25,7 @@ public class NetworkClientRunner implements Runnable {
 
 	public void run() {
 
-		while (BlockCounterRunner.getInstance().running()) {
+		while (BlockCounterRunner.getInstance().running() || transfers.size()>0) {
 			Transfer transfer;
 			try {
 				transfer = transfers.peek();
@@ -56,6 +56,10 @@ public class NetworkClientRunner implements Runnable {
 
 		System.out.println("--------- FINISHED CLIENT "  + id +" ---------");
 
+	}
+
+	public boolean running(){
+		return BlockCounterRunner.getInstance().running() || transfers.size()>0;
 	}
 
 	public int getSize() {

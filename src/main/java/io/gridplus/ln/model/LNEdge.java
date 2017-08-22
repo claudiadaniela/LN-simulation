@@ -1,9 +1,11 @@
 package io.gridplus.ln.model;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 public class LNEdge extends DefaultWeightedEdge {
@@ -45,10 +47,10 @@ public class LNEdge extends DefaultWeightedEdge {
 		return super.getWeight();
 	}
 
-	// @Override
-	// public String toString() {
-	// return "" + super.getWeight();
-	// }
+	 @Override
+	 public String toString() {
+	 return "" + super.getSource() +" : "+ tokenAmount.intValue();
+	 }
 
 	public LNVertex getSource() {
 		return (LNVertex) super.getSource();
@@ -61,4 +63,6 @@ public class LNEdge extends DefaultWeightedEdge {
 	public enum ChannelStatus {
 		OPENED, CLOSED, SETTLED
 	}
+
+
 }
