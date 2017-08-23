@@ -10,13 +10,11 @@ import io.gridplus.ln.model.Transfer;
 
 public class TransfersFactory {
 	protected LNVertex[] vertices;
-	protected int maxHTLC;
 	private int[] dailyClientsProfile;
 	private double[][] hourlyClientProfile;
 
-	public TransfersFactory(LNVertex[] vertices, int maxHTLC) {
+	public TransfersFactory(LNVertex[] vertices) {
 		this.vertices = vertices;
-		this.maxHTLC = maxHTLC;
 		dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(vertices.length);
 		hourlyClientProfile = new double[vertices.length][24];
 		for (int i = 0; i < vertices.length; i++) {
@@ -37,7 +35,6 @@ public class TransfersFactory {
 			while (source.equals(recipient)) {
 				recipient = new LNVertex(rand.nextInt(vertices.length));
 			}
-			int htlc = rand.nextInt(maxHTLC) + 1;
 			Transfer transfer = new Transfer(source, recipient, token);
 			transfer.setBlockOfDeploymentTime(startBlock);
 			transfer.setEnergy(energy);

@@ -21,10 +21,10 @@ public class NetworkSimulatorRunner implements Runnable {
 	private TransfersFactory transfersFactory;
 
 	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
-			int noNetworkClientsRunners,  int noMaxHTLC) {
+			int noNetworkClientsRunners) {
 		this.networkTopo = networkTopo;
 		setupClients(noNetworkClientsRunners);
-		setupTransferGenerator(noMaxHTLC);
+		setupTransferGenerator();
 		this.strategy = new ShortestQueueStrategy();
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("init-state.csv", state);
@@ -39,11 +39,11 @@ public class NetworkSimulatorRunner implements Runnable {
 		}
 	}
 
-	private void setupTransferGenerator(int maxHTLC){
+	private void setupTransferGenerator(){
 		Set<LNVertex> verticesSet = networkTopo.getVertices();
 		LNVertex[] vertices = new LNVertex[verticesSet.size()];
 		verticesSet.toArray(vertices);
-		transfersFactory = new TransfersFactory(vertices,maxHTLC );
+		transfersFactory = new TransfersFactory(vertices );
 	}
 
 	public void run() {
@@ -72,7 +72,6 @@ public class NetworkSimulatorRunner implements Runnable {
 		int noHops = 1;
 		int noClients = 100;
 		int noNetworkClientsRunners = 1;
-		int noMaxHTLC = 2;
 		int noSimulationSteps = 24;
 
 		NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
@@ -83,7 +82,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		BlockCounterRunner clock = BlockCounterRunner.getInstance();
 		clock.setSimulationSteps(noSimulationSteps);
 		NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noClients,
-				noNetworkClientsRunners, noMaxHTLC);
+				noNetworkClientsRunners);
 
 		new Thread(runner).start();
 		new Thread(clock).start();
