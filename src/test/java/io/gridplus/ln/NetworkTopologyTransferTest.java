@@ -19,7 +19,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         LNVertex v1 = new LNVertex(0);
         LNVertex v2 = new LNVertex(4);
         int amountTransferred = 5;
-        Transfer t = new Transfer(v1, v2, amountTransferred, 2, 1);
+        Transfer t = new Transfer(v1, v2, amountTransferred);
 
         LNPathValidator pathValidator = new LNPathValidator(5);
 
@@ -62,7 +62,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         LNVertex v1 = new LNVertex(0);
         LNVertex v2 = new LNVertex(4);
         int amountTransferred = 2;
-        Transfer t = new Transfer(v1, v2, amountTransferred, amountTransferred, 1);
+        Transfer t = new Transfer(v1, v2, amountTransferred);
 
         LNPathValidator pathValidator = new LNPathValidator(amountTransferred);
         List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 2, pathValidator);

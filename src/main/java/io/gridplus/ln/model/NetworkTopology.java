@@ -25,13 +25,14 @@ public class NetworkTopology {
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
-        refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
-        fees = new HashMap<>();
+        this.refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
+        this.fees = new HashMap<>();
     }
 
     public NetworkTopology(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
         this.networkGraph = networkGraph;
-        refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
+        this.refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
+        this.fees = new HashMap<>();
     }
 
     public LNVertex addNode(int id, double fee, NetworkStatus status, boolean hop) {

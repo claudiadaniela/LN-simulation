@@ -1,20 +1,24 @@
 package io.gridplus.ln;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
-
 import io.gridplus.ln.network.utils.CSVReader;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkClientRunner;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
 
 public class OneHopTopologyTest {
 
@@ -58,7 +62,7 @@ public class OneHopTopologyTest {
                 updateTokenAmount( edgeD, edgeD.getSource(), t.getAmount());
                 edgeD.addTokenAmount(-t.getAmount());
                 edgeR.addTokenAmount(t.getAmount());
-                updateLockedAmount(edgeR, t.getAmount(),t.getLockTime() );
+                updateLockedAmount(edgeR, t.getAmount(),1 );
             }else {
 
                 LNEdge edge1D = networkTop2.getEdge(t.getSource(), hop2);
@@ -69,13 +73,13 @@ public class OneHopTopologyTest {
 
                 edge1D.addTokenAmount(-amount);
                 edge1R.addTokenAmount(amount);
-                updateLockedAmount(edge1R, amount,t.getLockTime() );
+                updateLockedAmount(edge1R, amount,2 );
 
                 amount -= amount * hop2.feePercentage;
                 updateTokenAmount( edge2D, hop2,  t.getAmount());
                 edge2D.addTokenAmount(-amount);
                 edge2R.addTokenAmount(amount);
-                updateLockedAmount(edge2R, amount,t.getLockTime() );
+                updateLockedAmount(edge2R, amount,2 );
             }
 
         }

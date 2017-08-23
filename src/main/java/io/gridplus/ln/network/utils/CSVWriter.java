@@ -160,10 +160,6 @@ public class CSVWriter {
 				sb.append(',');
 				sb.append(t.getAmount());
 				sb.append(',');
-				sb.append(t.getLockTime());
-				sb.append(',');
-				sb.append(t.getHtlcTime());
-				sb.append(',');
 				sb.append(t.getBlockOfDeploymentTime());
 				sb.append('\n');
 			}
