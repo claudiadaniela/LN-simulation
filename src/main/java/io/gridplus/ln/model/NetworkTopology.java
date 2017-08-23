@@ -21,11 +21,12 @@ public class NetworkTopology {
 
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
     private Map<LNEdge, Integer> refunds;
-    private Map<LNVertex, Integer> fees;
+    private Map<LNVertex, Double> fees;
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
         refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
+        fees = new HashMap<>();
     }
 
     public NetworkTopology(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
@@ -104,14 +105,16 @@ public class NetworkTopology {
         }
         GraphPath<LNVertex, LNEdge> bestPath = paths.get(0);
         List<LNEdge> edges = bestPath.getEdgeList();
-        int lockedTime = transfer.getLockTime();
+        int lockedTime = bestPath.getLength();
         int currentBlock = BlockCounterRunner.getInstance().currentBlock();
         int amount = transfer.getAmount();
+        double fee =0;
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
             LNVertex ey = exy.getTarget();
             LNEdge eyx = getEdge(ey, ex);
-
+			updateFee(fee, ex);
+            
             if (eyx != null) {
                 synchronized (eyx) {
                     exy.addTokenAmount(-amount);
@@ -124,12 +127,20 @@ public class NetworkTopology {
                             eyx.lockedTokenAmount.put(i, amount);
                         }
                     }
-                    amount -= amount * exy.getTarget().feePercentage;
+                    fee = amount * exy.getTarget().feePercentage;
+                    amount -= fee; 
                     lockedTime--;
                 }
             }
         }
         return true;
+    }
+    
+    private void updateFee(double fee, LNVertex v){
+        if (fees.containsKey(v)) {
+            fee += fees.get(v);
+        }
+        fees.put(v, fee);
     }
 
     /**
@@ -172,7 +183,9 @@ public class NetworkTopology {
     public Map<LNEdge, Integer> getRefunds(){
         return  refunds;
     }
-
+    public Map<LNVertex, Double> getFees(){
+        return  fees;
+    }
     public Map<String, Map<String, Integer>> getNodesState() {
         Set<LNVertex> vertexSet = networkGraph.vertexSet();
         Map<String, Map<String, Integer>> networkState = new HashMap<String, Map<String, Integer>>();

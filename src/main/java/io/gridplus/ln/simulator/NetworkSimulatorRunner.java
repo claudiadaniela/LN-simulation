@@ -64,6 +64,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("final-state.csv", state);
 		CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopo.getRefunds());
+		CSVWriter.writeHopsFeesData("hop-fees.csv", networkTopo.getFees());
 		CSVWriter.writeInputEnergyData("inptEnergy.csv", transfersFactory.getEnergyValues());
 	}
 

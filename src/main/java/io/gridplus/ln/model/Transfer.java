@@ -9,21 +9,21 @@ public class Transfer {
 	/**
 	 * Simulate the time that a transfer locks the tokens lockTime< HTLC-time
 	 */
-	private int lockTime;
-	private int htlcTime;
+	//private int lockTime;
+	//private int htlcTime;
 	/**
 	 * Field used for scheduling transfers
 	 */
 	private int blockOfDeploymentTime;
 	private double energy;
 
-	public Transfer(LNVertex source, LNVertex recipient, int amount, int htlc, int lockTime) {
+	public Transfer(LNVertex source, LNVertex recipient, int amount) {
 		super();
 		this.source = source;
 		this.recipient = recipient;
 		this.amount = amount;
-		this.htlcTime = htlc;
-		this.lockTime =lockTime;
+		//this.htlcTime = htlc;
+		//this.lockTime =lockTime;
 	}
 
 	public LNVertex getSource() {
@@ -36,14 +36,6 @@ public class Transfer {
 
 	public int getAmount() {
 		return amount;
-	}
-
-	public int getLockTime() {
-		return lockTime;
-	}
-
-	public int getHtlcTime() {
-		return htlcTime;
 	}
 
 	public int getBlockOfDeploymentTime() {

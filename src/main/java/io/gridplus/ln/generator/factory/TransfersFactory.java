@@ -38,7 +38,7 @@ public class TransfersFactory {
 				recipient = new LNVertex(rand.nextInt(vertices.length));
 			}
 			int htlc = rand.nextInt(maxHTLC) + 1;
-			Transfer transfer = new Transfer(source, recipient, token, htlc, rand.nextInt(htlc));
+			Transfer transfer = new Transfer(source, recipient, token);
 			transfer.setBlockOfDeploymentTime(startBlock);
 			transfer.setEnergy(energy);
 			transfers.add(transfer);

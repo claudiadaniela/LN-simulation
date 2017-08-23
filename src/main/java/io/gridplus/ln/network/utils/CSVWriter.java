@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.Transfer;
 
 public class CSVWriter {
@@ -113,7 +114,28 @@ public class CSVWriter {
 			e.printStackTrace();
 		}
 	}
+	public static void writeHopsFeesData(String file, Map<LNVertex, Double> hopsFeesState) {
+		PrintWriter pw;
+		StringBuilder sb = new StringBuilder();
+		sb.append("node");
+		sb.append(',');
+		sb.append("amount refunded");
+		sb.append('\n');
+		try {
+			pw = new PrintWriter(new File(file));
+			for (Map.Entry<LNVertex, Double> entry : hopsFeesState.entrySet()) {
+				sb.append(entry.getKey());
+				sb.append(',');
+				sb.append(entry.getValue());
+				sb.append('\n');
+			}
 
+			pw.write(sb.toString());
+			pw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	public static void writeTransfers(String file, List<Transfer> transferList) {
 		PrintWriter pw;
 		StringBuilder sb = new StringBuilder();
