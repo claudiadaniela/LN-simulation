@@ -24,21 +24,20 @@ public class NetworkSetupController {
 
             int noSimulationSteps = view.getNoSimulationSteps();
             int noNetworkClientsRunners = view.getNoNetworkClientsRunners();
-            int noMaxTransfersPerBlock = view.getNoMaxTransfersPerBlock();
             int noMaxHTLC = view.getNoMaxHTLC();
-            setNetworkTopology(noHops, noNodes, initTokenHop, noSimulationSteps, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
+            setNetworkTopology(noHops, noNodes, initTokenHop, noSimulationSteps, noNetworkClientsRunners, noMaxHTLC);
         };
         view.getStartButton().addActionListener(actionListener);
     }
 
-    private void setNetworkTopology(int noHops, int noNodes, int initTokenHop, int noSimulationSteps, int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
+    private void setNetworkTopology(int noHops, int noNodes, int initTokenHop, int noSimulationSteps, int noNetworkClientsRunners, int noMaxHTLC) {
         NetworkTopologyAbstractFactory topoFactory =NetworkTopologyAbstractFactory.getInstance(type);
         NetworkTopology topology = topoFactory.createTopology(noHops, noNodes);
         NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(noSimulationSteps);
        
-        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
+        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners, noMaxHTLC);
         new Thread(runner).start();
         new Thread(clock).start();
     }

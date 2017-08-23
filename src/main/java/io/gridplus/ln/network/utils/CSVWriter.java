@@ -1,5 +1,6 @@
 package io.gridplus.ln.network.utils;
 
+import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.Transfer;
 
 import java.io.File;
@@ -55,6 +56,32 @@ public class CSVWriter {
 					sb.append(target.getValue());
 					sb.append('\n');
 				}
+			}
+
+			pw.write(sb.toString());
+			pw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void writeHopsRefundsData(String file,  Map<LNEdge,Integer> hopsRefundState) {
+		PrintWriter pw;
+		StringBuilder sb = new StringBuilder();
+		sb.append("source node");
+		sb.append(',');
+		sb.append("target node");
+		sb.append(',');
+		sb.append("amount refunded");
+		sb.append('\n');
+		try {
+			pw = new PrintWriter(new File(file));
+			for (Map.Entry<LNEdge,Integer> entry: hopsRefundState.entrySet() ) {
+				sb.append(entry.getKey().getSource());
+				sb.append(',');
+				sb.append(entry.getKey().getTarget());
+				sb.append(',');
+				sb.append(entry.getValue());
+				sb.append('\n');
 			}
 
 			pw.write(sb.toString());

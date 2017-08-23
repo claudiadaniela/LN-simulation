@@ -15,23 +15,21 @@ public class NetworkSimulatorRunner implements Runnable {
 	private List<NetworkClientRunner> clients;
 	private SchedulerStrategy strategy;
 	private NetworkTopology networkTopo;
-	private int maxTransfersPerBlock;
 	private int noNodes;
 	private int maxHTLC;
 	private TransfersFactory transfersFactory;
+
 	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
-			int noNetworkClientsRunners, int noMaxTransfersPerBlock, int noMaxHTLC) {
+			int noNetworkClientsRunners,  int noMaxHTLC) {
 		this.networkTopo = networkTopo;
 		setupClients(noNetworkClientsRunners);
 		setupTransferGenerator(noMaxHTLC);
 		this.strategy = new ShortestQueueStrategy();
-		this.maxTransfersPerBlock = noMaxTransfersPerBlock;
+
 		this.noNodes = noNodes;
 		this.maxHTLC = noMaxHTLC;
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("init-state.csv", state);
-
-
 	}
 
 	private void setupClients(int size) {
@@ -49,6 +47,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		verticesSet.toArray(vertices);
 		transfersFactory = new TransfersFactory(vertices,maxHTLC );
 	}
+
 	public void run() {
 		int block = BlockCounterRunner.getInstance().currentBlock();
 		while (BlockCounterRunner.getInstance().running()) {
@@ -66,16 +65,16 @@ public class NetworkSimulatorRunner implements Runnable {
 		System.out.println("--------- FINISHED ---------");
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("final-state.csv", state);
+		CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopo.getRefunds());
 	}
 
 	public static void main(String[] args) {
-
-		int noHops = 2;
-		int noClients = 20;
+		int noHops = 1;
+		int noClients = 100;
 		int noNetworkClientsRunners = 1;
-		int noMaxTransfersPerBlock = 50;
 		int noMaxHTLC = 2;
 		int noSimulationSteps = 24;
+
 		NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
 				.getInstance(NetworkTopologyAbstractFactory.Type.RANDOM);
 
@@ -84,7 +83,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		BlockCounterRunner clock = BlockCounterRunner.getInstance();
 		clock.setSimulationSteps(noSimulationSteps);
 		NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noClients,
-				noNetworkClientsRunners, noMaxTransfersPerBlock, noMaxHTLC);
+				noNetworkClientsRunners, noMaxHTLC);
 
 		new Thread(runner).start();
 		new Thread(clock).start();

@@ -18,6 +18,7 @@ public class NetworkTopology {
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
+        refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
     }
 
     public NetworkTopology(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
