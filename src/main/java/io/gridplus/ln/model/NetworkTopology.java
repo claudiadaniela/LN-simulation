@@ -13,6 +13,7 @@ import java.util.*;
 public class NetworkTopology {
 
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
+    private Map<LNEdge, Integer> refunds;
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);
@@ -20,6 +21,7 @@ public class NetworkTopology {
 
     public NetworkTopology(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
         this.networkGraph = networkGraph;
+        refunds = new TreeMap<>(new LNEdge.LNEdgeComparator());
     }
 
     public LNVertex addNode(int id, double fee, NetworkStatus status, boolean hop) {
@@ -34,11 +36,11 @@ public class NetworkTopology {
                            int tokenAmountV2) {
         LNEdge e12 = networkGraph.addEdge(v1, v2);
         e12.status = status;
-        e12.changeTokenAmount(tokenAmountV1);
+        e12.addTokenAmount(tokenAmountV1);
         networkGraph.setEdgeWeight(e12, v1.feePercentage);
         LNEdge e21 = networkGraph.addEdge(v2, v1);
         e21.status = status;
-        e21.changeTokenAmount(tokenAmountV2);
+        e21.addTokenAmount(tokenAmountV2);
         networkGraph.setEdgeWeight(e21, v2.feePercentage);
     }
 
@@ -110,13 +112,15 @@ public class NetworkTopology {
 
             if (eyx != null) {
                 synchronized (eyx) {
-                    exy.changeTokenAmount(-amount);
-                    eyx.changeTokenAmount(amount);
+                    exy.addTokenAmount(-amount);
+                    eyx.addTokenAmount(amount);
                     for (int i = currentBlock; i < lockedTime; i++) {
-                        if(eyx.lockedTokenAmount.containsKey(i)) {
+                        if (eyx.lockedTokenAmount.containsKey(i)) {
                             int ammountExisting = eyx.lockedTokenAmount.get(i);
-                            eyx.lockedTokenAmount.put(i, amount+ammountExisting);
-                        }else{eyx.lockedTokenAmount.put(i, amount);}
+                            eyx.lockedTokenAmount.put(i, amount + ammountExisting);
+                        } else {
+                            eyx.lockedTokenAmount.put(i, amount);
+                        }
                     }
                     amount -= amount * exy.getTarget().feePercentage;
                 }
@@ -145,11 +149,25 @@ public class NetworkTopology {
             LNVertex ex = exy.getSource();
             int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
             if (ex.hop && missingAmount > 0) {
-                exy.changeTokenAmount(missingAmount);
-                System.out.println("Refund hop: " + ex + " amount: " + missingAmount);
+                refund(exy, missingAmount);
             }
         }
         return true;
+    }
+
+    private void refund(LNEdge hopEdge, int amount) {
+        if(!hopEdge.getSource().hop){return;}
+        System.out.println("Refund hop: " + hopEdge.getSource() + " amount: " + amount);
+
+        hopEdge.addTokenAmount(amount);
+        if (refunds.containsKey(hopEdge)) {
+            amount += refunds.get(hopEdge);
+        }
+        refunds.put(hopEdge, amount);
+   }
+
+    public Map<LNEdge, Integer> getRefunds(){
+        return  refunds;
     }
 
     public Map<String, Map<String, Integer>> getNodesState() {

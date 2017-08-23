@@ -26,7 +26,7 @@ public class LNEdge extends DefaultWeightedEdge {
 		this.status = ChannelStatus.OPENED;
 	}
 
-	public void changeTokenAmount(int amount){
+	public void addTokenAmount(int amount){
 		tokenAmount.addAndGet(amount);
 	}
 	public int getLockedAmount(int block) {
@@ -62,6 +62,18 @@ public class LNEdge extends DefaultWeightedEdge {
 
 	public enum ChannelStatus {
 		OPENED, CLOSED, SETTLED
+	}
+
+	public static class LNEdgeComparator implements Comparator<LNEdge> {
+
+		public int compare(LNEdge o1, LNEdge o2) {
+			int compVs = o1.getSource().getId() - o2.getSource().getId();
+			if (compVs != 0) {
+				return (int) compVs;
+			}
+			return o1.getTarget().getId()- o2.getTarget().getId();
+		}
+
 	}
 
 

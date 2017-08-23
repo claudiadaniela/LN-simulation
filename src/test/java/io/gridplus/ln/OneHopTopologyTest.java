@@ -7,7 +7,6 @@ import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 
 import io.gridplus.ln.network.utils.CSVReader;
-import io.gridplus.ln.network.utils.GraphIO;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkClientRunner;
 import org.junit.Before;
@@ -22,6 +21,7 @@ public class OneHopTopologyTest {
     private static NetworkTopology networkTop;
     private static final double EPSILON = 0.000001;
     private List<Transfer> trasnfers;
+    private Map<LNEdge, Integer> refunds;
 
     @Before
     public  void init() {
@@ -29,6 +29,7 @@ public class OneHopTopologyTest {
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
         networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop.xml");
         trasnfers = CSVReader.readTransfers("./src/test/resources/test-transfers.csv");
+        refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
     }
     @Test
     public void testTransfer1() {
@@ -55,8 +56,8 @@ public class OneHopTopologyTest {
             if(edgeD!=null){
                 LNEdge edgeR = networkTop2.getEdge(t.getRecipient(),t.getSource());
                 updateTokenAmount( edgeD, edgeD.getSource(), t.getAmount());
-                edgeD.changeTokenAmount(-t.getAmount());
-                edgeR.changeTokenAmount(t.getAmount());
+                edgeD.addTokenAmount(-t.getAmount());
+                edgeR.addTokenAmount(t.getAmount());
                 updateLockedAmount(edgeR, t.getAmount(),t.getLockTime() );
             }else {
 
@@ -66,14 +67,14 @@ public class OneHopTopologyTest {
                 LNEdge edge2R = networkTop2.getEdge(t.getRecipient(), hop2);
                 int amount = t.getAmount();
 
-                edge1D.changeTokenAmount(-amount);
-                edge1R.changeTokenAmount(amount);
+                edge1D.addTokenAmount(-amount);
+                edge1R.addTokenAmount(amount);
                 updateLockedAmount(edge1R, amount,t.getLockTime() );
 
                 amount -= amount * hop2.feePercentage;
                 updateTokenAmount( edge2D, hop2,  t.getAmount());
-                edge2D.changeTokenAmount(-amount);
-                edge2R.changeTokenAmount(amount);
+                edge2D.addTokenAmount(-amount);
+                edge2R.addTokenAmount(amount);
                 updateLockedAmount(edge2R, amount,t.getLockTime() );
             }
 
@@ -102,15 +103,27 @@ public class OneHopTopologyTest {
 
             assertEquals("edge amount Direct", edgeV1H.getTotalAmount() , edgeV2H.getTotalAmount());
             assertEquals("edge amount Direct", edgeHV1.getTotalAmount() , edgeHV2.getTotalAmount());
-
         }
 
+        Map<LNEdge, Integer> refundsTopo = networkTop.getRefunds();
+        for(Map.Entry entry: refunds.entrySet()){
+            assertEquals("refunds on edge", entry.getValue() , refundsTopo.get(entry.getKey()));
+        }
+        LNEdge edge = networkTop2.getEdge(new LNVertex(1),new LNVertex(0));
+        assertEquals("edge amount Reverse", edge.getTotalAmount() , 21000);
+        edge = networkTop2.getEdge(new LNVertex(0),new LNVertex(1));
+        assertEquals("edge amount Direct", edge.getTotalAmount() , 798);
+        assertEquals("hop refund", refunds.get(edge).intValue() , 2958);
     }
 
-    private static void updateTokenAmount(LNEdge edge, LNVertex source, int amount){
+    private  void updateTokenAmount(LNEdge edge, LNVertex source, int amount){
      int missingAmount =    amount - edge.getAvailableAmount(0);
         if(source.hop && missingAmount >0){
-            edge.changeTokenAmount(missingAmount);
+            edge.addTokenAmount(missingAmount);
+            if (refunds.containsKey(edge)) {
+                missingAmount += refunds.get(edge);
+            }
+            refunds.put(edge, missingAmount);
         }
     }
 

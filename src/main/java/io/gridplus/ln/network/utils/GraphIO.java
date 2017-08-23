@@ -75,7 +75,7 @@ public final class GraphIO {
                 (from, to, label, attributes) -> {
                     int tokenAmount = Integer.parseInt(attributes.get("tokenAmount"));
                     LNEdge edge = new LNEdge();
-                    edge.changeTokenAmount( tokenAmount);
+                    edge.addTokenAmount( tokenAmount);
                     return edge;
                 };
 
