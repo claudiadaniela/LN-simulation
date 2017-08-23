@@ -9,6 +9,7 @@ import org.jgrapht.alg.shortestpath.PathValidator;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NetworkTopology {
 
@@ -66,14 +67,7 @@ public class NetworkTopology {
     }
 
     public Set<LNVertex> getHops() {
-        Set<LNVertex> vertexSet = new HashSet<>();
-
-        for (LNVertex v : networkGraph.vertexSet()) {
-            if (v.hop) {
-                vertexSet.add(v);
-            }
-        }
-        return vertexSet;
+       return networkGraph.vertexSet().stream().filter(v -> v.hop).collect(Collectors.toSet());
     }
 
     public SimpleDirectedWeightedGraph<LNVertex, LNEdge> getNetworkGraph() {
@@ -123,6 +117,7 @@ public class NetworkTopology {
                         }
                     }
                     amount -= amount * exy.getTarget().feePercentage;
+                    lockedTime--;
                 }
             }
         }
@@ -173,8 +168,6 @@ public class NetworkTopology {
     public Map<String, Map<String, Integer>> getNodesState() {
         Set<LNVertex> vertexSet = networkGraph.vertexSet();
         Map<String, Map<String, Integer>> networkState = new HashMap<String, Map<String, Integer>>();
-        int currentBlock = BlockCounterRunner.getInstance().currentBlock();
-
         for (LNVertex v : vertexSet) {
             Map<String, Integer> edgeState = new HashMap<>();
             networkState.put(v.toString(), edgeState);
