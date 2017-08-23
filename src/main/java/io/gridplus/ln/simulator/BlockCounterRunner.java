@@ -21,7 +21,7 @@ public class BlockCounterRunner implements Runnable {
     }
 
     public int currentBlock() {
-        return currentBlock;
+        return currentBlock< simSteps? currentBlock: simSteps-1;
     }
 
     public void setSimulationSteps(int steps) {

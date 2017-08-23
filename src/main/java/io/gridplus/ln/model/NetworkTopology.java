@@ -1,20 +1,27 @@
 package io.gridplus.ln.model;
 
-import io.gridplus.ln.model.LNVertex.NetworkStatus;
-import io.gridplus.ln.simulator.BlockCounterRunner;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.interfaces.KShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.KShortestPaths;
 import org.jgrapht.alg.shortestpath.PathValidator;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import io.gridplus.ln.model.LNVertex.NetworkStatus;
+import io.gridplus.ln.simulator.BlockCounterRunner;
 
 public class NetworkTopology {
 
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
     private Map<LNEdge, Integer> refunds;
+    private Map<LNVertex, Integer> fees;
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<LNVertex, LNEdge>(LNEdge.class);

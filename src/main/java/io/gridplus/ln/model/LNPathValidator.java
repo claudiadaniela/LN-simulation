@@ -1,8 +1,9 @@
 package io.gridplus.ln.model;
 
-import io.gridplus.ln.simulator.BlockCounterRunner;
 import org.jgrapht.alg.shortestpath.AbstractPathElement;
 import org.jgrapht.alg.shortestpath.PathValidator;
+
+import io.gridplus.ln.simulator.BlockCounterRunner;
 
 public class LNPathValidator implements PathValidator<LNVertex, LNEdge> {
 	private int amountNeeded;

@@ -1,12 +1,12 @@
 package io.gridplus.ln.view;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkSimulatorRunner;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class NetworkSetupController {
     private NetworkSetupView view;

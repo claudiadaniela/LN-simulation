@@ -15,6 +15,7 @@ public class Transfer {
 	 * Field used for scheduling transfers
 	 */
 	private int blockOfDeploymentTime;
+	private double energy;
 
 	public Transfer(LNVertex source, LNVertex recipient, int amount, int htlc, int lockTime) {
 		super();
@@ -53,9 +54,17 @@ public class Transfer {
 		this.blockOfDeploymentTime = blockOfDeploymentTime;
 	}
 
+	public double getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(double energy) {
+		this.energy = energy;
+	}
+
 	@Override
 	public String toString() {
-		return "Transfer [source=" + source + ", recipient=" + recipient + ", amount=" + amount +", deploy time=" + blockOfDeploymentTime + "]";
+		return "Transfer [source=" + source + ", recipient=" + recipient + ", amount=" + amount +", deploy time=" + blockOfDeploymentTime + ", energy=" + energy +"]";
 	}
 
 	public static class TransferComparator implements Comparator<Transfer> {

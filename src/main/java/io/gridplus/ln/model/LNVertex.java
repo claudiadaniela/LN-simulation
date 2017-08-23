@@ -1,7 +1,5 @@
 package io.gridplus.ln.model;
 
-import org.jgrapht.GraphPath;
-
 import java.io.Serializable;
 import java.util.Comparator;
 

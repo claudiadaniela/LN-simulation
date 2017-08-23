@@ -3,9 +3,8 @@ package io.gridplus.ln.simulator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.network.utils.CSVWriter;
+import io.gridplus.ln.model.Transfer;
 
 public class NetworkClientRunner implements Runnable {
 	private static final int MAX_ATTEMPTS = 5;

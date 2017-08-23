@@ -1,19 +1,15 @@
 package io.gridplus.ln.view;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import io.gridplus.ln.model.NetworkTopology;
-import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
-import java.awt.*;
 
 public class NetworkGraphView {
 

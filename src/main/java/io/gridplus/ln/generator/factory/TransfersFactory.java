@@ -1,43 +1,57 @@
 package io.gridplus.ln.generator.factory;
 
-import io.gridplus.ln.generator.utils.GaussianConsumptionGenerator;
-import io.gridplus.ln.model.LNVertex;
-import io.gridplus.ln.model.Transfer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public  class TransfersFactory {
-    protected LNVertex[] vertices;
-    protected int maxHTLC;
+import io.gridplus.ln.generator.utils.GaussianConsumptionGenerator;
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.Transfer;
 
-    public TransfersFactory(LNVertex[] vertices, int maxHTLC) {
-        this.vertices = vertices;
-        this.maxHTLC = maxHTLC;
-    }
+public class TransfersFactory {
+	protected LNVertex[] vertices;
+	protected int maxHTLC;
+	private int[] dailyClientsProfile;
+	private double[][] hourlyClientProfile;
 
-    public  List<Transfer> generate(int startBlock,int size){
-        int[] values = GaussianConsumptionGenerator.generate(size);
-        List<Transfer> transfers = new ArrayList<>();
-        Random rand = new Random();
+	public TransfersFactory(LNVertex[] vertices, int maxHTLC) {
+		this.vertices = vertices;
+		this.maxHTLC = maxHTLC;
+		dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(vertices.length);
+		hourlyClientProfile = new double[vertices.length][24];
+		for (int i = 0; i < vertices.length; i++) {
+			hourlyClientProfile[i] = GaussianConsumptionGenerator.getHourlyProfile(dailyClientsProfile[i]);
+		}
+	}
 
-        for (int i = 0; i < size; i++) {
-            int amount = values[i];
+	public List<Transfer> generate(int startBlock) {
+		List<Transfer> transfers = new ArrayList<>();
+		Random rand = new Random();
 
-            LNVertex source = vertices[rand.nextInt(vertices.length)];
+		for (int i = 0; i < vertices.length; i++) {
+			double energy = hourlyClientProfile[i][startBlock];
+			int token = getBolts(energy);
+			LNVertex source = vertices[i];
 
-            LNVertex recipient = vertices[rand.nextInt(vertices.length)];
-            while (source.equals(recipient)) {
-                recipient = new LNVertex(rand.nextInt(vertices.length));
-            }
-            int htlc = rand.nextInt(maxHTLC) + 1;
-            Transfer transfer = new Transfer(source, recipient, amount, htlc, rand.nextInt(htlc));
-            transfer.setBlockOfDeploymentTime(startBlock);
-
-            transfers.add(transfer);
-        }
-        return  transfers;
-    }
+			LNVertex recipient = vertices[rand.nextInt(vertices.length)];
+			while (source.equals(recipient)) {
+				recipient = new LNVertex(rand.nextInt(vertices.length));
+			}
+			int htlc = rand.nextInt(maxHTLC) + 1;
+			Transfer transfer = new Transfer(source, recipient, token, htlc, rand.nextInt(htlc));
+			transfer.setBlockOfDeploymentTime(startBlock);
+			transfer.setEnergy(energy);
+			transfers.add(transfer);
+		}
+		return transfers;
+	}
+	
+	public int getBolts(double energy){	
+		return (int) ((energy /TransfersSetup.ENERGY_PRICE.value())* TransfersSetup.TOKEN_SCALE.value());
+	}
+	
+	public double[][] getEnergyValues(){
+		return hourlyClientProfile;
+	}
 
 }

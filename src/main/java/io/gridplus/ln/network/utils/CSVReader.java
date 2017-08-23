@@ -1,11 +1,14 @@
 package io.gridplus.ln.network.utils;
 
-import io.gridplus.ln.model.LNVertex;
-import io.gridplus.ln.model.Transfer;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.model.Transfer;
 
 public class CSVReader {
 
