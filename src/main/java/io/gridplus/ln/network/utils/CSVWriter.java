@@ -114,7 +114,7 @@ public class CSVWriter {
 			e.printStackTrace();
 		}
 	}
-	public static void writeHopsFeesData(String file, Map<LNVertex, Double> hopsFeesState) {
+	public static void writeHopsFeesData(String file, Map<LNVertex, ? extends Number> hopsFeesState) {
 		PrintWriter pw;
 		StringBuilder sb = new StringBuilder();
 		sb.append("node");
@@ -123,7 +123,7 @@ public class CSVWriter {
 		sb.append('\n');
 		try {
 			pw = new PrintWriter(new File(file));
-			for (Map.Entry<LNVertex, Double> entry : hopsFeesState.entrySet()) {
+			for (Map.Entry<LNVertex, ? extends Number> entry : hopsFeesState.entrySet()) {
 				sb.append(entry.getKey());
 				sb.append(',');
 				sb.append(entry.getValue());

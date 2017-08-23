@@ -65,7 +65,9 @@ public class NetworkSimulatorRunner implements Runnable {
 		CSVWriter.writeNetwrokStateData("final-state.csv", state);
 		CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopo.getRefunds());
 		CSVWriter.writeHopsFeesData("hop-fees.csv", networkTopo.getFees());
-		CSVWriter.writeInputEnergyData("inptEnergy.csv", transfersFactory.getEnergyValues());
+		CSVWriter.writeHopsFeesData("hop-total-flow.csv", networkTopo.getTotalFlow());
+		CSVWriter.writeInputEnergyData("inputEnergy.csv", transfersFactory.getEnergyValues());
+		
 	}
 
 	public static void main(String[] args) {
