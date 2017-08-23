@@ -113,7 +113,10 @@ public class NetworkTopology {
                     exy.changeTokenAmount(-amount);
                     eyx.changeTokenAmount(amount);
                     for (int i = currentBlock; i < lockedTime; i++) {
-                        eyx.lockedTokenAmount.put(i, amount);
+                        if(eyx.lockedTokenAmount.containsKey(i)) {
+                            int ammountExisting = eyx.lockedTokenAmount.get(i);
+                            eyx.lockedTokenAmount.put(i, amount+ammountExisting);
+                        }else{eyx.lockedTokenAmount.put(i, amount);}
                     }
                     amount -= amount * exy.getTarget().feePercentage;
                 }
@@ -137,6 +140,7 @@ public class NetworkTopology {
         GraphPath<LNVertex, LNEdge> bestPath = paths.get(0);
         List<LNEdge> edges = bestPath.getEdgeList();
         int currentBlock = BlockCounterRunner.getInstance().currentBlock();
+
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
             int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
@@ -159,7 +163,7 @@ public class NetworkTopology {
 
             Set<LNEdge> edges = networkGraph.outgoingEdgesOf(v);
             for (LNEdge e : edges) {
-                edgeState.put(e.getTarget().toString(), e.getAvailableAmount(currentBlock));
+                edgeState.put(e.getTarget().toString(), e.getTotalAmount());
             }
         }
         return networkState;
