@@ -118,7 +118,7 @@ public class NetworkTopology {
 			LNVertex ey = exy.getTarget();
 			LNEdge eyx = getEdge(ey, ex);
 			updateFee(fee, ex);
-			updateTotalFlow(ex, amount);
+
 			if (eyx != null) {
 				synchronized (eyx) {
 					exy.addTokenAmount(-amount);
@@ -131,6 +131,7 @@ public class NetworkTopology {
 							eyx.lockedTokenAmount.put(i, amount);
 						}
 					}
+					updateTotalFlow(ey, amount);
 					fee = amount * exy.getTarget().feePercentage;
 					amount -= fee;
 					lockedTime--;
@@ -205,10 +206,12 @@ public class NetworkTopology {
 
 	private void updateTotalFlow(LNVertex v, int amount) {
 		if (!v.hop) {return;}
+		System.out.println("Update Flow " + v + " " + amount);
 		if (totalFlow.containsKey(v)) {
 			amount += totalFlow.get(v);
 		}
 		totalFlow.put(v, amount);
+		System.out.println("After Updated Flow " + v + " " + amount);
 	}
 	
 	public Map<LNEdge, Integer> getRefunds() {
