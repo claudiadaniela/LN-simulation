@@ -18,9 +18,8 @@ public class LNEdge extends DefaultWeightedEdge {
 	private AtomicInteger tokenAmount;
 	public Map<Integer, Integer> lockedTokenAmount;
 
-
 	public LNEdge() {
-		lockedTokenAmount = new HashMap<Integer, Integer>();
+		lockedTokenAmount = new HashMap<>();
 		tokenAmount = new AtomicInteger(0);
 		this.status = ChannelStatus.OPENED;
 	}
@@ -57,6 +56,29 @@ public class LNEdge extends DefaultWeightedEdge {
 
 	public LNVertex getTarget() {
 		return (LNVertex) super.getTarget();
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		LNEdge lnEdge = (LNEdge) o;
+
+		if (tokenAmount != null ? !tokenAmount.equals(lnEdge.tokenAmount) : lnEdge.tokenAmount != null) return false;
+		if (super.getSource() != lnEdge.getSource()) return false;
+		if (super.getTarget() != lnEdge.getTarget()) return false;
+		return true;
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = tokenAmount != null ? tokenAmount.hashCode() : 0;
+		result = 31 * result + super.getSource().hashCode();
+		result = 31 * result + super.getTarget().hashCode();
+		return result;
 	}
 
 	public enum ChannelStatus {

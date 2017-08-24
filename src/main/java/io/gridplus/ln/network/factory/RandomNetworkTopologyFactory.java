@@ -41,7 +41,7 @@ public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory
             int tokenAmountV2 = 0;
             topology.addChannel(v1, v2, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);
         }
-
+        topology.initInvariant();
         return topology;
     }
 
