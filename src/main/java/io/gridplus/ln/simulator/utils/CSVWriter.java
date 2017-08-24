@@ -1,4 +1,4 @@
-package io.gridplus.ln.network.utils;
+package io.gridplus.ln.simulator.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

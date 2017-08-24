@@ -27,6 +27,9 @@ public class LNEdge extends DefaultWeightedEdge {
 	public void addTokenAmount(int amount){
 		tokenAmount.addAndGet(amount);
 	}
+	public void setTokenAmount(int amount){
+		tokenAmount= new AtomicInteger(amount);
+	}
 	public int getLockedAmount(int block) {
 		Integer amount = lockedTokenAmount.get(block);
 		return amount != null ? amount : 0;
@@ -76,8 +79,10 @@ public class LNEdge extends DefaultWeightedEdge {
 	@Override
 	public int hashCode() {
 		int result = tokenAmount != null ? tokenAmount.hashCode() : 0;
-		result = 31 * result + super.getSource().hashCode();
-		result = 31 * result + super.getTarget().hashCode();
+		int r2=(super.getSource()!=null)? super.getSource().hashCode():0;
+		int r3=  (super.getTarget()!=null)? super.getTarget().hashCode():0;
+		result = 31 * result + r2;
+		result = 31 * result + r3;
 		return result;
 	}
 

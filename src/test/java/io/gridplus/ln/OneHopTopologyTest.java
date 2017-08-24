@@ -16,9 +16,9 @@ import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
-import io.gridplus.ln.network.utils.CSVReader;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkClientRunner;
+import io.gridplus.ln.simulator.utils.CSVReader;
 
 public class OneHopTopologyTest {
 
@@ -79,7 +79,7 @@ public class OneHopTopologyTest {
         }
 
         Map<LNEdge, Integer> refundsTopo = networkTop.getRefunds();
-        for(Map.Entry entry: refunds.entrySet()){
+        for(Map.Entry<LNEdge, Integer> entry: refunds.entrySet()){
             assertEquals("refunds on edge", entry.getValue() , refundsTopo.get(entry.getKey()));
         }
     }

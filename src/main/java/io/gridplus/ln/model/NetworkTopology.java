@@ -211,8 +211,7 @@ public class NetworkTopology {
             amount += totalFlow.get(v);
         }
         totalFlow.put(v, amount);
-        System.out.println("After Updated Flow " + v + " " + amount);
-    }
+   }
 
     public Map<LNEdge, Integer> getRefunds() {
         return refunds;
@@ -247,7 +246,7 @@ public class NetworkTopology {
 
     public boolean isWellFormed() {
         Map<LNEdge, Integer> bidirEdges = getTotalBiEdgeAmount();
-        for (Map.Entry entry : bidirEdges.entrySet()) {
+        for (Map.Entry<LNEdge, Integer> entry : bidirEdges.entrySet()) {
             if (!entry.getValue().equals(invariantEdges.get(entry.getKey()))) {
                 return false;
             }

@@ -7,19 +7,33 @@ import java.util.Random;
 import io.gridplus.ln.generator.utils.GaussianConsumptionGenerator;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.Transfer;
+import io.gridplus.ln.simulator.utils.CSVReader;
 
 public class TransfersFactory {
+	private static final double[] HOURLY_PROFILE = { 0.03, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.06,
+			0.05, 0.04, 0.03, 0.03, 0.04, 0.05, 0.06, 0.07, 0.07, 0.07, 0.06, 0.06, 0.04 };
+	private static final String PROFILE_FILE = "./src/main/resources/dailyProfileClients.csv";
 	protected LNVertex[] vertices;
 	private int[] dailyClientsProfile;
 	private double[][] hourlyClientProfile;
 
-	public TransfersFactory(LNVertex[] vertices) {
-		this.vertices = vertices;
-		dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(vertices.length);
-		hourlyClientProfile = new double[vertices.length][24];
+	private TransfersFactory() {
+	
+	}
+	public static TransfersFactory getInstance(LNVertex[] vertices, TransfersInput input){
+		TransfersFactory tFactory = new TransfersFactory();
+		tFactory.vertices = vertices;
+		
+		if(TransfersInput.FILE.equals(input)){
+			tFactory.dailyClientsProfile = CSVReader.readConsumptionData(PROFILE_FILE);
+		}else{
+			tFactory.dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(vertices.length);
+		}	
+		tFactory.hourlyClientProfile = new double[vertices.length][24];
 		for (int i = 0; i < vertices.length; i++) {
-			hourlyClientProfile[i] = GaussianConsumptionGenerator.getHourlyProfile(dailyClientsProfile[i]);
+			tFactory.hourlyClientProfile[i] = getHourlyProfile(tFactory.dailyClientsProfile[i]);
 		}
+		return tFactory;
 	}
 
 	public List<Transfer> generate(int startBlock) {
@@ -27,6 +41,7 @@ public class TransfersFactory {
 		Random rand = new Random();
 
 		for (int i = 0; i < vertices.length; i++) {
+			if(vertices[i].hop){continue;}
 			double energy = hourlyClientProfile[i][startBlock];
 			int token = getBolts(energy);
 			LNVertex source = vertices[i];
@@ -49,6 +64,24 @@ public class TransfersFactory {
 	
 	public double[][] getEnergyValues(){
 		return hourlyClientProfile;
+	}
+	
+	public int[] getClientsDailyProfile(){
+		return dailyClientsProfile;
+	}
+	public int[] getClientsConsumptionProfileHistogram(){
+		return GaussianConsumptionGenerator.histogram(dailyClientsProfile);
+	}
+	private static double[] getHourlyProfile(int valuePerDay) {
+		double[] values = new double[24];
+		for (int i = 0; i < HOURLY_PROFILE.length; i++) {
+			values[i] = HOURLY_PROFILE[i] * valuePerDay;
+		}
+		return values;
+	}
+
+	public enum TransfersInput {
+		GAUSSIAN, FILE
 	}
 
 }

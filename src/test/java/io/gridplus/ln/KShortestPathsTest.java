@@ -4,11 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import io.gridplus.ln.model.LNEdge;
-import io.gridplus.ln.model.LNPathValidator;
 import org.jgrapht.GraphPath;
 import org.junit.Test;
 
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNPathValidator;
 import io.gridplus.ln.model.LNVertex;
 
 public class KShortestPathsTest extends NetworkTopologyTest {

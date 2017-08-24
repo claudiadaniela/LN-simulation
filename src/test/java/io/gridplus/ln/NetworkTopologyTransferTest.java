@@ -1,16 +1,17 @@
 package io.gridplus.ln;
 
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.jgrapht.GraphPath;
+import org.junit.Test;
+
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNPathValidator;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.Transfer;
-import org.jgrapht.GraphPath;
-import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class NetworkTopologyTransferTest extends NetworkTopologyTest {
 

@@ -1,10 +1,10 @@
 package io.gridplus.ln;
 
+import org.junit.Before;
+
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
-import org.junit.Before;
 
 public class NetworkTopologyTest {
     protected static NetworkTopology networkTop;

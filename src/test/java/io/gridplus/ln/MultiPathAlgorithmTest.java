@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
-import io.gridplus.ln.model.LNEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.junit.Test;
 
+import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.multipath.MinCostMaxFlowAlgorithm;;
 

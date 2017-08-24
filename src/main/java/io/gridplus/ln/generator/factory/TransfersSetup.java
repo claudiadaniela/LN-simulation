@@ -14,8 +14,8 @@ package io.gridplus.ln.generator.factory;
 public enum TransfersSetup {
 	HOUSEHOULD_ENERGY_MEAN(18840), 
 	HOUSEHOLD_ENERGH_STD(4820), 
-	HOUSEHOLD_MAX_VALUE(18840 + 6 * 4820 *1000), 
-	TOKEN_SCALE(1000),
+	HOUSEHOLD_MAX_VALUE(((18840 + 6 * 4820)/7042) *1000000), 
+	TOKEN_SCALE(1000000),
 	ENERGY_PRICE(7042);
 
 	private double value;
