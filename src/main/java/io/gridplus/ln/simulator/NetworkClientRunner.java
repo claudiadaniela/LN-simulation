@@ -2,6 +2,8 @@ package io.gridplus.ln.simulator;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
@@ -11,7 +13,8 @@ public class NetworkClientRunner implements Runnable {
 	private int id;
 	private NetworkTopology networkTopology;
 	private BlockingQueue<Transfer> transfers;
-
+	private static final Logger LOGGER = Logger.getLogger(NetworkClientRunner.class
+			.getName());
 	public NetworkClientRunner(int id, NetworkTopology topology) {
 		this.id = id;
 		this.networkTopology = topology;
@@ -20,7 +23,6 @@ public class NetworkClientRunner implements Runnable {
 
 	public void addTransfer(Transfer transfer) {
 		transfers.add(transfer);
-		System.out.println("Transfer added: client " + id + " transfer: " + transfer);
 	}
 
 	public void run() {
@@ -43,19 +45,14 @@ public class NetworkClientRunner implements Runnable {
 					executed = networkTopology.sendTransfer(transfer);
 					attempt++;
 				}
-				if (!executed) {
-					System.out.println(id + " Drop transfer: " + transfer);
-				} else {
-					System.out.println(id + " Registered transfer: " + transfer);
+				if (!executed) {LOGGER.log(Level.WARNING, id + " Drop transfer: " + transfer);
 				}
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-
-		System.out.println("--------- FINISHED CLIENT "  + id +" ---------");
-
+		LOGGER.log(Level.INFO, "--------- FINISHED CLIENT "  + id +" ---------");
 	}
 
 	public boolean running(){

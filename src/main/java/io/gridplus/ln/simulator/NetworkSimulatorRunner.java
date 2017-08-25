@@ -22,10 +22,10 @@ public class NetworkSimulatorRunner implements Runnable {
 	private TransfersFactory transfersFactory;
 
 	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
-			int noNetworkClientsRunners) {
+			int noNetworkClientsRunners, TransfersInput input) {
 		this.networkTopo = networkTopo;
 		setupClients(noNetworkClientsRunners);
-		setupTransferGenerator();
+		setupTransferGenerator(input);
 		this.strategy = new ShortestQueueStrategy();
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("init-state.csv", state);
@@ -40,11 +40,11 @@ public class NetworkSimulatorRunner implements Runnable {
 		}
 	}
 
-	private void setupTransferGenerator(){
+	private void setupTransferGenerator(TransfersInput input){
 		Set<LNVertex> verticesSet = networkTopo.getVertices();
 		LNVertex[] vertices = new LNVertex[verticesSet.size()];
 		verticesSet.toArray(vertices);
-		transfersFactory = TransfersFactory.getInstance(vertices, TransfersInput.GAUSSIAN);
+		transfersFactory = TransfersFactory.getInstance(vertices, input);
 	}
 
 	public void run() {
@@ -70,7 +70,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		CSVWriter.writeInputEnergyData("inputEnergy.csv", transfersFactory.getEnergyValues());
 		CSVWriter.writeConsumptionData("dailyProfileClients.csv", transfersFactory.getClientsDailyProfile());
 		CSVWriter.writeConsumptionData("clientsHistogram.csv", transfersFactory.getClientsConsumptionProfileHistogram());
-		NetworkRunnerUtils.updateAndSaveTestNetworkGraph(networkTopo.getNetworkGraph(),  networkTopo.getRefunds());
+		//NetworkRunnerUtils.updateAndSaveTestNetworkGraph(networkTopo.getNetworkGraph(),  networkTopo.getRefunds());
 	}
 
 	public static void main(String[] args) {
@@ -80,14 +80,14 @@ public class NetworkSimulatorRunner implements Runnable {
 		int noSimulationSteps = 24;
 
 		NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
-				.getInstance(NetworkTopologyAbstractFactory.Type.RANDOM);
+				.getInstance(NetworkTopologyAbstractFactory.Type.FILE);
 
-		NetworkTopology topology = topoFactory.createTopology(noHops, noClients);
+		NetworkTopology topology = topoFactory.createTopology("./src/main/resources/graph.xml");
 		//NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
 		BlockCounterRunner clock = BlockCounterRunner.getInstance();
 		clock.setSimulationSteps(noSimulationSteps);
 		NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noClients,
-				noNetworkClientsRunners);
+				noNetworkClientsRunners, TransfersInput.FILE);
 
 		new Thread(runner).start();
 		new Thread(clock).start();

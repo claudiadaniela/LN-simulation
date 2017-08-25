@@ -13,7 +13,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import io.gridplus.ln.simulator.NetworkClientRunner;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.io.ComponentAttributeProvider;
 import org.jgrapht.io.EdgeProvider;
@@ -35,7 +38,8 @@ import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.view.NetworkGraphView;
 
 public final class GraphIO {
-
+    private static final Logger LOGGER = Logger.getLogger(GraphIO.class
+            .getName());
     private static GraphExporter<LNVertex, LNEdge> createExporter() {
         GraphMLExporter<LNVertex, LNEdge> exporter =
                 new GraphMLExporter<>((v) -> v.getId() + "", null, new IntegerComponentNameProvider<>(), null);
@@ -109,7 +113,8 @@ public final class GraphIO {
 
     public static void writeGraphML(SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph, String file) {
         try {
-            System.out.println("-- Exporting graph as GraphML");
+            LOGGER.log(Level.INFO, "-- Exporting graph as GraphML");
+
             GraphExporter<LNVertex, LNEdge> exporter = createExporter();
             Writer writer = new StringWriter();
             exporter.exportGraph(graph, writer);
@@ -126,7 +131,7 @@ public final class GraphIO {
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> graph = null;
         String graphString = xmlFileToString(file);
         try {
-            System.out.println("-- Importing graph back from GraphML");
+            LOGGER.log(Level.INFO, "-- Importing graph back from GraphML");
             graph = new SimpleDirectedWeightedGraph<>(LNEdge.class);
             GraphImporter<LNVertex, LNEdge> importer = createImporter();
             importer.importGraph(graph, new StringReader(graphString));

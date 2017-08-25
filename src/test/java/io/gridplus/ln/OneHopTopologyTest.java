@@ -32,7 +32,7 @@ public class OneHopTopologyTest {
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
         networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop.xml");
-
+        networkTop.activateRefund();
         refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
     }
     @Test
@@ -102,7 +102,7 @@ public class OneHopTopologyTest {
         while(networkClientRunner.running()){}
 
         NetworkTopology networkTop2 = updateTopo2(trasnfers);
-
+        networkTop2.activateRefund();
         LNEdge edge = networkTop2.getEdge(new LNVertex(1),new LNVertex(0));
         assertEquals("edge amount Reverse", edge.getTotalAmount() , 20993);
         edge = networkTop2.getEdge(new LNVertex(0),new LNVertex(1));
@@ -118,7 +118,7 @@ public class OneHopTopologyTest {
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
         NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hop.xml");
-
+        networkTop2.activateRefund();
         LNVertex hop2 = networkTop2.getHops().iterator().next();
 
 

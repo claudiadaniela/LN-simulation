@@ -1,5 +1,6 @@
 package io.gridplus.ln.model;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,12 +14,14 @@ import io.gridplus.ln.model.LNVertex.NetworkStatus;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 
 public class NetworkTopology {
-
+    private static final Logger LOGGER = Logger.getLogger(NetworkTopology.class
+            .getName());
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
     private Map<LNEdge, Integer> refunds;
     private Map<LNVertex, Integer> totalFlow;
     private Map<LNVertex, Double> fees;
     private Map<LNEdge, Integer> invariantEdges;
+    private  boolean REFUND_ACTIVE;
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<>(LNEdge.class);
@@ -100,6 +103,7 @@ public class NetworkTopology {
     }
 
     public boolean sendTransfer(Transfer transfer) {
+        if(!isWellFormed()) {LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");}
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
         if (paths == null || paths.size() == 0) {
@@ -136,6 +140,7 @@ public class NetworkTopology {
                 }
             }
         }
+        isWellFormed();
         return true;
     }
 
@@ -147,6 +152,7 @@ public class NetworkTopology {
      * @return
      */
     public boolean refundHops(Transfer transfer) {
+        if(!REFUND_ACTIVE){return false;}
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), null);
         if (paths == null || paths.size() == 0) {
@@ -170,7 +176,7 @@ public class NetworkTopology {
         if (!hopEdge.getSource().hop) {
             return;
         }
-        System.out.println("Refund hop: " + hopEdge.getSource() + " amount: " + amount);
+        LOGGER.log(Level.INFO, "Refund hop: " + hopEdge.getSource() + " amount: " + amount);
 
         hopEdge.addTokenAmount(amount);
         if (refunds.containsKey(hopEdge)) {
@@ -206,7 +212,6 @@ public class NetworkTopology {
         if (!v.hop) {
             return;
         }
-        System.out.println("Update Flow " + v + " " + amount);
         if (totalFlow.containsKey(v)) {
             amount += totalFlow.get(v);
         }
@@ -245,6 +250,7 @@ public class NetworkTopology {
     }
 
     public boolean isWellFormed() {
+        if(REFUND_ACTIVE){return false;}
         Map<LNEdge, Integer> bidirEdges = getTotalBiEdgeAmount();
         for (Map.Entry<LNEdge, Integer> entry : bidirEdges.entrySet()) {
             if (!entry.getValue().equals(invariantEdges.get(entry.getKey()))) {
@@ -252,6 +258,10 @@ public class NetworkTopology {
             }
         }
         return true;
+    }
+
+    public void activateRefund(){
+        REFUND_ACTIVE = true;
     }
 
 }

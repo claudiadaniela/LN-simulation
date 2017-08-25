@@ -3,6 +3,7 @@ package io.gridplus.ln.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 
+import io.gridplus.ln.generator.factory.TransfersFactory;
 import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.simulator.BlockCounterRunner;
@@ -36,7 +37,7 @@ public class NetworkSetupController {
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(noSimulationSteps);
        
-        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners);
+        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners, TransfersFactory.TransfersInput.GAUSSIAN);
         new Thread(runner).start();
         new Thread(clock).start();
     }

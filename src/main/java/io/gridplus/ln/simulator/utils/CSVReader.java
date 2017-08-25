@@ -26,7 +26,6 @@ public class CSVReader {
 			}
 			while ((line = br.readLine()) != null) {
 				String[] valuesS = line.split(cvsSplitBy);
-				System.out.println(" [value= " + valuesS[0]);
 				values.add(Integer.parseInt(valuesS[0]));
 			}
 		} catch (FileNotFoundException e) {

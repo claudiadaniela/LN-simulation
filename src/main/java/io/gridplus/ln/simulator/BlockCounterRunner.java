@@ -1,10 +1,14 @@
 package io.gridplus.ln.simulator;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class BlockCounterRunner implements Runnable {
     private volatile int currentBlock;
     private static BlockCounterRunner instance;
     private int simSteps;
-
+    private static final Logger LOGGER = Logger.getLogger(BlockCounterRunner.class
+            .getName());
     private BlockCounterRunner() {
     }
 
@@ -12,7 +16,6 @@ public class BlockCounterRunner implements Runnable {
         if (instance == null) {
             synchronized (BlockCounterRunner.class) {
                 if (instance == null) {
-                    System.out.println("Create Block Clock");
                     instance = new BlockCounterRunner();
                 }
             }
@@ -40,8 +43,8 @@ public class BlockCounterRunner implements Runnable {
                 e.printStackTrace();
             }
             currentBlock++;
-            System.out.println("current time: " + currentBlock);
+            LOGGER.log(Level.INFO, "current time: " + currentBlock);
         }
-        System.out.println("Finished block counter...");
+        LOGGER.log(Level.INFO, "Finished block counter...");
     }
 }
