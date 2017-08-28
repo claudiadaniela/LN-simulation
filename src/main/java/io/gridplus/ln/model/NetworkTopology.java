@@ -103,7 +103,7 @@ public class NetworkTopology {
     }
 
     public boolean sendTransfer(Transfer transfer) {
-        if(!isWellFormed()) {LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");}
+        if(!isWellFormed() && !REFUND_ACTIVE) {LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");}
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
         if (paths == null || paths.size() == 0) {

@@ -145,10 +145,6 @@ public class CSVWriter {
 		sb.append(',');
 		sb.append("amount");
 		sb.append(',');
-		sb.append("lockTime");
-		sb.append(',');
-		sb.append("htlc");
-		sb.append(',');
 		sb.append("deployBlock");
 		sb.append('\n');
 		try {

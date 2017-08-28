@@ -119,7 +119,6 @@ public final class GraphIO {
             Writer writer = new StringWriter();
             exporter.exportGraph(graph, writer);
             String graph1AsGraphML = writer.toString();
-            System.out.println(graph1AsGraphML);
             stringToXMLFile(graph1AsGraphML,file);
         } catch (ExportException e) {
             e.printStackTrace();

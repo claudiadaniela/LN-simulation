@@ -1,6 +1,0 @@
-source,recipient,amount,lockTime,htlc,deployBlock
-1,11,788,1,2,0
-2,1,667,1,2,0
-10,1,850,0,1,0
-4,1,537,0,1,0
-5,1,919,1,2,0

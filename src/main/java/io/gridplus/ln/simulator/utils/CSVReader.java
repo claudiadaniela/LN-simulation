@@ -61,7 +61,7 @@ public class CSVReader {
 				int source = Integer.parseInt(valuesS[0]);
 				int recipient = Integer.parseInt(valuesS[1]);
 				int amount = Integer.parseInt(valuesS[2]);
-				int blockStart = Integer.parseInt(valuesS[5]);
+				int blockStart = Integer.parseInt(valuesS[3]);
 				Transfer t = new Transfer(new LNVertex(source), new LNVertex(recipient), amount);
 				t.setBlockOfDeploymentTime(blockStart);
 				transfers.add(t);

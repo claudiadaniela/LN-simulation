@@ -29,29 +29,36 @@ public class OneHopTopologyTest {
 
     @Before
     public  void init() {
-        NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
-                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop.xml");
-        networkTop.activateRefund();
+
         refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
     }
     @Test
     public void testTransfers() {
-        List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-transfers.csv");
+        NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        networkTop.activateRefund();
+
+        List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hop/test-transfers.csv");
 
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(1);
         NetworkClientRunner networkClientRunner = new NetworkClientRunner(1, networkTop);
-        new Thread(networkClientRunner).start();
-        new Thread(clock).start();
-
 
         for(Transfer t : trasnfers){
             networkClientRunner.addTransfer(t);
         }
+        new Thread(networkClientRunner).start();
+        new Thread(clock).start();
+
+
         while(networkClientRunner.running()){}
 
-        NetworkTopology networkTop2 = updateTopo2(trasnfers);
+        topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        networkTop2.activateRefund();
+         updateTopo2(networkTop2,trasnfers);
         LNVertex hop2 = networkTop2.getHops().iterator().next();
 
         LNVertex hop1 = networkTop.getHops().iterator().next();
@@ -87,21 +94,30 @@ public class OneHopTopologyTest {
 
     @Test
     public void testHop0() {
-        List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-transfers-Hop0.csv");
+        NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        networkTop.activateRefund();
+
+        List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hop/test-transfers-Hop0.csv");
 
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(1);
         NetworkClientRunner networkClientRunner = new NetworkClientRunner(1, networkTop);
+        for(Transfer t : trasnfers){
+            networkClientRunner.addTransfer(t);
+        }
         new Thread(networkClientRunner).start();
         new Thread(clock).start();
 
 
-        for(Transfer t : trasnfers){
-            networkClientRunner.addTransfer(t);
-        }
         while(networkClientRunner.running()){}
 
-        NetworkTopology networkTop2 = updateTopo2(trasnfers);
+         topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        networkTop2.activateRefund();
+         updateTopo2(networkTop2, trasnfers);
         networkTop2.activateRefund();
         LNEdge edge = networkTop2.getEdge(new LNVertex(1),new LNVertex(0));
         assertEquals("edge amount Reverse", edge.getTotalAmount() , 20993);
@@ -113,14 +129,38 @@ public class OneHopTopologyTest {
         assertEquals("total fees",true, Math.abs(networkTop.getFees().get(new LNVertex(0)).doubleValue()- 37.61) < EPSILON);
     }
 
-    private NetworkTopology updateTopo2(List<Transfer> transfers){
-
+    @Test
+    public void testHourOne(){
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hop.xml");
-        networkTop2.activateRefund();
-        LNVertex hop2 = networkTop2.getHops().iterator().next();
+        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hour/graph.xml");
+        networkTop.activateRefund();
 
+        List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hour/transfers.csv");
+        BlockCounterRunner clock = BlockCounterRunner.getInstance();
+        clock.setSimulationSteps(1);
+        NetworkClientRunner networkClientRunner = new NetworkClientRunner(1, networkTop);
+        for(Transfer t : trasnfers){
+            networkClientRunner.addTransfer(t);
+        }
+        new Thread(networkClientRunner).start();
+        new Thread(clock).start();
+
+        while(networkClientRunner.running()){}
+
+        topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
+        NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hour/graph.xml");
+        networkTop2.activateRefund();
+        updateTopo2(networkTop2, trasnfers);
+
+
+        assertEquals("dummy", 1 , 1);
+    }
+
+    private void updateTopo2( NetworkTopology  networkTop2, List<Transfer> transfers){
+
+        LNVertex hop2 = networkTop2.getHops().iterator().next();
 
         for(Transfer t: transfers){
             LNEdge edgeD = networkTop2.getEdge(t.getSource(), t.getRecipient());
@@ -131,7 +171,6 @@ public class OneHopTopologyTest {
                 edgeR.addTokenAmount(t.getAmount());
                 updateLockedAmount(edgeR, t.getAmount(),1 );
             }else {
-
                 LNEdge edge1D = networkTop2.getEdge(t.getSource(), hop2);
                 LNEdge edge1R = networkTop2.getEdge(hop2, t.getSource());
                 LNEdge edge2D = networkTop2.getEdge(hop2, t.getRecipient());
@@ -148,10 +187,7 @@ public class OneHopTopologyTest {
                 edge2R.addTokenAmount(amount);
                 updateLockedAmount(edge2R, amount,2 );
             }
-
         }
-        return networkTop2;
-
     }
     private  void updateTokenAmount(LNEdge edge, LNVertex source, int amount){
      int missingAmount =    amount - edge.getAvailableAmount(0);

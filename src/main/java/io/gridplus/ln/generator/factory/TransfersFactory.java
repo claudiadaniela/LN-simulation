@@ -8,6 +8,7 @@ import io.gridplus.ln.generator.utils.GaussianConsumptionGenerator;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.simulator.utils.CSVReader;
+import io.gridplus.ln.simulator.utils.CSVWriter;
 
 public class TransfersFactory {
 	private static final double[] HOURLY_PROFILE = { 0.03, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.06,
@@ -47,7 +48,7 @@ public class TransfersFactory {
 			LNVertex source = vertices[i];
 
 			LNVertex recipient = vertices[rand.nextInt(vertices.length)];
-			while (source.equals(recipient)) {
+			while (source.equals(recipient) || recipient.hop) {
 				recipient = new LNVertex(rand.nextInt(vertices.length));
 			}
 			Transfer transfer = new Transfer(source, recipient, token);
@@ -55,6 +56,7 @@ public class TransfersFactory {
 			transfer.setEnergy(energy);
 			transfers.add(transfer);
 		}
+		CSVWriter.writeTransfers("transfers.csv", transfers);
 		return transfers;
 	}
 	

@@ -26,13 +26,13 @@ public class NetworkClientRunner implements Runnable {
 	}
 
 	public void run() {
-
+		LOGGER.log(Level.INFO, "--------- STARTED CLIENT "  + id +" ---------");
 		while (BlockCounterRunner.getInstance().running() || transfers.size()>0) {
 			Transfer transfer;
 			try {
 				transfer = transfers.peek();
 				if (transfer == null
-						|| transfer.getBlockOfDeploymentTime() != BlockCounterRunner.getInstance().currentBlock()) {
+						|| transfer.getBlockOfDeploymentTime() > BlockCounterRunner.getInstance().currentBlock()) {
 					continue;
 				}
 				transfer = transfers.take();
@@ -45,8 +45,7 @@ public class NetworkClientRunner implements Runnable {
 					executed = networkTopology.sendTransfer(transfer);
 					attempt++;
 				}
-				if (!executed) {LOGGER.log(Level.WARNING, id + " Drop transfer: " + transfer);
-				}
+				if (!executed) {LOGGER.log(Level.WARNING, id + " Drop transfer: " + transfer);}
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
