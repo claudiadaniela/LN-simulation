@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -148,14 +149,23 @@ public class OneHopTopologyTest {
 
         while(networkClientRunner.running()){}
 
-        topoFactory = NetworkTopologyAbstractFactory
-                .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        NetworkTopology  networkTop2 = topoFactory.createTopology("./src/test/resources/test-one-hour/graph.xml");
-        networkTop2.activateRefund();
-        updateTopo2(networkTop2, trasnfers);
 
-
-        assertEquals("dummy", 1 , 1);
+        int amount =0;
+        for(Transfer t: trasnfers){
+        	amount+= t.getAmount();
+        }
+        int amountSim =0;
+        for(Map.Entry<LNEdge, Integer> e: networkTop.getRefunds().entrySet()){
+        	amountSim += e.getValue();
+        }
+        int totalFlow = networkTop.getTotalFlow().get(new LNVertex(0));
+        System.out.println("total refunds" + amountSim);
+        System.out.println("total flow" + totalFlow);
+        System.out.println("total amount" + amount);
+        assertEquals("Amount of funds flowing through hop", totalFlow, amount);
+        assertEquals("Amount of funds flowing through hop", amountSim< amount, true);
+        
+        
     }
 
     private void updateTopo2( NetworkTopology  networkTop2, List<Transfer> transfers){
