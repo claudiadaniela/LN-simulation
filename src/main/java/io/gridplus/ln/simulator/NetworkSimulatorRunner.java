@@ -14,13 +14,14 @@ import io.gridplus.ln.network.utils.GraphIO;
 import io.gridplus.ln.scheduler.SchedulerStrategy;
 import io.gridplus.ln.scheduler.ShortestQueueStrategy;
 import io.gridplus.ln.simulator.utils.CSVWriter;
-import io.gridplus.ln.simulator.utils.NetworkRunnerUtils;
 
 public class NetworkSimulatorRunner implements Runnable {
 	private List<NetworkClientRunner> clients;
 	private SchedulerStrategy strategy;
 	private NetworkTopology networkTopo;
 	private TransfersFactory transfersFactory;
+	private int noClients;
+	private static final double CONSUMER_PERCENTAGE = 0.5;
 
 	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
 			int noNetworkClientsRunners, TransfersInput input) {
@@ -30,6 +31,7 @@ public class NetworkSimulatorRunner implements Runnable {
 		this.strategy = new ShortestQueueStrategy();
 		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
 		CSVWriter.writeNetwrokStateData("init-state.csv", state);
+		this.noClients = noNodes;
 	}
 
 	private void setupClients(int size) {
@@ -49,11 +51,12 @@ public class NetworkSimulatorRunner implements Runnable {
 	}
 
 	public void run() {
+		int consumers = (int) (noClients *CONSUMER_PERCENTAGE);
 		int block = -1;
 		while (BlockCounterRunner.getInstance().running()) {
 			int newBlock = BlockCounterRunner.getInstance().currentBlock();
 			if (block + 1 == newBlock) {
-				strategy.dispatchTransfer(transfersFactory.generate(newBlock), clients);
+				strategy.dispatchTransfer(transfersFactory.generate(newBlock, consumers ), clients);
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
@@ -76,7 +79,7 @@ public class NetworkSimulatorRunner implements Runnable {
 
 	public static void main(String[] args) {
 		int noHops = 1;
-		int noClients = 100;
+		int noClients = 200;
 		int noNetworkClientsRunners = 1;
 		int noSimulationSteps = 1;
 
@@ -84,7 +87,7 @@ public class NetworkSimulatorRunner implements Runnable {
 				.getInstance(NetworkTopologyAbstractFactory.Type.RANDOM);
 
 		//NetworkTopology topology = topoFactory.createTopology("./src/main/resources/graph.xml");
-		NetworkTopology topology = topoFactory.createTopology(1,20);
+		NetworkTopology topology = topoFactory.createTopology(1,noClients);
 		GraphIO.writeGraphML(topology.getNetworkGraph(), "graph.xml");
 		//NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
 		BlockCounterRunner clock = BlockCounterRunner.getInstance();

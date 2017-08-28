@@ -165,7 +165,11 @@ public class NetworkTopology {
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
             int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
-            if (ex.hop && missingAmount > 0) {     
+            if (ex.hop && missingAmount > 0) {
+            	  System.out.println("transfer aamount " + transfer.getAmount());
+                  System.out.println("available amount " + exy.getAvailableAmount(currentBlock));
+                  System.out.println("missing amount "+ missingAmount);
+                  
                 refund(exy, missingAmount);
             }
         }

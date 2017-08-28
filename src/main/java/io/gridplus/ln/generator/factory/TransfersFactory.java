@@ -37,17 +37,17 @@ public class TransfersFactory {
 		return tFactory;
 	}
 
-	public List<Transfer> generate(int startBlock) {
+	public List<Transfer> generate(int startBlock, int consumers) {
 		List<Transfer> transfers = new ArrayList<>();
 		Random rand = new Random();
 
-		for (int i = 0; i < vertices.length; i++) {
+		for (int i = 0; i < consumers; i++) {
 			if(vertices[i].hop){continue;}
 			double energy = hourlyClientProfile[i][startBlock];
 			int token = getBolts(energy);
 			LNVertex source = vertices[i];
-
-			LNVertex recipient = vertices[rand.nextInt(vertices.length)];
+			int index = rand.nextInt(vertices.length-consumers)+consumers;
+			LNVertex recipient = vertices[index];
 			while (source.equals(recipient) || recipient.hop) {
 				recipient = new LNVertex(rand.nextInt(vertices.length));
 			}
