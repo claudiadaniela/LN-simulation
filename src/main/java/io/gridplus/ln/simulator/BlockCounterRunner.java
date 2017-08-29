@@ -4,12 +4,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BlockCounterRunner implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(BlockCounterRunner.class.getName());
     private volatile int currentBlock;
     private static BlockCounterRunner instance;
     private int simSteps;
-    private static final Logger LOGGER = Logger.getLogger(BlockCounterRunner.class
-            .getName());
+    private volatile boolean running;
+
     private BlockCounterRunner() {
+
     }
 
     public static BlockCounterRunner getInstance() {
@@ -24,15 +26,16 @@ public class BlockCounterRunner implements Runnable {
     }
 
     public int currentBlock() {
-        return currentBlock< simSteps? currentBlock: simSteps-1;
+        return currentBlock < simSteps ? currentBlock : simSteps - 1;
     }
 
     public void setSimulationSteps(int steps) {
+        running = true;
         this.simSteps = steps;
     }
 
     public boolean running() {
-        return currentBlock < simSteps;
+        return running;
     }
 
     public void run() {
@@ -45,6 +48,7 @@ public class BlockCounterRunner implements Runnable {
             currentBlock++;
             LOGGER.log(Level.INFO, "current time: " + currentBlock);
         }
+        running = false;
         LOGGER.log(Level.INFO, "Finished block counter...");
     }
 }

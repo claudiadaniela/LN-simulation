@@ -15,10 +15,13 @@ public class NetworkClientRunner implements Runnable {
 	private BlockingQueue<Transfer> transfers;
 	private static final Logger LOGGER = Logger.getLogger(NetworkClientRunner.class
 			.getName());
+	private volatile boolean running;
+
 	public NetworkClientRunner(int id, NetworkTopology topology) {
 		this.id = id;
 		this.networkTopology = topology;
 		this.transfers = new LinkedBlockingQueue<>();
+		this.running = true;
 	}
 
 	public void addTransfer(Transfer transfer) {
@@ -51,11 +54,12 @@ public class NetworkClientRunner implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		running = false;
 		LOGGER.log(Level.INFO, "--------- FINISHED CLIENT "  + id +" ---------");
 	}
 
 	public boolean running(){
-		return BlockCounterRunner.getInstance().running() || transfers.size()>0;
+		return running;
 	}
 
 	public int getSize() {

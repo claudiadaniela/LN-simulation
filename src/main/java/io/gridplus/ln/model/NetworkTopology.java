@@ -1,4 +1,5 @@
 package io.gridplus.ln.model;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
@@ -21,7 +22,7 @@ public class NetworkTopology {
     private Map<LNVertex, Integer> totalFlow;
     private Map<LNVertex, Double> fees;
     private Map<LNEdge, Integer> invariantEdges;
-    private  boolean REFUND_ACTIVE;
+    private boolean REFUND_ACTIVE;
 
     public NetworkTopology() {
         this.networkGraph = new SimpleDirectedWeightedGraph<>(LNEdge.class);
@@ -103,7 +104,9 @@ public class NetworkTopology {
     }
 
     public boolean sendTransfer(Transfer transfer) {
-        if(!isWellFormed() && !REFUND_ACTIVE) {LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");}
+        if (!isWellFormed() && !REFUND_ACTIVE) {
+            LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");
+        }
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
         if (paths == null || paths.size() == 0) {
@@ -119,10 +122,11 @@ public class NetworkTopology {
             LNVertex ex = exy.getSource();
             LNVertex ey = exy.getTarget();
             LNEdge eyx = getEdge(ey, ex);
-            updateFee(fee, ex);
+
 
             if (eyx != null) {
                 synchronized (eyx) {
+                    updateFee(fee, ex);
                     exy.addTokenAmount(-amount);
                     eyx.addTokenAmount(amount);
                     for (int i = currentBlock; i < lockedTime; i++) {
@@ -147,12 +151,14 @@ public class NetworkTopology {
 
     /**
      * TODO: sync mechanisms
-     *
-     * @param transfer
-     * @return
+     * Refund with the total amount on each hop.
+     * During the transfer , the actual amount sent on edges will be smaller,
+     * depending on the fee of the hops it passes through.
      */
     public boolean refundHops(Transfer transfer) {
-        if(!REFUND_ACTIVE){return false;}
+        if (!REFUND_ACTIVE) {
+            return false;
+        }
         List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
                 transfer.getAmount(), null);
         if (paths == null || paths.size() == 0) {
@@ -161,17 +167,14 @@ public class NetworkTopology {
         GraphPath<LNVertex, LNEdge> bestPath = paths.get(0);
         List<LNEdge> edges = bestPath.getEdgeList();
         int currentBlock = BlockCounterRunner.getInstance().currentBlock();
-
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
             int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
+
             if (ex.hop && missingAmount > 0) {
-            	  System.out.println("transfer aamount " + transfer.getAmount());
-                  System.out.println("available amount " + exy.getAvailableAmount(currentBlock));
-                  System.out.println("missing amount "+ missingAmount);
-                  
                 refund(exy, missingAmount);
             }
+
         }
         return true;
     }
@@ -220,7 +223,7 @@ public class NetworkTopology {
             amount += totalFlow.get(v);
         }
         totalFlow.put(v, amount);
-   }
+    }
 
     public Map<LNEdge, Integer> getRefunds() {
         return refunds;
@@ -254,7 +257,9 @@ public class NetworkTopology {
     }
 
     public boolean isWellFormed() {
-        if(REFUND_ACTIVE){return false;}
+        if (REFUND_ACTIVE) {
+            return false;
+        }
         Map<LNEdge, Integer> bidirEdges = getTotalBiEdgeAmount();
         for (Map.Entry<LNEdge, Integer> entry : bidirEdges.entrySet()) {
             if (!entry.getValue().equals(invariantEdges.get(entry.getKey()))) {
@@ -264,7 +269,7 @@ public class NetworkTopology {
         return true;
     }
 
-    public void activateRefund(){
+    public void activateRefund() {
         REFUND_ACTIVE = true;
     }
 

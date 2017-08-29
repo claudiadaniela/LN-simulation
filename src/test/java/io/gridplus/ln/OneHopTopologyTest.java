@@ -22,22 +22,18 @@ import io.gridplus.ln.simulator.utils.CSVReader;
 
 public class OneHopTopologyTest {
 
-    private static NetworkTopology networkTop;
     private static final double EPSILON = 0.000001;
 
     private Map<LNEdge, Integer> refunds;
 
-    @Before
-    public  void init() {
-
-        refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
-    }
     @Test
     public void testTransfers() {
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        NetworkTopology networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
         networkTop.activateRefund();
+
+        refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
 
         List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hop/test-transfers.csv");
 
@@ -96,8 +92,10 @@ public class OneHopTopologyTest {
     public void testHop0() {
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
+        NetworkTopology networkTop  = topoFactory.createTopology("./src/test/resources/test-one-hop/test-one-hop.xml");
         networkTop.activateRefund();
+
+        refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
 
         List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hop/test-transfers-Hop0.csv");
 
@@ -133,8 +131,10 @@ public class OneHopTopologyTest {
     public void testHourOne(){
         NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
                 .getInstance(NetworkTopologyAbstractFactory.Type.FILE);
-        networkTop = topoFactory.createTopology("./src/test/resources/test-one-hour/graph.xml");
+        NetworkTopology networkTop = topoFactory.createTopology("./src/test/resources/test-one-hour/graph.xml");
         networkTop.activateRefund();
+
+        refunds =  new TreeMap<>(new LNEdge.LNEdgeComparator());
 
         List<Transfer> trasnfers= CSVReader.readTransfers("./src/test/resources/test-one-hour/transfers.csv");
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
