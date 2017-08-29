@@ -8,7 +8,7 @@ package io.gridplus.ln.generator.factory;
  * Standard deviation 4.82 kWh / day = 0.200 kWh/hour = 200 Wh
  * <p>
  * June 2017 source; https://www.bls.gov/regions/mid-atlantic/news-release/
- * averageenergyprices_washingtondc.htm Energy price : 0.142 /kWh => 1 Dollar =
+ * averageenergyprices_washingtondc.htm Energy price : 0.142 $ /kWh => 1 Dollar =
  * 1 Bolt = 7042 Wh
  */
 public enum TransfersSetup {

@@ -3,6 +3,8 @@ package io.gridplus.ln.generator.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import io.gridplus.ln.generator.utils.GaussianConsumptionGenerator;
 import io.gridplus.ln.model.LNVertex;
@@ -13,32 +15,33 @@ public class TransfersFactory {
     private static final double[] HOURLY_PROFILE = {0.03, 0.01, 0.01, 0.01, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.06,
             0.05, 0.04, 0.03, 0.03, 0.04, 0.05, 0.06, 0.07, 0.07, 0.07, 0.06, 0.06, 0.04};
     private static final String PROFILE_FILE = "./src/main/resources/dailyProfileClients.csv";
+    private static final Logger LOGGER = Logger.getLogger(TransfersFactory.class.getName());
+
     protected LNVertex[] vertices;
     private int[] dailyClientsProfile;
     private double[][] hourlyClientProfile;
-
+    private int consumers;
     private TransfersFactory() {
-
     }
 
-    public static TransfersFactory getInstance(LNVertex[] vertices, TransfersInput input) {
+    public static TransfersFactory getInstance(LNVertex[] vertices, TransfersInput input, int consumers) {
         TransfersFactory tFactory = new TransfersFactory();
         tFactory.vertices = vertices;
-
+        tFactory.consumers = consumers;
         if (TransfersInput.FILE.equals(input)) {
             tFactory.dailyClientsProfile = CSVReader.readConsumptionData(PROFILE_FILE);
         } else {
-            tFactory.dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(vertices.length);
+            tFactory.dailyClientsProfile = GaussianConsumptionGenerator.generateDailyProfile(consumers);
         }
-        tFactory.hourlyClientProfile = new double[vertices.length][24];
-        for (int i = 0; i < vertices.length; i++) {
+        tFactory.hourlyClientProfile = new double[consumers][24];
+        for (int i = 0; i < consumers; i++) {
             tFactory.hourlyClientProfile[i] = getHourlyProfile(tFactory.dailyClientsProfile[i]);
         }
         return tFactory;
     }
 
-    public List<Transfer> generate(int startBlock, int consumers) {
-
+    public List<Transfer> generate(int startBlock) {
+        LOGGER.log(Level.INFO, "Generate Transfers for time: " + startBlock +"  and consumers: " + consumers);
         List<Transfer> transfers = new ArrayList<>();
         Random rand = new Random();
 
@@ -52,7 +55,8 @@ public class TransfersFactory {
             int index = rand.nextInt(vertices.length - consumers) + consumers;
             LNVertex recipient = vertices[index];
             while (source.equals(recipient) || recipient.hop) {
-                recipient = new LNVertex(rand.nextInt(vertices.length));
+                index = rand.nextInt(vertices.length - consumers) + consumers;
+                recipient =  vertices[index];
             }
             Transfer transfer = new Transfer(source, recipient, token);
             transfer.setBlockOfDeploymentTime(startBlock);

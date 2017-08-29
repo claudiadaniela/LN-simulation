@@ -20,18 +20,16 @@ public class NetworkSimulatorRunner implements Runnable {
     private SchedulerStrategy strategy;
     private NetworkTopology networkTopology;
     private TransfersFactory transfersFactory;
-    private int noClients;
     private static final double CONSUMER_PERCENTAGE = 0.5;
 
     public NetworkSimulatorRunner(NetworkTopology networkTopo, int noNodes,
                                   int noNetworkClientsRunners, TransfersInput input) {
         this.networkTopology = networkTopo;
         setupClients(noNetworkClientsRunners);
-        setupTransferGenerator(input);
+        setupTransferGenerator(input, noNodes);
         this.strategy = new ShortestQueueStrategy();
         Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
         CSVWriter.writeNetwrokStateData("init-state.csv", state);
-        this.noClients = noNodes;
     }
 
     private void setupClients(int size) {
@@ -43,20 +41,20 @@ public class NetworkSimulatorRunner implements Runnable {
         }
     }
 
-    private void setupTransferGenerator(TransfersInput input) {
+    private void setupTransferGenerator(TransfersInput input, int noNodes) {
         Set<LNVertex> verticesSet = networkTopology.getVertices();
         LNVertex[] vertices = new LNVertex[verticesSet.size()];
         verticesSet.toArray(vertices);
-        transfersFactory = TransfersFactory.getInstance(vertices, input);
+        int consumers = (int) (noNodes * CONSUMER_PERCENTAGE);
+        transfersFactory = TransfersFactory.getInstance(vertices, input, consumers);
     }
 
     public void run() {
-        int consumers = (int) (noClients * CONSUMER_PERCENTAGE);
         int block = -1;
         while (BlockCounterRunner.getInstance().running()) {
             int newBlock = BlockCounterRunner.getInstance().currentBlock();
             if (block + 1 == newBlock) {
-                strategy.dispatchTransfer(transfersFactory.generate(newBlock, consumers), clients);
+                strategy.dispatchTransfer(transfersFactory.generate(newBlock), clients);
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {

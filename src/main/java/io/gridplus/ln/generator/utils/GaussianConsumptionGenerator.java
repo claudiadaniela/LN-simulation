@@ -11,8 +11,8 @@ public class GaussianConsumptionGenerator {
 		Random r = new Random();
 		int[] values = new int[size];
 		for (int i = 0; i < size; i++) {
-			double val = r.nextGaussian() * TransfersSetup.HOUSEHOLD_ENERGY_STD.value()
-					+ TransfersSetup.HOUSEHOLD_ENERGY_MEAN.value();
+			double val = r.nextGaussian() * (TransfersSetup.HOUSEHOLD_ENERGY_STD.value()/1000)
+					+ TransfersSetup.HOUSEHOLD_ENERGY_MEAN.value()/1000;
 			if (val < 0)
 				continue;
 			int value = (int) Math.round(val);
@@ -31,7 +31,7 @@ public class GaussianConsumptionGenerator {
 	}
 
 	public static void main(String[] args) {
-		int[] values = generateDailyProfile(30000);
+		int[] values = generateDailyProfile(400000);
 		CSVWriter.writeConsumptionData("household-consumption-daily.csv", values);
 		int[] hitogram = histogram(values);
 		CSVWriter.writeConsumptionData("histogram.csv", hitogram);
