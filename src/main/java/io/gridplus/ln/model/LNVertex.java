@@ -64,7 +64,7 @@ public class LNVertex implements Serializable {
     public static class LNVertexComparator implements Comparator<LNVertex> {
 
         public int compare(LNVertex o1, LNVertex o2) {
-            return o1.id- o2.id;
+            return o1.id - o2.id;
         }
 
     }

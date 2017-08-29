@@ -15,8 +15,7 @@ import io.gridplus.ln.model.LNVertex.NetworkStatus;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 
 public class NetworkTopology {
-    private static final Logger LOGGER = Logger.getLogger(NetworkTopology.class
-            .getName());
+    private static final Logger LOGGER = Logger.getLogger(NetworkTopology.class.getName());
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
     private Map<LNEdge, Integer> refunds;
     private Map<LNVertex, Integer> totalFlow;
@@ -67,40 +66,6 @@ public class NetworkTopology {
         List<GraphPath<LNVertex, LNEdge>> paths = pathsAlg.getPaths(id1, id2);
         Collections.sort(paths, new LNPathComparator());
         return paths;
-    }
-
-    public LNEdge getEdge(LNVertex v1, LNVertex v2) {
-        return networkGraph.getEdge(v1, v2);
-    }
-
-    public Set<LNEdge> getEdges(LNVertex v1) {
-        return networkGraph.edgesOf(v1);
-    }
-
-    public Set<LNVertex> getVertices() {
-        return networkGraph.vertexSet();
-    }
-
-    public Set<LNVertex> getHops() {
-        return networkGraph.vertexSet().stream().filter(v -> v.hop).collect(Collectors.toSet());
-    }
-
-    public SimpleDirectedWeightedGraph<LNVertex, LNEdge> getNetworkGraph() {
-        return networkGraph;
-    }
-
-    public int getMinAmountOnNodeEdges(LNVertex v1) {
-        int currentBlock = BlockCounterRunner.getInstance().currentBlock();
-        Set<LNEdge> edges = getEdges(v1);
-
-        int min = Integer.MAX_VALUE;
-        for (LNEdge e : edges) {
-            int availableAmount = e.getAvailableAmount(currentBlock);
-            if (availableAmount < min) {
-                min = availableAmount;
-            }
-        }
-        return min != Integer.MAX_VALUE ? min : 0;
     }
 
     public boolean sendTransfer(Transfer transfer) {
@@ -170,11 +135,9 @@ public class NetworkTopology {
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
             int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
-
             if (ex.hop && missingAmount > 0) {
                 refund(exy, missingAmount);
             }
-
         }
         return true;
     }
@@ -271,6 +234,22 @@ public class NetworkTopology {
 
     public void activateRefund() {
         REFUND_ACTIVE = true;
+    }
+
+    public LNEdge getEdge(LNVertex v1, LNVertex v2) {
+        return networkGraph.getEdge(v1, v2);
+    }
+
+    public Set<LNVertex> getVertices() {
+        return networkGraph.vertexSet();
+    }
+
+    public Set<LNVertex> getHops() {
+        return networkGraph.vertexSet().stream().filter(v -> v.hop).collect(Collectors.toSet());
+    }
+
+    public SimpleDirectedWeightedGraph<LNVertex, LNEdge> getNetworkGraph() {
+        return networkGraph;
     }
 
 }

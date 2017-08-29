@@ -9,12 +9,12 @@ import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
 
 public class NetworkClientRunner implements Runnable {
+	private static final Logger LOGGER = Logger.getLogger(NetworkClientRunner.class.getName());
 	private static final int MAX_ATTEMPTS = 5;
 	private int id;
 	private NetworkTopology networkTopology;
 	private BlockingQueue<Transfer> transfers;
-	private static final Logger LOGGER = Logger.getLogger(NetworkClientRunner.class
-			.getName());
+
 	private volatile boolean running;
 
 	public NetworkClientRunner(int id, NetworkTopology topology) {

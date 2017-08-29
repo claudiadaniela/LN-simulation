@@ -16,86 +16,86 @@ import io.gridplus.ln.scheduler.ShortestQueueStrategy;
 import io.gridplus.ln.simulator.utils.CSVWriter;
 
 public class NetworkSimulatorRunner implements Runnable {
-	private List<NetworkClientRunner> clients;
-	private SchedulerStrategy strategy;
-	private NetworkTopology networkTopo;
-	private TransfersFactory transfersFactory;
-	private int noClients;
-	private static final double CONSUMER_PERCENTAGE = 0.5;
+    private List<NetworkClientRunner> clients;
+    private SchedulerStrategy strategy;
+    private NetworkTopology networkTopology;
+    private TransfersFactory transfersFactory;
+    private int noClients;
+    private static final double CONSUMER_PERCENTAGE = 0.5;
 
-	public NetworkSimulatorRunner(NetworkTopology networkTopo, int noHops, int noNodes,
-			int noNetworkClientsRunners, TransfersInput input) {
-		this.networkTopo = networkTopo;
-		setupClients(noNetworkClientsRunners);
-		setupTransferGenerator(input);
-		this.strategy = new ShortestQueueStrategy();
-		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
-		CSVWriter.writeNetwrokStateData("init-state.csv", state);
-		this.noClients = noNodes;
-	}
+    public NetworkSimulatorRunner(NetworkTopology networkTopo, int noNodes,
+                                  int noNetworkClientsRunners, TransfersInput input) {
+        this.networkTopology = networkTopo;
+        setupClients(noNetworkClientsRunners);
+        setupTransferGenerator(input);
+        this.strategy = new ShortestQueueStrategy();
+        Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
+        CSVWriter.writeNetwrokStateData("init-state.csv", state);
+        this.noClients = noNodes;
+    }
 
-	private void setupClients(int size) {
-		clients = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			NetworkClientRunner runner = new NetworkClientRunner(i, networkTopo);
-			clients.add(runner);
-			new Thread(runner).start();
-		}
-	}
+    private void setupClients(int size) {
+        clients = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            NetworkClientRunner runner = new NetworkClientRunner(i, networkTopology);
+            clients.add(runner);
+            new Thread(runner).start();
+        }
+    }
 
-	private void setupTransferGenerator(TransfersInput input){
-		Set<LNVertex> verticesSet = networkTopo.getVertices();
-		LNVertex[] vertices = new LNVertex[verticesSet.size()];
-		verticesSet.toArray(vertices);
-		transfersFactory = TransfersFactory.getInstance(vertices, input);
-	}
+    private void setupTransferGenerator(TransfersInput input) {
+        Set<LNVertex> verticesSet = networkTopology.getVertices();
+        LNVertex[] vertices = new LNVertex[verticesSet.size()];
+        verticesSet.toArray(vertices);
+        transfersFactory = TransfersFactory.getInstance(vertices, input);
+    }
 
-	public void run() {
-		int consumers = (int) (noClients *CONSUMER_PERCENTAGE);
-		int block = -1;
-		while (BlockCounterRunner.getInstance().running()) {
-			int newBlock = BlockCounterRunner.getInstance().currentBlock();
-			if (block + 1 == newBlock) {
-				strategy.dispatchTransfer(transfersFactory.generate(newBlock, consumers ), clients);
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				block = newBlock;
-			}
-		}
-		System.out.println("--------- FINISHED ---------");
-		Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
-		CSVWriter.writeNetwrokStateData("final-state.csv", state);
-		CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopo.getRefunds());
-		CSVWriter.writeHopsFeesData("hop-fees.csv", networkTopo.getFees());
-		CSVWriter.writeHopsFeesData("hop-total-flow.csv", networkTopo.getTotalFlow());
-		CSVWriter.writeInputEnergyData("inputEnergy.csv", transfersFactory.getEnergyValues());
-		CSVWriter.writeConsumptionData("dailyProfileClients.csv", transfersFactory.getClientsDailyProfile());
-		CSVWriter.writeConsumptionData("clientsHistogram.csv", transfersFactory.getClientsConsumptionProfileHistogram());
-		//NetworkRunnerUtils.updateAndSaveTestNetworkGraph(networkTopo.getNetworkGraph(),  networkTopo.getRefunds());
-	}
+    public void run() {
+        int consumers = (int) (noClients * CONSUMER_PERCENTAGE);
+        int block = -1;
+        while (BlockCounterRunner.getInstance().running()) {
+            int newBlock = BlockCounterRunner.getInstance().currentBlock();
+            if (block + 1 == newBlock) {
+                strategy.dispatchTransfer(transfersFactory.generate(newBlock, consumers), clients);
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                block = newBlock;
+            }
+        }
+        System.out.println("--------- FINISHED ---------");
+        Map<String, Map<String, Integer>> state = networkTopology.getNodesState();
+        CSVWriter.writeNetwrokStateData("final-state.csv", state);
+        CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopology.getRefunds());
+        CSVWriter.writeHopsFeesData("hop-fees.csv", networkTopology.getFees());
+        CSVWriter.writeHopsFeesData("hop-total-flow.csv", networkTopology.getTotalFlow());
+        CSVWriter.writeInputEnergyData("inputEnergy.csv", transfersFactory.getEnergyValues());
+        CSVWriter.writeConsumptionData("dailyProfileClients.csv", transfersFactory.getClientsDailyProfile());
+        CSVWriter.writeConsumptionData("clientsHistogram.csv", transfersFactory.getClientsConsumptionProfileHistogram());
+        //NetworkRunnerUtils.updateAndSaveTestNetworkGraph(networkTopology.getNetworkGraph(),  networkTopology.getRefunds());
+    }
 
-	public static void main(String[] args) {
-		int noHops = 1;
-		int noClients = 200;
-		int noNetworkClientsRunners = 1;
-		int noSimulationSteps = 1;
+    public static void main(String[] args) {
+        int noHops = 1;
+        int noClients = 200;
+        int noNetworkClientsRunners = 1;
+        int noSimulationSteps = 24;
 
-		NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
-				.getInstance(NetworkTopologyAbstractFactory.Type.RANDOM);
+        NetworkTopologyAbstractFactory topoFactory = NetworkTopologyAbstractFactory
+                .getInstance(NetworkTopologyAbstractFactory.Type.RANDOM);
 
-		//NetworkTopology topology = topoFactory.createTopology("./src/main/resources/graph.xml");
-		NetworkTopology topology = topoFactory.createTopology(1,noClients);
-		GraphIO.writeGraphML(topology.getNetworkGraph(), "graph.xml");
-		//NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
-		BlockCounterRunner clock = BlockCounterRunner.getInstance();
-		clock.setSimulationSteps(noSimulationSteps);
-		NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noClients,
-				noNetworkClientsRunners, TransfersInput.GAUSSIAN);
+        //NetworkTopology topology = topoFactory.createTopology("./src/main/resources/graph.xml");
+        NetworkTopology topology = topoFactory.createTopology(noHops, noClients);
+        GraphIO.writeGraphML(topology.getNetworkGraph(), "graph.xml");
+        //NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
+        BlockCounterRunner clock = BlockCounterRunner.getInstance();
+        clock.setSimulationSteps(noSimulationSteps);
+        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noClients,
+                noNetworkClientsRunners, TransfersInput.GAUSSIAN);
 
-		new Thread(runner).start();
-		new Thread(clock).start();
-	}
+        new Thread(runner).start();
+        new Thread(clock).start();
+    }
 }

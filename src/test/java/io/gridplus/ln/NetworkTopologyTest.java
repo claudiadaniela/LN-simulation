@@ -9,14 +9,15 @@ import io.gridplus.ln.model.NetworkTopology;
 public class NetworkTopologyTest {
     protected static NetworkTopology networkTop;
     protected static final double EPSILON = 0.000001;
+
     @Before
-    public  void init() {
+    public void init() {
         networkTop = new NetworkTopology();
-        LNVertex v0 = networkTop.addNode(0, 0.01, new LNVertex.NetworkStatus(1),false);
-        LNVertex v1 = networkTop.addNode(1, 0, new LNVertex.NetworkStatus(1),false);
-        LNVertex v2 = networkTop.addNode(2, 0, new LNVertex.NetworkStatus(1),false);
-        LNVertex v3 = networkTop.addNode(3, 0, new LNVertex.NetworkStatus(1),false);
-        LNVertex v4 = networkTop.addNode(4, 0, new LNVertex.NetworkStatus(1),false);
+        LNVertex v0 = networkTop.addNode(0, 0.01, new LNVertex.NetworkStatus(1), false);
+        LNVertex v1 = networkTop.addNode(1, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v2 = networkTop.addNode(2, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v3 = networkTop.addNode(3, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v4 = networkTop.addNode(4, 0, new LNVertex.NetworkStatus(1), false);
 
         networkTop.addChannel(v0, v1, LNEdge.ChannelStatus.OPENED, 3, 0);
         networkTop.addChannel(v0, v2, LNEdge.ChannelStatus.OPENED, 4, 0);

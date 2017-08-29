@@ -11,8 +11,8 @@ public class GaussianConsumptionGenerator {
 		Random r = new Random();
 		int[] values = new int[size];
 		for (int i = 0; i < size; i++) {
-			double val = r.nextGaussian() * TransfersSetup.HOUSEHOLD_ENERGH_STD.value()
-					+ TransfersSetup.HOUSEHOULD_ENERGY_MEAN.value();
+			double val = r.nextGaussian() * TransfersSetup.HOUSEHOLD_ENERGY_STD.value()
+					+ TransfersSetup.HOUSEHOLD_ENERGY_MEAN.value();
 			if (val < 0)
 				continue;
 			int value = (int) Math.round(val);
@@ -23,7 +23,7 @@ public class GaussianConsumptionGenerator {
 
 
 	public static int[] histogram(int[] values) {
-		int[] histogram = new int[(int) TransfersSetup.HOUSEHOLD_MAX_VALUE.value()];
+		int[] histogram = new int[(int) TransfersSetup.HOUSEHOLD_MAX_TOKEN_VALUE.value()];
 		for (int i = 0; i < values.length; i++) {
 			histogram[values[i]]++;
 		}

@@ -11,7 +11,6 @@ public class BlockCounterRunner implements Runnable {
     private volatile boolean running;
 
     private BlockCounterRunner() {
-
     }
 
     public static BlockCounterRunner getInstance() {

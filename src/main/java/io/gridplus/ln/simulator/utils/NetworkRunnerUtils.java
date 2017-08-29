@@ -23,7 +23,7 @@ public class NetworkRunnerUtils {
 			if(e.getSource().hop){
 				e.setTokenAmount(hopAmount);
 			}else{
-				e.setTokenAmount((int)TransfersSetup.HOUSEHOLD_MAX_VALUE.value());
+				e.setTokenAmount((int)TransfersSetup.HOUSEHOLD_MAX_TOKEN_VALUE.value());
 			}
 			
 		}

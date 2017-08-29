@@ -19,5 +19,6 @@ public abstract class NetworkTopologyAbstractFactory {
     }
 
     public abstract NetworkTopology createTopology(int noHops, int noNodes);
+
     public abstract NetworkTopology createTopology(String file);
 }

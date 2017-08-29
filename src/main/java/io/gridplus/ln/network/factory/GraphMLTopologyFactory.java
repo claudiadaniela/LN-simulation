@@ -9,17 +9,17 @@ import io.gridplus.ln.network.utils.GraphIO;
 
 
 public class GraphMLTopologyFactory extends NetworkTopologyAbstractFactory {
-   // private static final String FILE = "./src/main/resources/graph.xml";
+    // private static final String FILE = "./src/main/resources/graph.xml";
 
     @Override
     public NetworkTopology createTopology(int noHops, int noNodes) {
-        return  new NetworkTopology();
+        return new NetworkTopology();
     }
 
     @Override
     public NetworkTopology createTopology(String file) {
         SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph = GraphIO.readGraphML(file);
-        NetworkTopology topo =  new NetworkTopology(networkGraph);
+        NetworkTopology topo = new NetworkTopology(networkGraph);
         topo.initInvariant();
         return topo;
 

@@ -37,7 +37,7 @@ public class NetworkSetupController {
         BlockCounterRunner clock = BlockCounterRunner.getInstance();
         clock.setSimulationSteps(noSimulationSteps);
        
-        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noHops, noNodes, noNetworkClientsRunners, TransfersFactory.TransfersInput.GAUSSIAN);
+        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noNodes, noNetworkClientsRunners, TransfersFactory.TransfersInput.GAUSSIAN);
         new Thread(runner).start();
         new Thread(clock).start();
     }

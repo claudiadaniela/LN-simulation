@@ -116,7 +116,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V0- Amount01", edge01.getTotalAmount(), amount01 - amountTransferred);
         assertEquals("V1- Amount10", edge10.getTotalAmount(), amount10 + amountTransferred);
 
-        double paidFee= amountTransferred * edge12.getSource().feePercentage;
+        double paidFee = amountTransferred * edge12.getSource().feePercentage;
         double amount12New = amount12 - (amountTransferred - paidFee);
         double amount21New = amount21 + (amountTransferred - paidFee);
         double amount23New = amount23 - (amountTransferred - paidFee);
@@ -125,12 +125,12 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         double amount43New = amount43 + (amountTransferred - paidFee);
 
 
-        assertEquals("V1- Amount12", true, Math.abs(edge12.getTotalAmount()- amount12New) < EPSILON);
-        assertEquals("V2- Amount21", true,  Math.abs(edge21.getTotalAmount() - amount21New) < EPSILON);
-        assertEquals("V1- Amount23", true, Math.abs(edge23.getTotalAmount()- amount23New) < EPSILON);
-        assertEquals("V2- Amount32", true,  Math.abs(edge32.getTotalAmount() - amount32New) < EPSILON);
-        assertEquals("V1- Amount34", true, Math.abs(edge34.getTotalAmount()- amount34New) < EPSILON);
-        assertEquals("V2- Amount43", true,  Math.abs(edge43.getTotalAmount() - amount43New) < EPSILON);
+        assertEquals("V1- Amount12", true, Math.abs(edge12.getTotalAmount() - amount12New) < EPSILON);
+        assertEquals("V2- Amount21", true, Math.abs(edge21.getTotalAmount() - amount21New) < EPSILON);
+        assertEquals("V1- Amount23", true, Math.abs(edge23.getTotalAmount() - amount23New) < EPSILON);
+        assertEquals("V2- Amount32", true, Math.abs(edge32.getTotalAmount() - amount32New) < EPSILON);
+        assertEquals("V1- Amount34", true, Math.abs(edge34.getTotalAmount() - amount34New) < EPSILON);
+        assertEquals("V2- Amount43", true, Math.abs(edge43.getTotalAmount() - amount43New) < EPSILON);
 
     }
 

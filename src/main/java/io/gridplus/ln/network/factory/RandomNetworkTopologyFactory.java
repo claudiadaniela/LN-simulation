@@ -1,4 +1,4 @@
- package io.gridplus.ln.network.factory;
+package io.gridplus.ln.network.factory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +12,15 @@ import io.gridplus.ln.model.NetworkTopology;
 
 public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory {
 
-    private static double HOP_FEE=0.01;
-    
+    private static double HOP_FEE = 0.01;
+
     @Override
     public NetworkTopology createTopology(int noHops, int noNodes) {
         NetworkTopology topology = new NetworkTopology();
 
         List<LNVertex> hops = new ArrayList<LNVertex>();
         Random rand = new Random();
-        int initTokenHop = (int) TransfersSetup.HOUSEHOLD_MAX_VALUE.value();
+        int initTokenHop = (int) TransfersSetup.HOUSEHOLD_MAX_TOKEN_VALUE.value();
 
         for (int i = 0; i < noHops; i++) {
             LNVertex hop = topology.addNode(i, HOP_FEE, new LNVertex.NetworkStatus(1), true);
@@ -34,7 +34,7 @@ public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory
         }
 
         for (int i = noHops; i < noNodes + noHops; i++) {
-            LNVertex v1 = topology.addNode(i, 0, new LNVertex.NetworkStatus(1),false);
+            LNVertex v1 = topology.addNode(i, 0, new LNVertex.NetworkStatus(1), false);
             LNVertex v2 = hops.get(rand.nextInt(noHops));
 
             int tokenAmountV1 = initTokenHop;

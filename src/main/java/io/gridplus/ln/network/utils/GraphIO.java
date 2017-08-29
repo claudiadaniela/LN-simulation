@@ -38,8 +38,8 @@ import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.view.NetworkGraphView;
 
 public final class GraphIO {
-    private static final Logger LOGGER = Logger.getLogger(GraphIO.class
-            .getName());
+    private static final Logger LOGGER = Logger.getLogger(GraphIO.class.getName());
+
     private static GraphExporter<LNVertex, LNEdge> createExporter() {
         GraphMLExporter<LNVertex, LNEdge> exporter =
                 new GraphMLExporter<>((v) -> v.getId() + "", null, new IntegerComponentNameProvider<>(), null);
@@ -55,7 +55,7 @@ public final class GraphIO {
                     Map<String, String> m = new HashMap<>();
                     if (v.feePercentage != 0) {
                         m.put("feePercentage", v.feePercentage + "");
-                        m.put("hop", v.hop? "1":"0");
+                        m.put("hop", v.hop ? "1" : "0");
                         m.put("networkStatus", v.networkStatus.getHealthScore() + "");
                     }
                     return m;
@@ -82,11 +82,11 @@ public final class GraphIO {
             LNVertex v = new LNVertex(idValue);
             if (attributes.get("feePercentage") != null) {
                 double feeValue = Double.parseDouble(attributes.get("feePercentage"));
-                v.feePercentage =feeValue;
+                v.feePercentage = feeValue;
             }
             if (attributes.get("hop") != null) {
-                boolean hopValue = attributes.get("hop").equals("1")? true: false;
-                v.hop=hopValue;
+                boolean hopValue = attributes.get("hop").equals("1") ? true : false;
+                v.hop = hopValue;
             }
             if (attributes.get("networkStatus") != null) {
                 double statusValue = Double.parseDouble(attributes.get("networkStatus"));
@@ -99,7 +99,7 @@ public final class GraphIO {
                 (from, to, label, attributes) -> {
                     int tokenAmount = Integer.parseInt(attributes.get("tokenAmount"));
                     LNEdge edge = new LNEdge();
-                    edge.addTokenAmount( tokenAmount);
+                    edge.addTokenAmount(tokenAmount);
                     return edge;
                 };
 
@@ -119,7 +119,7 @@ public final class GraphIO {
             Writer writer = new StringWriter();
             exporter.exportGraph(graph, writer);
             String graph1AsGraphML = writer.toString();
-            stringToXMLFile(graph1AsGraphML,file);
+            stringToXMLFile(graph1AsGraphML, file);
         } catch (ExportException e) {
             e.printStackTrace();
         }

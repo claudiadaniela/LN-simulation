@@ -6,5 +6,5 @@ import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.simulator.NetworkClientRunner;
 
 public interface SchedulerStrategy {
-	public void dispatchTransfer(List<Transfer> transfer, List<NetworkClientRunner> clients);
+	 void dispatchTransfer(List<Transfer> transfer, List<NetworkClientRunner> clients);
 }
