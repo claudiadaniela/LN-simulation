@@ -15,33 +15,33 @@ public class LNEdge extends DefaultWeightedEdge {
 	 * Token Amount on Directed Edge: A-> B the amount deposited by A
 	 * lockedTokenAmount: the amount blocked in transfers from A-> B
 	 */
-	private AtomicInteger tokenAmount;
-	public Map<Integer, Integer> lockedTokenAmount;
+	private volatile double tokenAmount;
+	public Map<Integer, Double> lockedTokenAmount;
 
 	public LNEdge() {
 		lockedTokenAmount = new HashMap<>();
-		tokenAmount = new AtomicInteger(0);
+		tokenAmount = 0;
 		this.status = ChannelStatus.OPENED;
 	}
 
-	public void addTokenAmount(int amount){
-		tokenAmount.addAndGet(amount);
+	public synchronized void addTokenAmount(double amount){
+		tokenAmount+=amount;
 	}
-	public void setTokenAmount(int amount){
-		tokenAmount= new AtomicInteger(amount);
+	public synchronized void setTokenAmount(double amount){
+		tokenAmount= amount;
 	}
-	public int getLockedAmount(int block) {
-		Integer amount = lockedTokenAmount.get(block);
+	public double getLockedAmount(int block) {
+		Double amount = lockedTokenAmount.get(block);
 		return amount != null ? amount : 0;
 	}
 
 
-	public int getAvailableAmount(int block) {
-		return tokenAmount.get() - getLockedAmount(block);
+	public double getAvailableAmount(int block) {
+		return tokenAmount - getLockedAmount(block);
 	}
 	
-	public int getTotalAmount() {
-		return tokenAmount.get();
+	public double getTotalAmount() {
+		return tokenAmount;
 	}
 
 	public double getWeight() {
@@ -69,19 +69,17 @@ public class LNEdge extends DefaultWeightedEdge {
 
 		LNEdge lnEdge = (LNEdge) o;
 
-		if (tokenAmount != null ? !tokenAmount.equals(lnEdge.tokenAmount) : lnEdge.tokenAmount != null) return false;
-		if (super.getSource() != lnEdge.getSource()) return false;
-		if (super.getTarget() != lnEdge.getTarget()) return false;
+		if (!super.getSource().equals(lnEdge.getSource())) return false;
+		if (!super.getTarget().equals(lnEdge.getTarget())) return false;
 		return true;
 	}
 
 
 	@Override
 	public int hashCode() {
-		int result = tokenAmount != null ? tokenAmount.hashCode() : 0;
 		int r2=(super.getSource()!=null)? super.getSource().hashCode():0;
 		int r3=  (super.getTarget()!=null)? super.getTarget().hashCode():0;
-		result = 31 * result + r2;
+		int result = 31 *  r2;
 		result = 31 * result + r3;
 		return result;
 	}

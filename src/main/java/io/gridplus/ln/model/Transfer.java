@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class Transfer {
     private LNVertex source;
     private LNVertex recipient;
-    private int amount;
+    private double amount;
     /**
      * Simulate the time that a transfer locks the tokens lockTime< HTLC-time
      */
@@ -34,7 +34,7 @@ public class Transfer {
         return recipient;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 

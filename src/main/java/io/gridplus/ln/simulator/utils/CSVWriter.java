@@ -53,7 +53,7 @@ public class CSVWriter {
 		}
 	}
 
-	public static void writeNetwrokStateData(String file, Map<String, Map<String, Integer>> networkState) {
+	public static void writeNetwrokStateData(String file, Map<String, Map<String, Double>> networkState) {
 		PrintWriter pw;
 		StringBuilder sb = new StringBuilder();
 		sb.append("source node");
@@ -64,14 +64,14 @@ public class CSVWriter {
 		sb.append('\n');
 		try {
 			pw = new PrintWriter(new File(file));
-			for (Map.Entry<String, Map<String, Integer>> entry : networkState.entrySet()) {
+			for (Map.Entry<String, Map<String, Double>> entry : networkState.entrySet()) {
 				sb.append(entry.getKey());
 				sb.append(',');
 				sb.append('-');
 				sb.append(',');
 				sb.append('-');
 				sb.append('\n');
-				for (Map.Entry<String, Integer> target : entry.getValue().entrySet()) {
+				for (Map.Entry<String, Double> target : entry.getValue().entrySet()) {
 					sb.append("-");
 					sb.append(',');
 					sb.append(target.getKey());
@@ -88,7 +88,7 @@ public class CSVWriter {
 		}
 	}
 
-	public static void writeHopsRefundsData(String file, Map<LNEdge, Integer> hopsRefundState) {
+	public static void writeHopsRefundsData(String file, Map<LNEdge, Double> hopsRefundState) {
 		PrintWriter pw;
 		StringBuilder sb = new StringBuilder();
 		sb.append("source node");
@@ -99,7 +99,7 @@ public class CSVWriter {
 		sb.append('\n');
 		try {
 			pw = new PrintWriter(new File(file));
-			for (Map.Entry<LNEdge, Integer> entry : hopsRefundState.entrySet()) {
+			for (Map.Entry<LNEdge, Double> entry : hopsRefundState.entrySet()) {
 				sb.append(entry.getKey().getSource());
 				sb.append(',');
 				sb.append(entry.getKey().getTarget());

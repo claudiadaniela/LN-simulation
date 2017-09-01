@@ -1,6 +1,11 @@
 package io.gridplus.ln.multipath;
 
+import io.gridplus.ln.model.LNEdge;
+import io.gridplus.ln.model.LNVertex;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * SOURCE :
@@ -8,7 +13,8 @@ import java.util.Arrays;
  */
 public class MinCostMaxFlowAlgorithm {
     private boolean found[];
-    private int noNodes, capacity[][], flow[][], dad[];
+    private int noNodes, flow[][], dad[];
+    private double capacity[][];
     private double dist[], pi[];
     private double cost[][];
 
@@ -50,23 +56,15 @@ public class MinCostMaxFlowAlgorithm {
         return found[sink];
     }
 
-    public double[] getMaxFlow(int cap[][], double cost[][], int source, int sink) {
-        this.capacity = cap;
-        this.cost = cost;
+    public double[] getMaxFlow(int source, int sink) {
 
-        noNodes = cap.length;
-        found = new boolean[noNodes];
-        flow = new int[noNodes][noNodes];
-        dist = new double[noNodes + 1];
-        dad = new int[noNodes];
-        pi = new double[noNodes];
 
         int totflow = 0;
         double totcost = 0;
         while (search(source, sink)) {
-            int amt = INF;
+            double amt = INF;
             for (int x = sink; x != source; x = dad[x])
-                amt = Math.min(amt, flow[x][dad[x]] != 0 ? flow[x][dad[x]] : cap[dad[x]][x] - flow[dad[x]][x]);
+                amt = Math.min(amt, flow[x][dad[x]] != 0 ? flow[x][dad[x]] : capacity[dad[x]][x] - flow[dad[x]][x]);
             for (int x = sink; x != source; x = dad[x]) {
                 if (flow[x][dad[x]] != 0) {
                     flow[x][dad[x]] -= amt;
@@ -80,5 +78,38 @@ public class MinCostMaxFlowAlgorithm {
         }
 
         return new double[]{totflow, totcost};
+    }
+
+    public static MinCostMaxFlowAlgorithm getInstance(SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph) {
+        MinCostMaxFlowAlgorithm alg = new MinCostMaxFlowAlgorithm();
+        alg.noNodes = networkGraph.vertexSet().size();
+        double[][] capacity = new double[alg.noNodes][alg.noNodes];
+        double[][] fee = new double[alg.noNodes][alg.noNodes];
+
+        for (int i = 0; i < alg.noNodes; i++) {
+            for (int j = 0; j < i; j++) {
+                Set<LNEdge> edgeSet = networkGraph.getAllEdges(new LNVertex(i), new LNVertex(j));
+                for (LNEdge e : edgeSet) {
+                    capacity[i][j] = e.getTotalAmount();
+                    fee[i][j] = e.getWeight();
+                }
+
+                Set<LNEdge> edgeSet2 = networkGraph.getAllEdges(new LNVertex(j), new LNVertex(i));
+                for (LNEdge e : edgeSet2) {
+                    capacity[j][i] = e.getTotalAmount();
+                    fee[j][i] = e.getWeight();
+                }
+            }
+        }
+
+        alg.capacity = capacity;
+        alg.cost = fee;
+
+        alg.found = new boolean[alg.noNodes];
+        alg.flow = new int[alg.noNodes][alg.noNodes];
+        alg.dist = new double[alg.noNodes + 1];
+        alg.dad = new int[alg.noNodes];
+        alg.pi = new double[alg.noNodes];
+        return alg;
     }
 }

@@ -24,7 +24,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
 
         LNPathValidator pathValidator = new LNPathValidator(5);
 
-        List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 5, pathValidator);
+        List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2,  pathValidator);
 
         assertEquals("Paths found", 1, paths.size());
         GraphPath<LNVertex, LNEdge> path0 = paths.get(0);
@@ -45,17 +45,17 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V1-Source", edge34.getSource(), new LNVertex(3));
         assertEquals("V1-Target", edge34.getTarget(), new LNVertex(4));
 
-        int amount03 = edge03.getTotalAmount();
-        int amount34 = edge34.getTotalAmount();
-        int amount30 = edge30.getTotalAmount();
-        int amount43 = edge43.getTotalAmount();
+        double amount03 = edge03.getTotalAmount();
+        double amount34 = edge34.getTotalAmount();
+        double amount30 = edge30.getTotalAmount();
+        double amount43 = edge43.getTotalAmount();
 
         networkTop.sendTransfer(t);
 
-        assertEquals("V0- Amount03", edge03.getTotalAmount(), amount03 - amountTransferred);
-        assertEquals("V3- Amount03", edge30.getTotalAmount(), amount30 + amountTransferred);
-        assertEquals("V3- Amount34", edge34.getTotalAmount(), amount34 - amountTransferred);
-        assertEquals("V4- Amount34", edge43.getTotalAmount(), amount43 + amountTransferred);
+        assertEquals("V0- Amount03", Math.abs(edge03.getTotalAmount()- (amount03 - amountTransferred))<EPSILON, true);
+        assertEquals("V3- Amount03", Math.abs(edge30.getTotalAmount()-(amount30 + amountTransferred))< EPSILON, true);
+        assertEquals("V3- Amount34", Math.abs(edge34.getTotalAmount()- (amount34 - amountTransferred)) <EPSILON, true);
+        assertEquals("V4- Amount34", Math.abs(edge43.getTotalAmount()- (amount43 + amountTransferred))<EPSILON, true);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         Transfer t = new Transfer(v1, v2, amountTransferred);
 
         LNPathValidator pathValidator = new LNPathValidator(amountTransferred);
-        List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 2, pathValidator);
+        List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2,  pathValidator);
         assertEquals("Paths found", 3, paths.size());
 
         GraphPath<LNVertex, LNEdge> path2 = paths.get(2);
@@ -96,14 +96,14 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V3-Target p2", edges.get(3).getTarget(), new LNVertex(4));
 
 
-        int amount01 = edge01.getTotalAmount();
-        int amount10 = edge10.getTotalAmount();
-        int amount12 = edge12.getTotalAmount();
-        int amount21 = edge21.getTotalAmount();
-        int amount23 = edge23.getTotalAmount();
-        int amount32 = edge32.getTotalAmount();
-        int amount34 = edge34.getTotalAmount();
-        int amount43 = edge43.getTotalAmount();
+        double amount01 = edge01.getTotalAmount();
+        double amount10 = edge10.getTotalAmount();
+        double amount12 = edge12.getTotalAmount();
+        double amount21 = edge21.getTotalAmount();
+        double amount23 = edge23.getTotalAmount();
+        double amount32 = edge32.getTotalAmount();
+        double amount34 = edge34.getTotalAmount();
+        double amount43 = edge43.getTotalAmount();
 
         LNEdge edge02 = networkTop.getEdge(new LNVertex(0), new LNVertex(2));
         edge02.status = LNEdge.ChannelStatus.CLOSED;
@@ -113,8 +113,8 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         boolean valid = networkTop.sendTransfer(t);
         assertEquals("Transferred", valid, true);
 
-        assertEquals("V0- Amount01", edge01.getTotalAmount(), amount01 - amountTransferred);
-        assertEquals("V1- Amount10", edge10.getTotalAmount(), amount10 + amountTransferred);
+        assertEquals("V0- Amount01", Math.abs(edge01.getTotalAmount()-( amount01 - amountTransferred)) <EPSILON, true);
+        assertEquals("V1- Amount10", Math.abs(edge10.getTotalAmount()-( amount10 + amountTransferred))<EPSILON, true);
 
         double paidFee = amountTransferred * edge12.getSource().feePercentage;
         double amount12New = amount12 - (amountTransferred - paidFee);

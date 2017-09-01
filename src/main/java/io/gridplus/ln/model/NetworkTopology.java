@@ -17,10 +17,10 @@ import io.gridplus.ln.simulator.BlockCounterRunner;
 public class NetworkTopology {
     private static final Logger LOGGER = Logger.getLogger(NetworkTopology.class.getName());
     private SimpleDirectedWeightedGraph<LNVertex, LNEdge> networkGraph;
-    private Map<LNEdge, Integer> refunds;
-    private Map<LNVertex, Integer> totalFlow;
+    private Map<LNEdge, Double> refunds;
+    private Map<LNVertex, Double> totalFlow;
     private Map<LNVertex, Double> fees;
-    private Map<LNEdge, Integer> invariantEdges;
+    private Map<LNEdge, Double> invariantEdges;
     private boolean REFUND_ACTIVE;
 
     public NetworkTopology() {
@@ -47,7 +47,7 @@ public class NetworkTopology {
         return vertex;
     }
 
-    public void addChannel(LNVertex v1, LNVertex v2, LNEdge.ChannelStatus status, int tokenAmountV1,
+    public void addChannel(LNVertex v1, LNVertex v2, LNEdge.ChannelStatus status, double tokenAmountV1,
                            int tokenAmountV2) {
         LNEdge e12 = networkGraph.addEdge(v1, v2);
         e12.status = status;
@@ -59,7 +59,7 @@ public class NetworkTopology {
         networkGraph.setEdgeWeight(e21, v2.feePercentage);
     }
 
-    public List<GraphPath<LNVertex, LNEdge>> findShortestPaths(LNVertex id1, LNVertex id2, int amount,
+    public List<GraphPath<LNVertex, LNEdge>> findShortestPaths(LNVertex id1, LNVertex id2,
                                                                PathValidator<LNVertex, LNEdge> validator) {
         KShortestPathAlgorithm<LNVertex, LNEdge> pathsAlg = new KShortestPaths<LNVertex, LNEdge>(networkGraph, 3,
                 validator);
@@ -72,8 +72,7 @@ public class NetworkTopology {
         if (!isWellFormed() && !REFUND_ACTIVE) {
             LOGGER.log(Level.SEVERE, "Channel tokens are not consistent");
         }
-        List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
-                transfer.getAmount(), new LNPathValidator(transfer.getAmount()));
+        List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(), new LNPathValidator(transfer.getAmount()));
         if (paths == null || paths.size() == 0) {
             return false;
         }
@@ -81,7 +80,7 @@ public class NetworkTopology {
         List<LNEdge> edges = bestPath.getEdgeList();
         int lockedTime = bestPath.getLength();
         int currentBlock = BlockCounterRunner.getInstance().currentBlock();
-        int amount = transfer.getAmount();
+        double amount = transfer.getAmount();
         double fee = 0;
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
@@ -96,7 +95,7 @@ public class NetworkTopology {
                     eyx.addTokenAmount(amount);
                     for (int i = currentBlock; i < lockedTime; i++) {
                         if (eyx.lockedTokenAmount.containsKey(i)) {
-                            int ammountExisting = eyx.lockedTokenAmount.get(i);
+                            double ammountExisting = eyx.lockedTokenAmount.get(i);
                             eyx.lockedTokenAmount.put(i, amount + ammountExisting);
                         } else {
                             eyx.lockedTokenAmount.put(i, amount);
@@ -124,8 +123,7 @@ public class NetworkTopology {
         if (!REFUND_ACTIVE) {
             return false;
         }
-        List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),
-                transfer.getAmount(), null);
+        List<GraphPath<LNVertex, LNEdge>> paths = findShortestPaths(transfer.getSource(), transfer.getRecipient(),null);
         if (paths == null || paths.size() == 0) {
             return false;
         }
@@ -134,7 +132,7 @@ public class NetworkTopology {
         int currentBlock = BlockCounterRunner.getInstance().currentBlock();
         for (LNEdge exy : edges) {
             LNVertex ex = exy.getSource();
-            int missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
+            double missingAmount = transfer.getAmount() - exy.getAvailableAmount(currentBlock);
             if (ex.hop && missingAmount > 0) {
                 refund(exy, missingAmount);
             }
@@ -142,7 +140,7 @@ public class NetworkTopology {
         return true;
     }
 
-    private void refund(LNEdge hopEdge, int amount) {
+    private void refund(LNEdge hopEdge, double amount) {
         if (!hopEdge.getSource().hop) {
             return;
         }
@@ -155,11 +153,11 @@ public class NetworkTopology {
         refunds.put(hopEdge, amount);
     }
 
-    public Map<String, Map<String, Integer>> getNodesState() {
+    public Map<String, Map<String, Double>> getNodesState() {
         Set<LNVertex> vertexSet = networkGraph.vertexSet();
-        Map<String, Map<String, Integer>> networkState = new HashMap<String, Map<String, Integer>>();
+        Map<String, Map<String, Double>> networkState = new HashMap<String, Map<String, Double>>();
         for (LNVertex v : vertexSet) {
-            Map<String, Integer> edgeState = new HashMap<>();
+            Map<String, Double> edgeState = new HashMap<>();
             networkState.put(v.toString(), edgeState);
 
             Set<LNEdge> edges = networkGraph.outgoingEdgesOf(v);
@@ -178,7 +176,7 @@ public class NetworkTopology {
         fees.put(v, fee);
     }
 
-    private void updateTotalFlow(LNVertex v, int amount) {
+    private void updateTotalFlow(LNVertex v, double amount) {
         if (!v.hop) {
             return;
         }
@@ -188,7 +186,7 @@ public class NetworkTopology {
         totalFlow.put(v, amount);
     }
 
-    public Map<LNEdge, Integer> getRefunds() {
+    public Map<LNEdge, Double> getRefunds() {
         return refunds;
     }
 
@@ -196,7 +194,7 @@ public class NetworkTopology {
         return fees;
     }
 
-    public Map<LNVertex, Integer> getTotalFlow() {
+    public Map<LNVertex, Double> getTotalFlow() {
         return totalFlow;
     }
 
@@ -204,14 +202,14 @@ public class NetworkTopology {
         invariantEdges = getTotalBiEdgeAmount();
     }
 
-    private Map<LNEdge, Integer> getTotalBiEdgeAmount() {
-        Map<LNEdge, Integer> bidirEdges = new TreeMap<>(new LNEdge.LNEdgeComparator());
+    private Map<LNEdge, Double> getTotalBiEdgeAmount() {
+        Map<LNEdge, Double> bidirEdges = new TreeMap<>(new LNEdge.LNEdgeComparator());
         Set<LNEdge> edges = networkGraph.edgeSet();
         Set<LNEdge> inverse = new HashSet<>();
         for (LNEdge edge : edges) {
             if (!inverse.contains(edge)) {
                 LNEdge edgeR = networkGraph.getEdge(edge.getTarget(), edge.getSource());
-                int totalAmountEdge = edge.getTotalAmount() + edgeR.getTotalAmount();
+                double totalAmountEdge = edge.getTotalAmount() + edgeR.getTotalAmount();
                 inverse.add(edgeR);
                 bidirEdges.put(edge, totalAmountEdge);
             }
@@ -223,8 +221,8 @@ public class NetworkTopology {
         if (REFUND_ACTIVE) {
             return false;
         }
-        Map<LNEdge, Integer> bidirEdges = getTotalBiEdgeAmount();
-        for (Map.Entry<LNEdge, Integer> entry : bidirEdges.entrySet()) {
+        Map<LNEdge, Double> bidirEdges = getTotalBiEdgeAmount();
+        for (Map.Entry<LNEdge, Double> entry : bidirEdges.entrySet()) {
             if (!entry.getValue().equals(invariantEdges.get(entry.getKey()))) {
                 return false;
             }

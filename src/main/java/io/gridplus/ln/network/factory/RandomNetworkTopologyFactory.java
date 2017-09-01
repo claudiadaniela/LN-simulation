@@ -12,7 +12,7 @@ import io.gridplus.ln.model.NetworkTopology;
 
 public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory {
 
-    private static double HOP_FEE = 0.00033;
+    private static double HOP_FEE = 0.01;
 
     @Override
     public NetworkTopology createTopology(int noHops, int noNodes) {

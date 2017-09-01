@@ -23,7 +23,7 @@ public class OneHopTopologyTest {
 
     private static final double EPSILON = 0.000001;
 
-    private Map<LNEdge, Integer> refunds;
+    private Map<LNEdge, Double> refunds;
 
     @Test
     public void testTransfers() {
@@ -79,12 +79,12 @@ public class OneHopTopologyTest {
             LNEdge edgeV2H = networkTop2.getEdge(v2, hop2);
             LNEdge edgeHV2 = networkTop2.getEdge(hop2, v2);
 
-            assertEquals("edge amount Direct", edgeV1H.getTotalAmount(), edgeV2H.getTotalAmount());
-            assertEquals("edge amount Direct", edgeHV1.getTotalAmount(), edgeHV2.getTotalAmount());
+            assertEquals("edge amount Direct", Math.abs(edgeV1H.getTotalAmount()- edgeV2H.getTotalAmount()) <EPSILON, true);
+            assertEquals("edge amount Direct", Math.abs(edgeHV1.getTotalAmount()- edgeHV2.getTotalAmount())<EPSILON, true);
         }
 
-        Map<LNEdge, Integer> refundsTopo = networkTop.getRefunds();
-        for (Map.Entry<LNEdge, Integer> entry : refunds.entrySet()) {
+        Map<LNEdge, Double> refundsTopo = networkTop.getRefunds();
+        for (Map.Entry<LNEdge, Double> entry : refunds.entrySet()) {
             assertEquals("refunds on edge", entry.getValue(), refundsTopo.get(entry.getKey()));
         }
     }
@@ -121,13 +121,14 @@ public class OneHopTopologyTest {
         updateTopo2(networkTop2, trasnfers);
         networkTop2.activateRefund();
         LNEdge edge = networkTop2.getEdge(new LNVertex(1), new LNVertex(0));
-        assertEquals("edge amount Reverse", edge.getTotalAmount(), 20993);
-        edge = networkTop2.getEdge(new LNVertex(0), new LNVertex(1));
-        assertEquals("edge amount Direct", edge.getTotalAmount(), 798);
-        assertEquals("hop refund", networkTop.getRefunds().get(edge).intValue(), 2951);
-        assertEquals("total flow", networkTop.getTotalFlow().get(new LNVertex(0)).intValue(), 3761);
 
-        assertEquals("total fees", true, Math.abs(networkTop.getFees().get(new LNVertex(0)).doubleValue() - 37.61) < EPSILON);
+        assertEquals("edge amount Reverse", Math.abs(edge.getTotalAmount()- 20995.27)<EPSILON, true);
+
+        edge = networkTop2.getEdge(new LNVertex(0), new LNVertex(1));
+        assertEquals("edge amount Direct", Math.abs(edge.getTotalAmount()-797.19) <EPSILON, true);
+        assertEquals("hop refund", Math.abs(networkTop.getRefunds().get(edge)-2952.46)<EPSILON, true);
+        assertEquals("total flow",Math.abs( networkTop.getTotalFlow().get(new LNVertex(0))- 3761)<EPSILON, true);
+        assertEquals("total fees",  Math.abs(networkTop.getFees().get(new LNVertex(0)).doubleValue() - 37.61) < EPSILON, true);
     }
 
     @Test
@@ -158,14 +159,14 @@ public class OneHopTopologyTest {
             amount += t.getAmount();
         }
         int amountSim = 0;
-        for (Map.Entry<LNEdge, Integer> e : networkTop.getRefunds().entrySet()) {
+        for (Map.Entry<LNEdge, Double> e : networkTop.getRefunds().entrySet()) {
             amountSim += e.getValue();
         }
-        int totalFlow = networkTop.getTotalFlow().get(new LNVertex(0));
+        double totalFlow = networkTop.getTotalFlow().get(new LNVertex(0));
         System.out.println("total refunds" + amountSim);
         System.out.println("total flow" + totalFlow);
         System.out.println("total amount" + amount);
-        assertEquals("Amount of funds flowing through hop", totalFlow, amount);
+        assertEquals("Amount of funds flowing through hop", Math.abs(totalFlow- amount)< EPSILON , true);
         assertEquals("Amount of funds flowing through hop", amountSim < amount, true);
 
 
@@ -188,7 +189,7 @@ public class OneHopTopologyTest {
                 LNEdge edge1R = networkTop2.getEdge(hop2, t.getSource());
                 LNEdge edge2D = networkTop2.getEdge(hop2, t.getRecipient());
                 LNEdge edge2R = networkTop2.getEdge(t.getRecipient(), hop2);
-                int amount = t.getAmount();
+                double amount = t.getAmount();
 
                 edge1D.addTokenAmount(-amount);
                 edge1R.addTokenAmount(amount);
@@ -203,8 +204,8 @@ public class OneHopTopologyTest {
         }
     }
 
-    private void updateTokenAmount(LNEdge edge, LNVertex source, int amount) {
-        int missingAmount = amount - edge.getAvailableAmount(0);
+    private void updateTokenAmount(LNEdge edge, LNVertex source, double amount) {
+        double missingAmount = amount - edge.getAvailableAmount(0);
         if (source.hop && missingAmount > 0) {
             edge.addTokenAmount(missingAmount);
             if (refunds.containsKey(edge)) {
@@ -214,10 +215,10 @@ public class OneHopTopologyTest {
         }
     }
 
-    private static void updateLockedAmount(LNEdge edge, int amount, int locktime) {
+    private static void updateLockedAmount(LNEdge edge, double amount, int locktime) {
         for (int i = 0; i < locktime; i++) {
             if (edge.lockedTokenAmount.containsKey(i)) {
-                int ammountExisting = edge.lockedTokenAmount.get(i);
+                double ammountExisting = edge.lockedTokenAmount.get(i);
                 edge.lockedTokenAmount.put(i, amount + ammountExisting);
             } else {
                 edge.lockedTokenAmount.put(i, amount);

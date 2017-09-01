@@ -31,7 +31,7 @@ public class NetworkSimulatorRunner implements Runnable {
         setupClients(noNetworkClientsRunners);
         setupTransferGenerator(input, noNodes);
         this.strategy = new ShortestQueueStrategy();
-        Map<String, Map<String, Integer>> state = networkTopo.getNodesState();
+        Map<String, Map<String, Double>> state = networkTopo.getNodesState();
         CSVWriter.writeNetwrokStateData("init-state.csv", state);
     }
 
@@ -67,7 +67,7 @@ public class NetworkSimulatorRunner implements Runnable {
             }
         }
         System.out.println("--------- FINISHED ---------");
-        Map<String, Map<String, Integer>> state = networkTopology.getNodesState();
+        Map<String, Map<String, Double>> state = networkTopology.getNodesState();
         CSVWriter.writeNetwrokStateData("final-state.csv", state);
         CSVWriter.writeHopsRefundsData("hop-refunds.csv", networkTopology.getRefunds());
         CSVWriter.writeHopsFeesData("hop-fees.csv", networkTopology.getFees());

@@ -19,7 +19,7 @@ public class KShortestPathsTest extends NetworkTopologyTest {
 		LNVertex v2 = new LNVertex(4);
 		LNPathValidator pathValidator = new LNPathValidator(5);
 
-		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 5, pathValidator);
+		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, pathValidator);
 		assertEquals("Paths found", 1, paths.size());
 		GraphPath<LNVertex, LNEdge> path0 = paths.get(0);
 
@@ -41,7 +41,7 @@ public class KShortestPathsTest extends NetworkTopologyTest {
 		LNVertex v1 = new LNVertex(0);
 		LNVertex v2 = new LNVertex(4);
 		LNPathValidator pathValidator = new LNPathValidator(4);
-		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 4, pathValidator);
+		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2,  pathValidator);
 		assertEquals("Paths found", 2, paths.size());
 		GraphPath<LNVertex, LNEdge> path0 = paths.get(0);
 		GraphPath<LNVertex, LNEdge> path1 = paths.get(1);
@@ -78,7 +78,7 @@ public class KShortestPathsTest extends NetworkTopologyTest {
 		LNVertex v1 = new LNVertex(0);
 		LNVertex v2 = new LNVertex(4);
 		LNPathValidator pathValidator = new LNPathValidator(2);
-		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, 2, pathValidator);
+		List<GraphPath<LNVertex, LNEdge>> paths = networkTop.findShortestPaths(v1, v2, pathValidator);
 		assertEquals("Paths found", 3, paths.size());
 		GraphPath<LNVertex, LNEdge> path0 = paths.get(0);
 		GraphPath<LNVertex, LNEdge> path1 = paths.get(1);
