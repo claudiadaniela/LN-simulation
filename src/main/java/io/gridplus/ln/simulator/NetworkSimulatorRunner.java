@@ -7,20 +7,23 @@ import java.util.Set;
 
 import io.gridplus.ln.generator.factory.TransfersFactory;
 import io.gridplus.ln.generator.factory.TransfersFactory.TransfersInput;
+import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
 import io.gridplus.ln.model.NetworkTopology;
+import io.gridplus.ln.model.Transfer;
 import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.network.utils.GraphIO;
 import io.gridplus.ln.scheduler.SchedulerStrategy;
 import io.gridplus.ln.scheduler.ShortestQueueStrategy;
 import io.gridplus.ln.simulator.utils.CSVWriter;
+import io.gridplus.ln.view.NetworkGraphView;
 
 public class NetworkSimulatorRunner implements Runnable {
     private List<NetworkClientRunner> clients;
     private SchedulerStrategy strategy;
     private NetworkTopology networkTopology;
     private TransfersFactory transfersFactory;
-    private static final double CONSUMER_PERCENTAGE = 0.5;
+    private static final double CONSUMER_PERCENTAGE = 0.9009;
 
     public NetworkSimulatorRunner(NetworkTopology networkTopo, int noNodes,
                                   int noNetworkClientsRunners, TransfersInput input) {
@@ -77,7 +80,7 @@ public class NetworkSimulatorRunner implements Runnable {
 
     public static void main(String[] args) {
         int noHops = 1;
-        int noClients = 200;
+        int noClients = 12;
         int noNetworkClientsRunners = 1;
         int noSimulationSteps = 24;
 
@@ -86,14 +89,17 @@ public class NetworkSimulatorRunner implements Runnable {
 
         //NetworkTopology topology = topoFactory.createTopology("./src/main/resources/graph.xml");
         NetworkTopology topology = topoFactory.createTopology(noHops, noClients);
-        GraphIO.writeGraphML(topology.getNetworkGraph(), "graph.xml");
-        //NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
-        BlockCounterRunner clock = BlockCounterRunner.getInstance();
-        clock.setSimulationSteps(noSimulationSteps);
-        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noClients,
-                noNetworkClientsRunners, TransfersInput.GAUSSIAN);
+    //    GraphIO.writeGraphML(topology.getNetworkGraph(), "graph.xml");
+        NetworkGraphView graphView = new NetworkGraphView(topology.getNetworkGraph());
+//        BlockCounterRunner clock = BlockCounterRunner.getInstance();
+//        clock.setSimulationSteps(noSimulationSteps);
+//        NetworkSimulatorRunner runner = new NetworkSimulatorRunner(topology, noClients,
+//                noNetworkClientsRunners, TransfersInput.GAUSSIAN);
+//
+//        new Thread(runner).start();
+//        new Thread(clock).start();
 
-        new Thread(runner).start();
-        new Thread(clock).start();
+
+
     }
 }

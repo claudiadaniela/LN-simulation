@@ -11,8 +11,8 @@ public class GaussianConsumptionGenerator {
 		Random r = new Random();
 		int[] values = new int[size];
 		for (int i = 0; i < size; i++) {
-			double val = r.nextGaussian() * (TransfersSetup.HOUSEHOLD_ENERGY_STD.value()/1000)
-					+ TransfersSetup.HOUSEHOLD_ENERGY_MEAN.value()/1000;
+			double val = r.nextGaussian() * (TransfersSetup.HOUSEHOLD_ENERGY_STD.value())
+					+ TransfersSetup.HOUSEHOLD_ENERGY_MEAN.value();
 			if (val < 0)
 				continue;
 			int value = (int) Math.round(val);

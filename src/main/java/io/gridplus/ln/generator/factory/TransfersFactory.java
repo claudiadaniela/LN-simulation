@@ -3,6 +3,7 @@ package io.gridplus.ln.generator.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,7 +44,6 @@ public class TransfersFactory {
     public List<Transfer> generate(int startBlock) {
         LOGGER.log(Level.INFO, "Generate Transfers for time: " + startBlock +"  and consumers: " + consumers);
         List<Transfer> transfers = new ArrayList<>();
-        Random rand = new Random();
 
         for (int i = 0; i < consumers; i++) {
             if (vertices[i].hop) {
@@ -52,10 +52,10 @@ public class TransfersFactory {
             double energy = hourlyClientProfile[i][startBlock];
             int token = getBolts(energy);
             LNVertex source = vertices[i];
-            int index = rand.nextInt(vertices.length - consumers) + consumers;
+            int index =  ThreadLocalRandom.current().nextInt(consumers, vertices.length);
             LNVertex recipient = vertices[index];
             while (source.equals(recipient) || recipient.hop) {
-                index = rand.nextInt(vertices.length - consumers) + consumers;
+                index = ThreadLocalRandom.current().nextInt(consumers, vertices.length);
                 recipient =  vertices[index];
             }
             Transfer transfer = new Transfer(source, recipient, token);
@@ -67,7 +67,7 @@ public class TransfersFactory {
     }
 
     public int getBolts(double energy) {
-        return (int) ((energy / TransfersSetup.ENERGY_PRICE.value()) * TransfersSetup.TOKEN_SCALE.value());
+        return (int) ((energy* TransfersSetup.TOKEN_SCALE.value()) / TransfersSetup.ENERGY_PRICE.value());
     }
 
     public double[][] getEnergyValues() {

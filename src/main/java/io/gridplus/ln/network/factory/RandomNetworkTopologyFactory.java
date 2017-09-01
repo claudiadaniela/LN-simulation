@@ -12,7 +12,7 @@ import io.gridplus.ln.model.NetworkTopology;
 
 public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory {
 
-    private static double HOP_FEE = 0.01;
+    private static double HOP_FEE = 0.00033;
 
     @Override
     public NetworkTopology createTopology(int noHops, int noNodes) {
@@ -26,7 +26,8 @@ public class RandomNetworkTopologyFactory extends NetworkTopologyAbstractFactory
             LNVertex hop = topology.addNode(i, HOP_FEE, new LNVertex.NetworkStatus(1), true);
             hops.add(hop);
             if (i - 1 >= 0) {
-                LNVertex hop0 = hops.get(i - 1);
+                int hopIndex = i - 1 == 0 ? 0 : rand.nextInt(i - 1);
+                LNVertex hop0 = hops.get(hopIndex);
                 int tokenAmountV1 = 0;
                 int tokenAmountV2 = 0;
                 topology.addChannel(hop0, hop, LNEdge.ChannelStatus.OPENED, tokenAmountV1, tokenAmountV2);

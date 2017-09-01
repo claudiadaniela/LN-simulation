@@ -50,7 +50,7 @@ public class LNEdge extends DefaultWeightedEdge {
 
 	 @Override
 	 public String toString() {
-	 return "" + super.getSource() +" : "+ tokenAmount.intValue();
+	 return "" ;//+ super.getSource() +" : "+ tokenAmount.intValue();
 	 }
 
 	public LNVertex getSource() {

@@ -18,7 +18,7 @@ public class LNVertex implements Serializable {
 
     public LNVertex(int id, double fee) {
         this.id = id;
-        this.feePercentage = (double) Math.round(fee * 100d) / 100d;
+        this.feePercentage = fee;//(double) Math.round(fee * 100d) / 100d;
     }
 
     public int getId() {
