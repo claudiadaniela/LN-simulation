@@ -2,7 +2,7 @@
 <key id="edge_weight_key" for="edge" attr.name="weight" attr.type="double">
 <default>1.0</default>
 </key>
-<key id="key0" for="node" attr.name="feePercentage" attr.type="double"/>
+<key id="key0" for="node" attr.name="fee" attr.type="double"/>
 <key id="key1" for="node" attr.name="networkStatus" attr.type="double"/>
 <key id="key2" for="edge" attr.name="tokenAmount" attr.type="int"/>
 <key id="key3" for="node" attr.name="hop" attr.type="boolean"/>

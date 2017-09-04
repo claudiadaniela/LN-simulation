@@ -52,11 +52,11 @@ public class NetworkTopology {
         LNEdge e12 = networkGraph.addEdge(v1, v2);
         e12.status = status;
         e12.addTokenAmount(tokenAmountV1);
-        networkGraph.setEdgeWeight(e12, v1.feePercentage);
+        networkGraph.setEdgeWeight(e12, v1.fee);
         LNEdge e21 = networkGraph.addEdge(v2, v1);
         e21.status = status;
         e21.addTokenAmount(tokenAmountV2);
-        networkGraph.setEdgeWeight(e21, v2.feePercentage);
+        networkGraph.setEdgeWeight(e21, v2.fee);
     }
 
     public List<GraphPath<LNVertex, LNEdge>> findShortestPaths(LNVertex id1, LNVertex id2,
@@ -102,7 +102,7 @@ public class NetworkTopology {
                         }
                     }
                     updateTotalFlow(ey, amount);
-                    fee = amount * exy.getTarget().feePercentage;
+                    fee =  exy.getTarget().fee;
                     amount -= fee;
                     lockedTime--;
                 }
@@ -170,6 +170,7 @@ public class NetworkTopology {
 
 
     private void updateFee(double fee, LNVertex v) {
+        System.out.println("fee " + v +" "+fee);
         if (fees.containsKey(v)) {
             fee += fees.get(v);
         }

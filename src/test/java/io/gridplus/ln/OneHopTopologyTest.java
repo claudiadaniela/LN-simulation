@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import jdk.nashorn.internal.objects.NativeRegExp;
 import org.junit.Test;
 
 import io.gridplus.ln.model.LNEdge;
@@ -122,13 +123,14 @@ public class OneHopTopologyTest {
         networkTop2.activateRefund();
         LNEdge edge = networkTop2.getEdge(new LNVertex(1), new LNVertex(0));
 
-        assertEquals("edge amount Reverse", Math.abs(edge.getTotalAmount()- 20995.27)<EPSILON, true);
+
+        assertEquals("edge amount Reverse", Math.abs(edge.getTotalAmount()- 21024.96)<EPSILON, true);
 
         edge = networkTop2.getEdge(new LNVertex(0), new LNVertex(1));
-        assertEquals("edge amount Direct", Math.abs(edge.getTotalAmount()-797.19) <EPSILON, true);
-        assertEquals("hop refund", Math.abs(networkTop.getRefunds().get(edge)-2952.46)<EPSILON, true);
+        assertEquals("edge amount Direct", Math.abs(edge.getTotalAmount()-788.01) <EPSILON, true);
+        assertEquals("hop refund", Math.abs(networkTop.getRefunds().get(edge)-2972.97)<EPSILON, true);
         assertEquals("total flow",Math.abs( networkTop.getTotalFlow().get(new LNVertex(0))- 3761)<EPSILON, true);
-        assertEquals("total fees",  Math.abs(networkTop.getFees().get(new LNVertex(0)).doubleValue() - 37.61) < EPSILON, true);
+        assertEquals("total fees",  Math.abs(networkTop.getFees().get(new LNVertex(0)).doubleValue() - 0.05) < EPSILON, true);
     }
 
     @Test
@@ -154,11 +156,11 @@ public class OneHopTopologyTest {
         }
 
 
-        int amount = 0;
+        double amount = 0;
         for (Transfer t : trasnfers) {
             amount += t.getAmount();
         }
-        int amountSim = 0;
+        double amountSim = 0;
         for (Map.Entry<LNEdge, Double> e : networkTop.getRefunds().entrySet()) {
             amountSim += e.getValue();
         }
@@ -167,7 +169,7 @@ public class OneHopTopologyTest {
         System.out.println("total flow" + totalFlow);
         System.out.println("total amount" + amount);
         assertEquals("Amount of funds flowing through hop", Math.abs(totalFlow- amount)< EPSILON , true);
-        assertEquals("Amount of funds flowing through hop", amountSim < amount, true);
+        assertEquals("Amount of funds flowing through hop", amountSim <= amount, true);
 
 
     }
@@ -195,7 +197,7 @@ public class OneHopTopologyTest {
                 edge1R.addTokenAmount(amount);
                 updateLockedAmount(edge1R, amount, 2);
 
-                amount -= amount * hop2.feePercentage;
+                amount -=  hop2.fee;
                 updateTokenAmount(edge2D, hop2, t.getAmount());
                 edge2D.addTokenAmount(-amount);
                 edge2R.addTokenAmount(amount);

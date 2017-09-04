@@ -7,7 +7,7 @@ public class LNVertex implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private int id;
-    public double feePercentage;
+    public double fee;
     public boolean hop;
 
     public NetworkStatus networkStatus;
@@ -18,7 +18,7 @@ public class LNVertex implements Serializable {
 
     public LNVertex(int id, double fee) {
         this.id = id;
-        this.feePercentage = fee;//(double) Math.round(fee * 100d) / 100d;
+        this.fee = fee;//(double) Math.round(fee * 100d) / 100d;
     }
 
     public int getId() {

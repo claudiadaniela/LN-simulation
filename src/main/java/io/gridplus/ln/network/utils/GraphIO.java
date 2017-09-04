@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.gridplus.ln.simulator.NetworkClientRunner;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.jgrapht.io.ComponentAttributeProvider;
 import org.jgrapht.io.EdgeProvider;
@@ -45,7 +44,7 @@ public final class GraphIO {
                 new GraphMLExporter<>((v) -> v.getId() + "", null, new IntegerComponentNameProvider<>(), null);
 
         exporter.setExportEdgeWeights(true);
-        exporter.registerAttribute("feePercentage", AttributeCategory.NODE, AttributeType.DOUBLE);
+        exporter.registerAttribute("fee", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("networkStatus", AttributeCategory.NODE, AttributeType.DOUBLE);
         exporter.registerAttribute("tokenAmount", AttributeCategory.EDGE, AttributeType.INT);
         exporter.registerAttribute("hop", AttributeCategory.NODE, AttributeType.BOOLEAN);
@@ -53,8 +52,8 @@ public final class GraphIO {
         ComponentAttributeProvider<LNVertex> vertexAttributeProvider =
                 v -> {
                     Map<String, String> m = new HashMap<>();
-                    if (v.feePercentage != 0) {
-                        m.put("feePercentage", v.feePercentage + "");
+                    if (v.fee != 0) {
+                        m.put("fee", v.fee + "");
                         m.put("hop", v.hop ? "1" : "0");
                         m.put("networkStatus", v.networkStatus.getHealthScore() + "");
                     }
@@ -80,9 +79,9 @@ public final class GraphIO {
         VertexProvider<LNVertex> vertexProvider = (id, attributes) -> {
             int idValue = Integer.parseInt(id);
             LNVertex v = new LNVertex(idValue);
-            if (attributes.get("feePercentage") != null) {
-                double feeValue = Double.parseDouble(attributes.get("feePercentage"));
-                v.feePercentage = feeValue;
+            if (attributes.get("fee") != null) {
+                double feeValue = Double.parseDouble(attributes.get("fee"));
+                v.fee = feeValue;
             }
             if (attributes.get("hop") != null) {
                 boolean hopValue = attributes.get("hop").equals("1") ? true : false;

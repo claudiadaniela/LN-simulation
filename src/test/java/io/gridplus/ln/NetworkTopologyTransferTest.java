@@ -116,7 +116,7 @@ public class NetworkTopologyTransferTest extends NetworkTopologyTest {
         assertEquals("V0- Amount01", Math.abs(edge01.getTotalAmount()-( amount01 - amountTransferred)) <EPSILON, true);
         assertEquals("V1- Amount10", Math.abs(edge10.getTotalAmount()-( amount10 + amountTransferred))<EPSILON, true);
 
-        double paidFee = amountTransferred * edge12.getSource().feePercentage;
+        double paidFee = amountTransferred * edge12.getSource().fee;
         double amount12New = amount12 - (amountTransferred - paidFee);
         double amount21New = amount21 + (amountTransferred - paidFee);
         double amount23New = amount23 - (amountTransferred - paidFee);
