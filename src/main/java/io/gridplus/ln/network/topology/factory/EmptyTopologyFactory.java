@@ -1,6 +1,6 @@
-package io.gridplus.ln.network.factory;
+package io.gridplus.ln.network.topology.factory;
 
-import io.gridplus.ln.model.NetworkTopology;
+import io.gridplus.ln.network.topology.NetworkTopology;
 
 public class EmptyTopologyFactory extends NetworkTopologyAbstractFactory {
     @Override

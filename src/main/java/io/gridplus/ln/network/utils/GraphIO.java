@@ -32,8 +32,8 @@ import org.jgrapht.io.VertexProvider;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
-import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
+import io.gridplus.ln.network.topology.NetworkTopology;
+import io.gridplus.ln.network.topology.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.view.NetworkGraphView;
 
 public final class GraphIO {

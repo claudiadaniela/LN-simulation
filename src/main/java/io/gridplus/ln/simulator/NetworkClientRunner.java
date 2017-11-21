@@ -5,8 +5,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
+import io.gridplus.ln.network.topology.NetworkTopology;
 
 public class NetworkClientRunner implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(NetworkClientRunner.class.getName());

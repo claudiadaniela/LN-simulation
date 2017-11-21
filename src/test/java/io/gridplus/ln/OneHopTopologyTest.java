@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
-import io.gridplus.ln.model.NetworkTopology;
 import io.gridplus.ln.model.Transfer;
-import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
+import io.gridplus.ln.network.topology.NetworkTopology;
+import io.gridplus.ln.network.topology.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkClientRunner;
 import io.gridplus.ln.simulator.utils.CSVReader;

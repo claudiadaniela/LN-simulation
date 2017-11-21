@@ -4,8 +4,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 
 import io.gridplus.ln.generator.factory.TransfersFactory;
-import io.gridplus.ln.model.NetworkTopology;
-import io.gridplus.ln.network.factory.NetworkTopologyAbstractFactory;
+import io.gridplus.ln.network.topology.NetworkTopology;
+import io.gridplus.ln.network.topology.factory.NetworkTopologyAbstractFactory;
 import io.gridplus.ln.simulator.BlockCounterRunner;
 import io.gridplus.ln.simulator.NetworkSimulatorRunner;
 

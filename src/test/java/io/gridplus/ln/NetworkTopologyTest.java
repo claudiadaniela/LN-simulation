@@ -4,7 +4,7 @@ import org.junit.Before;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
-import io.gridplus.ln.model.NetworkTopology;
+import io.gridplus.ln.network.topology.NetworkTopology;
 
 public class NetworkTopologyTest {
     protected static NetworkTopology networkTop;

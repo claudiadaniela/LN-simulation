@@ -2,7 +2,11 @@ package io.gridplus.ln.multipath;
 
 import io.gridplus.ln.model.LNEdge;
 import io.gridplus.ln.model.LNVertex;
+import io.gridplus.ln.network.topology.NetworkTopology;
+
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -111,5 +115,31 @@ public class MinCostMaxFlowAlgorithm {
         alg.dad = new int[alg.noNodes];
         alg.pi = new double[alg.noNodes];
         return alg;
+    }
+    
+    
+    public static void main(String[] args){
+    	NetworkTopology networkTop = new NetworkTopology();
+        LNVertex v0 = networkTop.addNode(0, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v1 = networkTop.addNode(1, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v2 = networkTop.addNode(2, 0, new LNVertex.NetworkStatus(1), false);
+        LNVertex v3 = networkTop.addNode(3, 1, new LNVertex.NetworkStatus(1), false);
+        LNVertex v4 = networkTop.addNode(4, 0, new LNVertex.NetworkStatus(1), false);
+
+        networkTop.addChannel(v0, v1, LNEdge.ChannelStatus.OPENED, 3, 0);
+        networkTop.addChannel(v0, v2, LNEdge.ChannelStatus.OPENED, 4, 0);
+        networkTop.addChannel(v0, v3, LNEdge.ChannelStatus.OPENED, 5, 0);
+
+        networkTop.addChannel(v1, v2, LNEdge.ChannelStatus.OPENED, 2, 0);
+
+        networkTop.addChannel(v2, v3, LNEdge.ChannelStatus.OPENED, 4, 0);
+        networkTop.addChannel(v2, v4, LNEdge.ChannelStatus.OPENED, 1, 0);
+
+        networkTop.addChannel(v3, v4, LNEdge.ChannelStatus.OPENED, 10, 0);
+        MinCostMaxFlowAlgorithm flowAlg = MinCostMaxFlowAlgorithm.getInstance(networkTop.getNetworkGraph());
+        
+        double[] ret = flowAlg.getMaxFlow(0, 4);
+        System.out.println("Max flow "+ ret[0]);
+        System.out.println("Min cost "+ ret[1]);
     }
 }
